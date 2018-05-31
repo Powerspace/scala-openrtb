@@ -6,21 +6,13 @@
 dist/*
 target/
 lib_managed/
-src_managed/
 project/boot/
 project/plugins/project/
-.history
 .cache
 .lib/
-### Scala template
-*.class
-*.log
 
-.gitignore
+
+*.log
 .idea/
-openrtb-json/target/
-openrtb-model/target/
-openrtb-proto/target/
 project/project/
-project/target/
-src/
+openrtb-json/src/
