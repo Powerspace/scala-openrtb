@@ -15,4 +15,3 @@ project/plugins/project/
 *.log
 .idea/
 project/project/
-openrtb-json/src/

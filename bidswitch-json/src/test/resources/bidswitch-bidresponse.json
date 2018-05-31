@@ -1,0 +1,109 @@
+{
+  "id": "1234567890",
+  "ext": {
+    "protocol": "5.3"
+  },
+  "seatbid": [
+    {
+      "bid": [
+        {
+          "id": "1",
+          "impid": "102",
+          "price": 9.43,
+          "adid": "314",
+          "cid": "42",
+          "language": "en",
+          "burl": "https://adserver.com/imp?impid=102&winprice=${AUCTION_PRICE}",
+          "cat": [
+            "IAB12"
+          ],
+          "nurl": "http://adserver.com/winnotice?impid=102&winprice=${AUCTION_PRICE}",
+          "adomain": [
+            "advertiserdomain.com"
+          ],
+          "ext": {
+            "advertiser_name": "Coca-Cola",
+            "agency_name": "CC-advertising",
+            "native": {
+              "ver": "1",
+              "eventtrackers": [
+                {
+                  "event": 1,
+                  "method": 2,
+                  "url": "http://www.mytracker.com/tracker.js"
+                },
+                {
+                  "event": 2,
+                  "method": 1,
+                  "url": "http://www.example.com/tracker.php"
+                }
+              ],
+              "link": {
+                "url": "http://adserver.com/click?impid=102"
+              },
+              "assets": [
+                {
+                  "id": 1,
+                  "required": 1,
+                  "title": {
+                    "text": "A test Native Ad"
+                  }
+                },
+                {}
+              ]
+            }
+          }
+        },
+        {
+          "id": "1",
+          "impid": "102",
+          "price": 9.43,
+          "adid": "314",
+          "cid": "42",
+          "language": "en",
+          "burl": "https://adserver.com/imp?impid=102&winprice=${AUCTION_PRICE}",
+          "cat": [
+            "IAB12"
+          ],
+          "nurl": "http://adserver.com/winnotice?impid=102&winprice=${AUCTION_PRICE}",
+          "adomain": [
+            "advertiserdomain.com"
+          ],
+          "ext": {
+            "advertiser_name": "Coca-Cola",
+            "agency_name": "CC-advertising",
+            "native": {
+              "ver": "1",
+              "eventtrackers": [
+                {
+                  "event": 1,
+                  "method": 2,
+                  "url": "http://www.mytracker.com/tracker.js"
+                },
+                {
+                  "event": 2,
+                  "method": 1,
+                  "url": "http://www.example.com/tracker.php"
+                }
+              ],
+              "link": {
+                "url": "http://adserver.com/click?impid=102"
+              },
+              "assets": [
+                {
+                  "id": 1,
+                  "required": 1,
+                  "title": {
+                    "text": "A test Native Ad"
+                  }
+                },
+                {}
+              ]
+            }
+          }
+        }
+      ],
+      "seat": "58"
+    }
+  ]
+}
