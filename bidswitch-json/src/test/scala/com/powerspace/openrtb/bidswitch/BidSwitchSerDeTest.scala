@@ -8,7 +8,7 @@ import io.circe.parser._
 import org.scalatest.{FunSuite, GivenWhenThen}
 
 class BidSwitchSerDeTest extends FunSuite with GivenWhenThen {
-  import BidSwitchBidResponseSerde._
+  import BidSwitchSerdeModule._
 
   test("bidswitch parsing") {
     val stream: URL = getClass.getResource("/bidswitch-bidresponse.json")
@@ -19,9 +19,10 @@ class BidSwitchSerDeTest extends FunSuite with GivenWhenThen {
     When("I deserialize it")
     Then("it should return a proper BidResponse")
     val decoded = decode[BidResponse](json)
-    println(decoded)
-    println(decoded.map(_.extension(BidswitchProto.bidResponse)))
-    println(decoded.map(_.seatbid.flatMap(_.bid).map(_.extension(BidswitchProto.bidExt))))
+
+    println(decoded.map(_.toProtoString))
+    println(decoded.map(_.extension(BidswitchProto.bidResponse).map(_.toProtoString)))
+    println(decoded.map(_.seatbid.flatMap(_.bid).map(_.extension(BidswitchProto.bidExt).map(_.toProtoString))))
   }
 
   test("bidswitch deser") {
