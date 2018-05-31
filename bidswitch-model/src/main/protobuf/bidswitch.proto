@@ -1,0 +1,53 @@
+syntax = "proto2";
+import "openrtb.proto";
+option java_outer_classname = "BidSwitchExt";
+package com.powerspace.bidswitch;
+
+message BidRequestExt {
+    required string ssp = 1;
+    required string media_src = 2;
+    required AdsTxt ads_txt = 3;
+
+    message AdsTxt {
+        required int32 status = 1;
+        required string pub_id = 2;
+    }
+}
+
+extend com.google.openrtb.BidRequest {
+    optional BidRequestExt bidRequest = 1000;
+}
+
+
+message BidResponseExt {
+    optional string protocol = 1;
+}
+
+extend com.google.openrtb.BidResponse {
+    optional BidResponseExt bidResponse = 1000;
+}
+
+message BidExt {
+    optional string asid = 1001;
+    optional string country = 1002;
+    optional string advertiser_name = 1003;
+    optional string agency_name = 1004;
+    optional string agency_id = 1005;
+    repeated string lpdomain = 1006;
+    optional string language = 1007;
+    // optional object google = 100;
+    // optional [] yieldone = 100;
+    optional string vast_url = 1008;
+    optional string daast_url = 1009;
+    optional int32 duration = 1010;
+    optional com.google.openrtb.NativeResponse native = 100;
+    optional string deal = 1011;
+    optional string img_url = 1012;
+    optional string click_url = 1013;
+    optional string js_url = 1014;
+}
+
+
+extend com.google.openrtb.BidResponse.SeatBid.Bid {
+    optional BidExt bidExt = 1000;
+}

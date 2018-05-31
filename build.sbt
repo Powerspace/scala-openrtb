@@ -16,23 +16,33 @@ scalacOptions in ThisBuild := Seq(
   "-language:postfixOps", "-language:implicitConversions","-language:existentials","-language:higherKinds"
   /*,"-Ymacro-debug-lite"*/)
 
-
+val testDependencies = Seq(libraryDependencies ++= Seq("org.scalactic" %% "scalactic" % "3.0.1" % "test",
+"org.scalatest" %% "scalatest" % "3.0.1" % "test",
+"org.scalamock" %% "scalamock-scalatest-support" % "3.5.0" % "test"))
 
 // plain openrtb scala model
 lazy val openRtbModel = Project(id = "openrtb-model", base = file("openrtb-model"))
+
+// plain openrtb scala model
+lazy val bidderClient = Project(id = "bidder-client", base = file("bidder-client"))
 
 // json ser/deser
 lazy val openRtbJson = Project(id = "openrtb-json", base = file("openrtb-json"))
   .dependsOn(openRtbModel)
 
 // proto ser/deser
-lazy val openRtbProtobuf = Project(id = "openrtb-proto", base = file("openrtb-proto"))
+lazy val bidswitchModel = Project(id = "bidswitch-model", base = file("bidswitch-model"))
   .dependsOn(openRtbModel)
 
+// proto ser/deser
+lazy val bidswitchJson = Project(id = "bidswitch-json", base = file("bidswitch-json"))
+  .dependsOn(bidswitchModel, openRtbJson)
+  .settings(testDependencies: _*)
 
 lazy val root = (project in file("."))
   .aggregate(
     openRtbModel,
     openRtbJson,
-    openRtbProtobuf
+    bidswitchModel,
+    bidswitchJson
   )
