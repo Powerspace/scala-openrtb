@@ -1,0 +1,27 @@
+{
+  "id": "fmySKZNcTFcTPOurFYivufGxMtuSYpen",
+  "seatbid": [
+    {
+      "bid": [
+        {
+          "id": "fmySKZNcTFcTPOurFYivufGxMtuSYpen",
+          "bidid": "fmySKZNcTFcTPOurFYivufGxMtuSYpen",
+          "impid": "1",
+          "price": 0.9,
+          "nurl": "https://tracking-eu.dsp.theadtech.com:4431/v1/win?media_cost=${AUCTION_PRICE}&bid_request_id=fmySKZNcTFcTPOurFYivufGxMtuSYpen&bid_id=37144464&imp_id=1&tag_id=458&auction_timestamp=1494602342&user_id=r1KznwG8Xe-&domain=ddf56ace-a502-45bd-8ef9-89503e5d564e.com&deal=deal-2&pva=0&seat_id=1&advertiser_id=1&line_item_id=1&campaign_id=249&ad_id=150&ad_flavour_id=1626&channel_id=30&revenue_type=none&revenue=&bid_price=0.90000000000000002&country=RO&type=WIN&supply_type=web&dsp_salt=1366074880",
+          "adm": "{\"native\":{\"assets\":[{\"id\":1,\"title\":{\"text\":\"Le printemps est là > jusqu\"}},{\"id\":2,\"img\":{\"h\":150,\"url\":\"https://d39mhyf1137x0k.cloudfront.net/media/image/ahilwc1b/scale-150x150\",\"w\":150}},{\"data\":{\"value\":\"Profitez de jusqu'à -50% sur des milliers de modèles avec nos promotions de printemps !\"},\"id\":4},{\"data\":{\"value\":\"Sarenza\"},\"id\":5}],\"imptrackers\":[\"https://tracking.dsp.theadtech.com/v1/track?auction_id=fmySKZNcTFcTPOurFYivufGxMtuSYpen&auction_bid_id=37144464&type=IMP&user_id=r1KznwG8Xe-\",\"https://pixels.dsp.theadtech.com/sync?ssp=trl&uid=r1KznwG8Xe-\",\"https://pixels.dsp.theadtech.com/sync?ssp=pwl&uid=r1KznwG8Xe-\",\"https://pixels.dsp.theadtech.com/sync?ssp=tbl&uid=r1KznwG8Xe-\",\"https://pixels.dsp.theadtech.com/sync?ssp=bsw&uid=r1KznwG8Xe-\",\"https://pixels.dsp.theadtech.com/sync?ssp=ivd&uid=r1KznwG8Xe-\",\"https://pixels.dsp.theadtech.com/sync?ssp=pws&uid=r1KznwG8Xe-\",\"https://pixels.dsp.theadtech.com/sync?ssp=sas&uid=r1KznwG8Xe-\"],\"link\":{\"url\":\"https://tracking.dsp.theadtech.com/v1/track?auction_id=fmySKZNcTFcTPOurFYivufGxMtuSYpen&auction_bid_id=37144464&type=CLICK&user_id=r1KznwG8Xe-&re=http%3A%2F%2Fwww.sarenza.com%2Fchaussure-pas-cher\"}}}",
+          "adomain": [
+            "sarenza.com"
+          ],
+          "cat": [
+            "IAB18-3"
+          ],
+          "cid": "249:30",
+          "crid": "150:1626"
+        }
+      ],
+      "seat": "1"
+    }
+  ],
+  "cur": "USD"
+}

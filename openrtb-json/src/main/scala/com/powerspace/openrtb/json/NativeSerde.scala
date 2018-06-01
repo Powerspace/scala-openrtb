@@ -57,7 +57,11 @@ object NativeSerde {
       img <- cursor.downField("img").as[Option[NativeResponse.Asset.Image]].map(_.map(AssetOneof.Img))
       video <- cursor.downField("video").as[Option[NativeResponse.Asset.Video]].map(_.map(AssetOneof.Video))
       data <- cursor.downField("data").as[Option[NativeResponse.Asset.Data]].map(_.map(AssetOneof.Data))
-      assetOneOf = title.orElse(img).orElse(video).orElse(data).getOrElse(AssetOneof.Empty)
+      assetOneOf = title
+        .orElse(img)
+        .orElse(video)
+        .orElse(data)
+        .getOrElse(AssetOneof.Empty)
   } yield NativeResponse.Asset(id = id.getOrElse(0), required = required, link = link, assetOneof = assetOneOf)
 
 

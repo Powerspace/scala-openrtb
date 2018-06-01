@@ -1,0 +1,152 @@
+{
+  "id" : "a506757c-9e1c-3697-b780-78ad47e35bfa",
+  "cur" : "EUR",
+  "seatbid" : [
+    {
+      "group" : 0,
+      "seat" : "prisma",
+      "bid" : [
+        {
+          "qagmediarating" : 1,
+          "crid" : "9358",
+          "cid" : "2004",
+          "id" : "ca3cdb13-2d44-3ca0-85d2-95e511fc0974",
+          "nurl" : "https://dsp.pwspace.com/win?auction=${AUCTION_ID}&bid=${AUCTION_BID_ID}&imp=${AUCTION_IMP_ID}&ad=${AUCTION_AD_ID}&price=${AUCTION_PRICE:B64}&currency=${AUCTION_CURRENCY}&mbr=${AUCTION_MBR}&seat=${AUCTION_SEAT_ID}",
+          "ext" : {
+            "cpc" : 0.5,
+            "commission" : 0,
+            "algorithm" : "vowpal_binarybq",
+            "ctr" : 0.000175493827555329
+          },
+          "price" : 0.0877469107508659,
+          "cat" : [
+            "IAB8"
+          ],
+          "impid" : "1",
+          "adid" : "2798",
+          "adm" : {
+            "native" : {
+              "link" : {
+                "clicktrackers" : [
+                  "https://dsp.pwspace.com/click?auction=${AUCTION_ID}&bid=${AUCTION_BID_ID}&imp=${AUCTION_IMP_ID}"
+                ],
+                "url" : "http://track.double6-track39.com/aff_c?offer_id=129&aff_id=1263&url_id=3215&source=DI_NA_IMG&aff_sub={siteName}"
+              },
+              "imptrackers" : [
+                "https://dsp.pwspace.com/imp?auction=${AUCTION_ID}&bid=${AUCTION_BID_ID}&imp=${AUCTION_IMP_ID}"
+              ],
+              "assets" : [
+                {
+                  "id" : 1,
+                  "title" : {
+                    "text" : "Robot multifonctions à 1€ + Box"
+                  }
+                },
+                {
+                  "data" : {
+                    "value" : "J'en profite"
+                  },
+                  "id" : 2
+                },
+                {
+                  "id" : 3,
+                  "data" : {
+                    "value" : "Recevez pour 1€ chez vous 1 robot multifonctions + 1 coffret cuisine du monde tous les mois."
+                  }
+                },
+                {
+                  "id" : 4,
+                  "data" : {
+                    "value" : "Kitchen Trotter"
+                  }
+                },
+                {
+                  "id" : 6,
+                  "img" : {
+                    "url" : "https://cdn.psimg.net/mh/03c7791a-056e-4311-89b7-913fb1da55b2.jpg",
+                    "w" : 246,
+                    "h" : 164
+                  }
+                }
+              ]
+            }
+          },
+          "burl" : "https://dsp.pwspace.com/bill?auction=${AUCTION_ID}&bid=${AUCTION_BID_ID}&imp=${AUCTION_IMP_ID}&ad=${AUCTION_AD_ID}&price=${AUCTION_PRICE:B64}&currency=${AUCTION_CURRENCY}&mbr=${AUCTION_MBR}&seat=${AUCTION_SEAT_ID}"
+        }
+      ]
+    },
+    {
+      "seat" : "powerspace",
+      "bid" : [
+        {
+          "price" : 1.092169880867,
+          "impid" : "1",
+          "cat" : [
+            "IAB13-6"
+          ],
+          "adid" : "18",
+          "crid" : "9323",
+          "qagmediarating" : 1,
+          "cid" : "16",
+          "id" : "5684a52d-11aa-3acc-be9a-e5ae9b69c188",
+          "nurl" : "https://dsp.pwspace.com/win?auction=${AUCTION_ID}&bid=${AUCTION_BID_ID}&imp=${AUCTION_IMP_ID}&ad=${AUCTION_AD_ID}&price=${AUCTION_PRICE:B64}&currency=${AUCTION_CURRENCY}&mbr=${AUCTION_MBR}&seat=${AUCTION_SEAT_ID}",
+          "ext" : {
+            "algorithm" : "eCpm_v3_device",
+            "ctr" : 0.00780121330171824,
+            "cpc" : 0.200000002980232,
+            "commission" : 0.0600000023841858
+          },
+          "burl" : "https://dsp.pwspace.com/bill?auction=${AUCTION_ID}&bid=${AUCTION_BID_ID}&imp=${AUCTION_IMP_ID}&ad=${AUCTION_AD_ID}&price=${AUCTION_PRICE:B64}&currency=${AUCTION_CURRENCY}&mbr=${AUCTION_MBR}&seat=${AUCTION_SEAT_ID}",
+          "adm" : {
+            "native" : {
+              "assets" : [
+                {
+                  "title" : {
+                    "text" : "Le classement des meilleures mutuelles en 2018"
+                  },
+                  "id" : 1
+                },
+                {
+                  "data" : {
+                    "value" : "Lire la suite"
+                  },
+                  "id" : 2
+                },
+                {
+                  "data" : {
+                    "value" : "Découvrez le top 15 des meilleures mutuelles et assurances santé de l'année 2018"
+                  },
+                  "id" : 3
+                },
+                {
+                  "id" : 4,
+                  "data" : {
+                    "value" : "Meilleurtaux.com"
+                  }
+                },
+                {
+                  "img" : {
+                    "w" : 246,
+                    "url" : "https://cdn.psimg.net/mh/bbeb6469-d492-4b5e-8a31-26e7822b0276.jpg",
+                    "h" : 164
+                  },
+                  "id" : 6
+                }
+              ],
+              "link" : {
+                "url" : "https://assurance.meilleurtaux.com/mutuelle-sante/guide/15-mutuelles-preferees-francais-2018//?clickId={clickId}&utm_source=powerspace&utm_medium=native&utm_campaign=classement-2018-mutuelles",
+                "clicktrackers" : [
+                  "https://dsp.pwspace.com/click?auction=${AUCTION_ID}&bid=${AUCTION_BID_ID}&imp=${AUCTION_IMP_ID}"
+                ]
+              },
+              "imptrackers" : [
+                "https://dsp.pwspace.com/imp?auction=${AUCTION_ID}&bid=${AUCTION_BID_ID}&imp=${AUCTION_IMP_ID}"
+              ]
+            }
+          }
+        }
+      ],
+      "group" : 0
+    }
+  ]
+}

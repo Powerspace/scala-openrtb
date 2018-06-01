@@ -1,0 +1,125 @@
+{
+  "tmax" : 100,
+  "ext" : {
+    "bcampaign" : []
+  },
+  "id" : "a506757c-9e1c-3697-b780-78ad47e35bfa",
+  "wseat" : [
+    "powerspace",
+    "prisma"
+  ],
+  "user" : {
+    "yob" : 1993,
+    "data" : [
+      {
+        "id" : "powerspace"
+      }
+    ],
+    "id" : "f3bbe6e924ce42e08703745e77c2c65b",
+    "buyeruid" : "32957074-ca7e-3c0c-b1fd-8908e1bbd1f6"
+  },
+  "test" : 0,
+  "imp" : [
+    {
+      "secure" : 1,
+      "instl" : 0,
+      "tagid" : "powerspace_L9E6K0ZR_2744",
+      "pmp" : {
+        "private_auction" : 0
+      },
+      "id" : "1",
+      "native" : {
+        "request" : {
+          "native" : {
+            "plcmttype" : 1,
+            "plcmtcnt" : 1,
+            "ver" : "1",
+            "context" : 1,
+            "assets" : [
+              {
+                "title" : {
+                  "len" : 50
+                },
+                "id" : 1,
+                "required" : 1
+              },
+              {
+                "required" : 1,
+                "id" : 2,
+                "data" : {
+                  "type" : 12
+                }
+              },
+              {
+                "required" : 1,
+                "data" : {
+                  "type" : 2
+                },
+                "id" : 3
+              },
+              {
+                "required" : 1,
+                "id" : 4,
+                "data" : {
+                  "type" : 1
+                }
+              },
+              {
+                "data" : {
+                  "type" : 11
+                },
+                "id" : 5,
+                "required" : 1
+              },
+              {
+                "required" : 1,
+                "img" : {
+                  "w" : 246,
+                  "mimes" : [
+                    "image/png",
+                    "image/jpg"
+                  ],
+                  "type" : 3,
+                  "h" : 164
+                },
+                "id" : 6
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "site" : {
+    "id" : "site-1218",
+    "domain" : "www.serengo.net",
+    "name" : "Serengo",
+    "page" : "/ndi/L9E6K0ZR",
+    "publisher" : {
+      "id" : "pub-2306",
+      "name" : "Prisma Media"
+    },
+    "content" : {
+      "id" : "content-L9E6K0ZR",
+      "title" : "Newsletter Serengo Daily - 1 annonce (horizontale)"
+    },
+    "cat" : [
+      "IAB18"
+    ]
+  },
+  "at" : 2,
+  "device" : {
+    "os" : "Other",
+    "model" : "Other",
+    "carrier" : "colt technology services group limited",
+    "ip" : "84.14.135.0",
+    "ua" : "curl/7.54.0",
+    "geo" : {
+      "lat" : 48.8602294921875,
+      "utcoffset" : 60,
+      "country" : "fr",
+      "lon" : 2.34106993675232,
+      "city" : "paris"
+    }
+  }
+}

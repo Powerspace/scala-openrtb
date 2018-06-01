@@ -9,11 +9,7 @@ import io.circe.parser._
 import io.circe.syntax._
 import org.scalatest.{FunSuite, GivenWhenThen}
 
-/**
-  * @todo provide implicit accessors on BidSwitch structures instead of relying on the extension thing
-  * @todo improve toString with extensions
-  */
-class BidSwitchSerDeTest extends FunSuite with GivenWhenThen {
+class BidSwitchSerdeTest extends FunSuite with GivenWhenThen {
 
   import BidSwitchSerdeModule._
 
@@ -61,10 +57,10 @@ class BidSwitchSerDeTest extends FunSuite with GivenWhenThen {
     assert(nativeExtension.adchoiceurl.isEmpty)
     assert(nativeExtension.viewtracker.isEmpty)
 
-//    println("BidResponse: " + decoded.toTry)
-//    println("BidResponse Extension: " + bidResponseExtension)
-//    println("Bid Extension: " + bidExtension)
-//    println("Bid Extension / native: " + bidExtension.native)
+    println("BidResponse: " + decoded.toTry)
+    println("BidResponse Extension: " + bidResponseExtension)
+    println("Bid Extension: " + bidExtension)
+    println("Bid Extension / native: " + bidExtension.native)
   }
 
   test("BidSwitch bid request serialization") {
