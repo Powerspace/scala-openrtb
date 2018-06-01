@@ -35,8 +35,6 @@ message BidExt {
     optional string agency_id = 1005;
     repeated string lpdomain = 1006;
     optional string language = 1007;
-    // optional object google = 100;
-    // optional [] yieldone = 100;
     optional string vast_url = 1008;
     optional string daast_url = 1009;
     optional int32 duration = 1010;
@@ -45,9 +43,32 @@ message BidExt {
     optional string img_url = 1012;
     optional string click_url = 1013;
     optional string js_url = 1014;
-}
+    optional Google google = 1015;
+    optional Yieldone yieldone = 1016;
 
+    message Google {
+        repeated int32 attribute = 1001;
+        repeated int32 vendor_type = 1002;
+    }
+
+    message Yieldone {
+        optional string creative_type = 1001;
+        optional int32 creative_category_id = 1002;
+    }
+
+}
 
 extend com.google.openrtb.BidResponse.SeatBid.Bid {
     optional BidExt bidExt = 1000;
 }
+
+message NativeResponseExt {
+    optional string viewtracker = 1001;
+    optional string adchoiceurl = 1002;
+}
+
+extend com.google.openrtb.NativeResponse {
+    optional NativeResponseExt nativeExt = 1000;
+}
+
+

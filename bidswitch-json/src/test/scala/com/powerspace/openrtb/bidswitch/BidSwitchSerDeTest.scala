@@ -1,10 +1,12 @@
 package com.powerspace.openrtb.bidswitch
 
 import java.net.URL
-
-import com.google.openrtb.BidResponse
-import com.powerspace.bidswitch.BidswitchProto
+import com.google.openrtb.BidRequest.Imp
+import com.google.openrtb.{BidRequest, BidResponse}
+import com.powerspace.bidswitch.BidRequestExt.AdsTxt
+import com.powerspace.bidswitch.{BidRequestExt, BidswitchProto}
 import io.circe.parser._
+import io.circe.syntax._
 import org.scalatest.{FunSuite, GivenWhenThen}
 
 /**
@@ -15,18 +17,26 @@ class BidSwitchSerDeTest extends FunSuite with GivenWhenThen {
 
   import BidSwitchSerdeModule._
 
-  test("BidSwitch bid response deserialization") {
-    val stream: URL = getClass.getResource("/bidswitch-bidresponse.json")
+  /**
+    * Create a Bid Request with BidSwitch extension
+    */
+  def bidSwitchBidRequest: BidRequest = {
+    val imp = Imp(id = "imp-1")
+    val bidRequest = BidRequest(id = "br-id-1", imp = Seq(imp), cur = Seq("EUR"))
+    val bidRequestExt = BidRequestExt("powerspace", "powerspace", AdsTxt(status = 1, pubId = "pub-id-1"))
+    bidRequest.withExtension(BidswitchProto.bidRequest)(Some(bidRequestExt))
+  }
 
+  test("BidSwitch bid response deserialization") {
     Given("A BidSwitch bid response in JSON format")
+    val stream: URL = getClass.getResource("/bidswitch-bidresponse.json")
     val json: String = scala.io.Source.fromFile(stream.toURI).mkString
 
     When("I deserialize it")
     val decoded = decode[BidResponse](json)
 
     Then("It should return a proper Scala BidResponse")
-    assert(decoded.isRight)
-    val bidResponse = decoded.right.get
+    val bidResponse = decoded.toTry.get
     assert(bidResponse.id == "1234567890")
     assert(bidResponse.bidid.isEmpty)
     assert(bidResponse.seatbid.size == 1)
@@ -36,26 +46,36 @@ class BidSwitchSerDeTest extends FunSuite with GivenWhenThen {
     assert(firstBid.h.isEmpty)
     assert(firstBid.price == 9.43)
 
-    assert(decoded.map(_.extension(BidswitchProto.bidResponse)).isRight)
-    val bidResponseExtension = decoded.map(_.extension(BidswitchProto.bidResponse)).right.get.get
+    val bidResponseExtension = decoded.map(_.extension(BidswitchProto.bidResponse)).toTry.get.get
     assert(bidResponseExtension.protocol.contains("5.3"))
 
-    assert(decoded.map(_.seatbid.flatMap(_.bid).map(_.extension(BidswitchProto.bidExt))).isRight)
-    val bidExtension = decoded.map(_.seatbid.flatMap(_.bid).map(_.extension(BidswitchProto.bidExt)))
+    val bidExtension = decoded.map(_.seatbid.flatMap(_.bid).flatMap(_.extension(BidswitchProto.bidExt))).toTry.get.head
+    assert(bidExtension.advertiserName.nonEmpty)
 
-    println(decoded)
-    println(bidResponseExtension)
-    println(bidExtension)
+    assert(bidExtension.native.get.link.url.nonEmpty)
+    assert(bidExtension.native.get.assets.nonEmpty)
+    assert(bidExtension.native.get.assets.head.required.contains(true))
+    assert(bidExtension.native.get.assets.head.getTitle.text.nonEmpty)
+
+    val nativeExtension = bidExtension.native.get.extension(BidswitchProto.nativeExt).get
+    assert(nativeExtension.adchoiceurl.isEmpty)
+    assert(nativeExtension.viewtracker.isEmpty)
+
+//    println("BidResponse: " + decoded.toTry)
+//    println("BidResponse Extension: " + bidResponseExtension)
+//    println("Bid Extension: " + bidExtension)
+//    println("Bid Extension / native: " + bidExtension.native)
   }
 
   test("BidSwitch bid request serialization") {
     Given("A BidSwitch BidRequest")
-    ???
+    val bidRequest = bidSwitchBidRequest
 
     When("I serialize it")
-    ???
+    val json = bidRequest.asJson
 
     Then("It should return a proper bid request in JSON format")
-    ???
+    println(json)
   }
+
 }
