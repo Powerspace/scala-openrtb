@@ -4,7 +4,11 @@ import com.google.openrtb.BidResponse.SeatBid.Bid.AdmOneof
 import com.google.openrtb._
 import io.circe.Decoder
 
+/**
+  * Serialize and Deserialize an OpenRTB Bid
+  */
 object BidSerde {
+
   def decoder: Decoder[BidResponse.SeatBid.Bid] =
     cursor => for {
       id <- cursor.downField("id").as[String]
@@ -43,4 +47,5 @@ object BidSerde {
         exp = exp, burl = burl, lurl = lurl, tactic = tactic, language = language, wratio = wratio,
         hratio = hratio, admOneof = AdmOneof.Empty)
     }
+
 }

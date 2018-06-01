@@ -3,7 +3,11 @@ package com.powerspace.openrtb.json
 import com.google.openrtb._
 import io.circe.Decoder
 
+/**
+  * Serialize and Deserialize an OpenRTB SeatBid
+  */
 object SeatBidSerDe {
+
   implicit def decoder(implicit seatBidDecoder: Decoder[BidResponse.SeatBid.Bid]): Decoder[BidResponse.SeatBid] =
     cursor => for {
       seat <- cursor.downField("seat").as[Option[String]]
@@ -12,4 +16,5 @@ object SeatBidSerDe {
     } yield {
       BidResponse.SeatBid(seat = seat, bid = bids, group = group)
     }
+
 }

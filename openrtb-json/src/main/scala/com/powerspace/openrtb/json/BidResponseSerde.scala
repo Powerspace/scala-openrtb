@@ -1,9 +1,13 @@
 package com.powerspace.openrtb.json
 
 import com.google.openrtb.{BidResponse, NoBidReason}
-import io.circe.Decoder
+import io.circe.{Decoder, Encoder}
 
+/**
+  * Serialize and Deserialize an OpenRTB BidResponse
+  */
 object BidResponseSerde {
+
   def decoder(implicit seatBidDecoder: Decoder[BidResponse.SeatBid]): Decoder[BidResponse] = {
     cursor =>
       for {
@@ -17,4 +21,7 @@ object BidResponseSerde {
         BidResponse(id = id, seatbid = seatBids, bidid = bidid, cur = cur, customdata = customdata, nbr = nbr)
       }
   }
+
+  def encoder(): Encoder[BidResponse] = ???
+
 }
