@@ -1,12 +1,21 @@
 package com.powerspace.openrtb.json
 
 import com.google.openrtb.{BidResponse, NoBidReason}
+import io.circe.generic.extras.Configuration
 import io.circe.{Decoder, Encoder, Json}
+import scalapb.UnknownFieldSet
 
 /**
   * Serialize and Deserialize an OpenRTB BidResponse
   */
 object BidResponseSerde {
+
+  /**
+    * @todo following three lines are unnecessary and are about full automatic derivation
+    */
+  implicit val configuration: Configuration = Configuration.default.withDefaults
+  implicit val noBidReasonDecoder: Decoder[Option[NoBidReason]] = Decoder.decodeOption[Int].map(_.map(NoBidReason.fromValue))
+  implicit val unknownFieldSet: Decoder[UnknownFieldSet] = _ => Right(UnknownFieldSet(Map()))
 
   /**
     * Decoder for the OpenRTB bid response.
