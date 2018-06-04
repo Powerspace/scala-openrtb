@@ -1,10 +1,47 @@
 package com.powerspace.openrtb.json
 
+import com.google.openrtb.BidResponse.SeatBid
 import com.google.openrtb.BidResponse.SeatBid.Bid.AdmOneof
 import com.google.openrtb._
-import io.circe.Decoder
+import io.circe.{Decoder, DecodingFailure, Json}
+import io.circe.parser._
 
+/**
+  * Serialize and Deserialize an OpenRTB Bid
+  */
 object BidSerde {
+
+  val nativeObject: Decoder[Json] = cursor => cursor.downField("native").as[Json]
+  val nativeDecoder: Decoder[NativeResponse] = nativeObject.emapTry(NativeSerde.decoder.decodeJson(_).toTry)
+
+  implicit class LoggableEither[L, R](tryInstance: Either[L, R]) {
+    def doOnError(action: (L) => Unit): Either[L, R] = {
+      tryInstance.fold(throwable => action(throwable), _ => Unit)
+      tryInstance
+    }
+  }
+
+  /**
+    * Decoder for OpenRTB adm object.
+    * `adm` can contain either a serialized native response string or a whole native response object
+    * @todo simplify this code
+    */
+  private implicit val admOneOfDecoder: Decoder[SeatBid.Bid.AdmOneof] =
+    cursor => for {
+      adm <- cursor.as[Option[String]]
+      parsed = adm.toRight(DecodingFailure("Unparsable tag adm.", List())).flatMap(parse)
+      decoded = parsed
+        .flatMap(nativeDecoder.decodeJson(_).doOnError(println("An error occurred while decoding adm tag.", _)))
+        .toOption
+    } yield {
+      val maybeNative = decoded.map(AdmOneof.AdmNative)
+      val maybeOneof: Option[AdmOneof] = maybeNative.orElse(adm.map(AdmOneof.Adm))
+      maybeOneof.getOrElse(AdmOneof.Empty)
+    }
+
+  /**
+    * Decoder for OpenRTB bid object.
+    */
   def decoder: Decoder[BidResponse.SeatBid.Bid] =
     cursor => for {
       id <- cursor.downField("id").as[String]
@@ -36,11 +73,13 @@ object BidSerde {
       language <- cursor.downField("language").as[Option[String]]
       wratio <- cursor.downField("wratio").as[Option[Int]]
       hratio <- cursor.downField("hratio").as[Option[Int]]
+      admOneof <- cursor.downField("adm").as[Option[BidResponse.SeatBid.Bid.AdmOneof]]
     } yield {
       BidResponse.SeatBid.Bid(id, impid = impid, price = price, adid = adid, adomain = adomain,
         nurl = nurl, bundle = bundle, iurl = iurl, cid = cid, crid = crid, cat = cat, attr = attr.getOrElse(Seq()),
         api = api, protocol = protocol, qagmediarating = qagmediarating, dealid = dealid, w = w, h = h,
         exp = exp, burl = burl, lurl = lurl, tactic = tactic, language = language, wratio = wratio,
-        hratio = hratio, admOneof = AdmOneof.Empty)
+        hratio = hratio, admOneof = admOneof.getOrElse(AdmOneof.Empty))
     }
+
 }
