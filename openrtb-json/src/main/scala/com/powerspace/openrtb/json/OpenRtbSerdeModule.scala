@@ -5,7 +5,7 @@ import com.google.openrtb.BidResponse.SeatBid
 import io.circe.{Decoder, Encoder}
 
 /**
-  * Provides serialization and deserialization for OpenRTB entities by way of Google
+  * Provides serialization and deserialization for OpenRTB entities.
   */
 object OpenRtbSerdeModule extends SerdeModule {
   override implicit val bidDecoder: Decoder[SeatBid.Bid] = BidSerde.decoder

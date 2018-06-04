@@ -7,7 +7,6 @@ trait SerdeModule {
   implicit val bidResponseDecoder: Decoder[BidResponse]
   implicit val seatBidDecoder: Decoder[BidResponse.SeatBid]
   implicit val bidDecoder: Decoder[BidResponse.SeatBid.Bid]
-
   implicit val bidRequestEncoder: Encoder[BidRequest]
 }
 

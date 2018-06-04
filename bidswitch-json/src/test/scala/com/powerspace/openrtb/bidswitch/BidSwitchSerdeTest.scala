@@ -63,6 +63,22 @@ class BidSwitchSerdeTest extends FunSuite with GivenWhenThen {
     println("Bid Extension / native: " + bidExtension.native)
   }
 
+  test("BidSwitch bid response serialization with no-bid") {
+    Given("An BidSwitch bid response in JSON format with no bid")
+    val stream: URL = getClass.getResource("/bidswitch-bidresponse-no-bid.json")
+    val json: String = scala.io.Source.fromFile(stream.toURI).mkString
+
+    When("I deserialize it")
+    val decoded = decode[BidResponse](json)
+
+    Then("It should return a proper Scala BidResponse with no bid in it")
+    val bidResponse = decoded.toTry.get
+    assert(bidResponse.id.nonEmpty)
+    assert(bidResponse.bidid.isEmpty)
+    assert(bidResponse.seatbid.nonEmpty)
+    assert(bidResponse.seatbid.head.bid.isEmpty)
+  }
+
   test("BidSwitch bid request serialization") {
     Given("A BidSwitch BidRequest")
     val bidRequest = bidSwitchBidRequest

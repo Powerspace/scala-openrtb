@@ -1,9 +1,9 @@
 package com.powerspace.openrtb.json
 
 import java.net.URL
+
 import com.google.openrtb.{BidRequest, BidResponse}
 import io.circe.parser._
-import io.circe.syntax._
 import org.scalatest.{FunSuite, GivenWhenThen}
 
 class OpenRtbSerdeTest extends FunSuite with GivenWhenThen {
@@ -32,7 +32,26 @@ class OpenRtbSerdeTest extends FunSuite with GivenWhenThen {
     assert(firstBid.admOneof.admNative.isDefined)
     assert(firstBid.admOneof.adm.isEmpty)
 
-    //@todo adm to be tested
+    assert(firstBid.getAdmNative.assets.nonEmpty)
+    assert(firstBid.getAdmNative.assets.head.getTitle.text.contains("printemps"))
+    assert(firstBid.getAdmNative.assets.last.id == 5)
+    assert(firstBid.getAdmNative.assets.last.getData.value.contains("Sarenza"))
+  }
+
+  test("OpenRTB-like bid response serialization with no-bid") {
+    Given("An OpenRTB-like bid response in JSON format with no bid")
+    val stream: URL = getClass.getResource("/elasticads-bidresponse-no-bid.json")
+    val json: String = scala.io.Source.fromFile(stream.toURI).mkString
+
+    When("I deserialize it")
+    val decoded = decode[BidResponse](json)
+
+    Then("It should return a proper Scala BidResponse with no bid in it")
+    val bidResponse = decoded.toTry.get
+    assert(bidResponse.id.nonEmpty)
+    assert(bidResponse.bidid.isEmpty)
+    assert(bidResponse.seatbid.nonEmpty)
+    assert(bidResponse.seatbid.head.bid.isEmpty)
   }
 
   test("OpenRTB-like bid request serialization") {

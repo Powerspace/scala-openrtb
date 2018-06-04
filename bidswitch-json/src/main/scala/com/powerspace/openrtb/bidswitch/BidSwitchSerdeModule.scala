@@ -13,11 +13,19 @@ import io.circe._
   */
 object BidSwitchSerdeModule extends SerdeModule {
 
+  /**
+    * Decoder for bid response extension object.
+    */
   private implicit val bidResponseExtDecoder: Decoder[BidResponseExt] = _.downField("ext")
     .downField("protocol")
     .as[Option[String]]
     .map(BidResponseExt.apply)
 
+  /**
+    * Decoder for the native extension object.
+    * `viewtracker` represents the view tracking URL that will be called when the ad is visible, if supported by the Supplier.
+    * `adchoiceurl` is a Buyer specific AdChoices URL that will replace default Supplier AdChoices URL.
+    */
   private implicit val nativeExtDecoder: Decoder[NativeResponseExt] = {
     cursor =>
       val ext = cursor.downField("ext")
@@ -27,11 +35,17 @@ object BidSwitchSerdeModule extends SerdeModule {
       } yield NativeResponseExt(viewtracker = viewtracker, adchoiceurl = adchoiceurl)
   }
 
+  /**
+    * Decoder for native object.
+    */
   private implicit val nativeResponseDecoder: Decoder[NativeResponse] = for {
     native <- NativeSerde.decoder
     ext <- nativeExtDecoder
   } yield native.withExtension(BidswitchProto.nativeExt)(Some(ext))
 
+  /**
+    * Decoder for google object.
+    */
   private implicit val googleDecoder: Decoder[Google] = {
     cursor =>
       for {
@@ -40,6 +54,9 @@ object BidSwitchSerdeModule extends SerdeModule {
       } yield Google(attribute.getOrElse(Seq()), vendorType.getOrElse(Seq()))
   }
 
+  /**
+    * Decoder for yieldone object.
+    */
   private implicit val yieldoneDecoder: Decoder[Yieldone] = {
     cursor =>
       for {
@@ -48,6 +65,12 @@ object BidSwitchSerdeModule extends SerdeModule {
       } yield Yieldone(creativeType = creativeType, creativeCategoryId = creativeCategoryId)
   }
 
+  /**
+    * Decoder for the bid extension object.
+    * `asid` specifies the 3rd party ad server in use.
+    * `lpdomain` is the actual landing page URL of the creative.
+    * `vastUrl` and `daastURL` are URLs pointing to the location of VAST and DAAST documents for bid responses.
+    */
   private val bidExtDecoder: Decoder[BidExt] =
     cursor => {
       val ext = cursor.downField("ext")
@@ -77,13 +100,22 @@ object BidSwitchSerdeModule extends SerdeModule {
       }
     }
 
+  /**
+    * Decoder for bid object.
+    */
   override implicit val bidDecoder: Decoder[SeatBid.Bid] = for {
     bid <- BidSerde.decoder
     ext <- bidExtDecoder
   } yield bid.withExtension(BidswitchProto.bidExt)(Some(ext))
 
+  /**
+    * Decoder for seatBid object.
+    */
   override implicit val seatBidDecoder: Decoder[SeatBid] = SeatBidSerDe.decoder
 
+  /**
+    * Decoder for the BidSwitch bid response.
+    */
   override implicit val bidResponseDecoder: Decoder[BidResponse] = for {
     bidResponse <- BidResponseSerde.decoder
     extension <- bidResponseExtDecoder

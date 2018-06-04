@@ -22,21 +22,26 @@ object BidSerde {
   }
 
   /**
-    * adm field can contain either a serialized native
-    * response string or a whole native response object
+    * Decoder for OpenRTB adm object.
+    * `adm` can contain either a serialized native response string or a whole native response object
     * @todo simplify this code
     */
   private implicit val admOneOfDecoder: Decoder[SeatBid.Bid.AdmOneof] =
     cursor => for {
       adm <- cursor.as[Option[String]]
       parsed = adm.toRight(DecodingFailure("Unparsable tag adm.", List())).flatMap(parse)
-      decoded = parsed.flatMap(p=>nativeDecoder.decodeJson(p).doOnError(println("An error occurred while decoding adm tag.", _))).toOption
+      decoded = parsed
+        .flatMap(nativeDecoder.decodeJson(_).doOnError(println("An error occurred while decoding adm tag.", _)))
+        .toOption
     } yield {
       val maybeNative = decoded.map(AdmOneof.AdmNative)
       val maybeOneof: Option[AdmOneof] = maybeNative.orElse(adm.map(AdmOneof.Adm))
       maybeOneof.getOrElse(AdmOneof.Empty)
     }
 
+  /**
+    * Decoder for OpenRTB bid object.
+    */
   def decoder: Decoder[BidResponse.SeatBid.Bid] =
     cursor => for {
       id <- cursor.downField("id").as[String]

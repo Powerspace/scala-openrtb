@@ -8,6 +8,9 @@ import io.circe.Decoder
   */
 object SeatBidSerDe {
 
+  /**
+    * Decoder for the OpenRTB seatBid object.
+    */
   implicit def decoder(implicit seatBidDecoder: Decoder[BidResponse.SeatBid.Bid]): Decoder[BidResponse.SeatBid] =
     cursor => for {
       seat <- cursor.downField("seat").as[Option[String]]
