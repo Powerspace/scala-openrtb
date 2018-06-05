@@ -11,7 +11,7 @@ import scalapb.UnknownFieldSet
 object BidResponseSerde {
 
   /**
-    * @todo following three lines are unnecessary and are about full automatic derivation
+    * @todo use semi automatic derivation for decoding
     */
   implicit val configuration: Configuration = Configuration.default.withDefaults
   implicit val noBidReasonDecoder: Decoder[Option[NoBidReason]] = Decoder.decodeOption[Int].map(_.map(NoBidReason.fromValue))

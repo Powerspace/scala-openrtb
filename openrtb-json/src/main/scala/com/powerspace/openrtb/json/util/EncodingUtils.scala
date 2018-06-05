@@ -3,14 +3,20 @@ package com.powerspace.openrtb.json.util
 import io.circe.{Encoder, Json}
 import scalapb.UnknownFieldSet
 
-object JsonUtils {
+object EncodingUtils {
 
+  /**
+    * Convert a boolean to the related integer value
+    */
   implicit class BooleanEnhancement(b: Boolean) {
     def toInt: Int = if (b) 1 else 0
   }
 
-  implicit class NoNullsEncoder[T](encoder: Encoder[T]) {
+  implicit class EncoderEnhancement[T](encoder: Encoder[T]) {
 
+    /**
+      * Clean up the JSON file from empty fields/arrays unless present within the given list
+      */
     def clean(toKeep: Seq[String] = Seq()): Encoder[T] = {
       encoder.mapJson(jsonObject =>
         jsonObject.mapObject(obj => obj.filter {
@@ -21,29 +27,32 @@ object JsonUtils {
       )
     }
 
-    def clean: Encoder[T] = clean(Seq())
-
-    def recodeBooleans: Encoder[T] = {
+    /**
+      * Transform boolean fields into the related integers
+      */
+    def transformBooleans: Encoder[T] = {
       encoder.mapJson({
         json => json.mapObject(_.mapValues{
-          case json: Json if json.isBoolean =>
-            Json.fromInt(json.asBoolean.map(_.toInt).get)
-          case json: Json =>
-            json})
+          case json: Json if json.isBoolean => Json.fromInt(json.asBoolean.map(_.toInt).get)
+          case json: Json => json
+        })
       })
     }
+
+    def clean: Encoder[T] = clean(Seq())
+
   }
 
-  object NoNullsEncoder {
-    final def apply[A](f: A => Seq[(String, Json)], toKeep: Seq[String] = Seq()): Encoder[A] = new Encoder[A] {
-      override def apply(a: A): Json = Json.fromFields(f(a))
-    }.clean(toKeep)
-  }
-
-
+  /**
+    * Allow to generate a JSON integer field from an Enum instance
+    */
   def protobufEnumEncoder[T <: _root_.scalapb.GeneratedEnum]: Encoder[T] = {
     (a: T) => Json.fromInt(a.value)
   }
 
+  /**
+    * @todo user would define a list of protobuf extensions to actually encode
+    */
   implicit val unknownFieldsEncoder: Encoder[UnknownFieldSet] = (_: UnknownFieldSet) => Json.Null
+
 }
