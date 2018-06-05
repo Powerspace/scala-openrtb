@@ -4,22 +4,22 @@ import com.google.openrtb.BidRequest.Imp.Banner.Format
 import com.google.openrtb.BidRequest.Imp.Native.RequestOneof
 import com.google.openrtb.BidRequest.Imp.Pmp.Deal
 import com.google.openrtb.BidRequest.Imp.Video.CompanionAd
-import com.google.openrtb._
 import com.google.openrtb.BidRequest.Imp.{Audio, Banner, Metric, Pmp, Video}
 import com.google.openrtb.BidRequest.{Imp, Source}
 import com.google.openrtb.NativeRequest.Asset.AssetOneof
 import com.google.openrtb.NativeRequest.{Asset, EventTrackers}
+import com.google.openrtb._
 import com.powerspace.openrtb.json.util.EncodingUtils
 import io.circe.generic.extras.Configuration
-
+import io.circe.syntax._
 /**
   * Serialize and Deserialize an OpenRTB BidRequest
   */
 object BidRequestSerde {
 
+  import EncodingUtils._
   import io.circe._
   import io.circe.generic.extras.semiauto._
-  import EncodingUtils._
 
   implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
 
@@ -71,25 +71,32 @@ object BidRequestSerde {
   implicit val contentEncoder: Encoder[BidRequest.Content] = deriveEncoder[BidRequest.Content].transformBooleans.clean
 
   // Native encoding
-  implicit val distChannelOneOfEncoder: Encoder[BidRequest.DistributionchannelOneof] = deriveEncoder[BidRequest.DistributionchannelOneof].transformBooleans.clean
+  implicit val distChannelOneOfEncoder: Encoder[BidRequest.DistributionchannelOneof] = protobufOneofEncoder[BidRequest.DistributionchannelOneof] {
+      case BidRequest.DistributionchannelOneof.App(app) => app.asJson
+      case BidRequest.DistributionchannelOneof.Site(site) => site.asJson
+    }
+
   implicit val titleEncoder: Encoder[Asset.Title] = deriveEncoder[Asset.Title].transformBooleans.clean
   implicit val imgEncoder: Encoder[Asset.Image] = deriveEncoder[Asset.Image].transformBooleans.clean
   implicit val assetDataEncoder: Encoder[Asset.Data] = deriveEncoder[Asset.Data].transformBooleans.clean
-  implicit val assetOneOfEncoder: Encoder[AssetOneof] = deriveEncoder[AssetOneof].transformBooleans.clean
+  implicit val assetOneOfEncoder: Encoder[AssetOneof] = protobufOneofEncoder[AssetOneof]{
+    case AssetOneof.Img(img) => img.asJson
+    case AssetOneof.Data(data) => data.asJson
+    case AssetOneof.Video(video) => video.asJson
+    case AssetOneof.Title(title) => title.asJson
+  }
+
   implicit val assetEncoder: Encoder[Asset] = deriveEncoder[Asset].transformBooleans.clean
   implicit val eventTrackersEncoder: Encoder[EventTrackers] = deriveEncoder[EventTrackers].transformBooleans.clean
   implicit val nativeRequestEncoder: Encoder[NativeRequest] = deriveEncoder[NativeRequest].transformBooleans.clean
 
 
-
   implicit val requestOneOfEncoder: Encoder[RequestOneof] = protobufOneofEncoder[Imp.Native.RequestOneof] {
-    case request : Imp.Native.RequestOneof.Request => Encoder.encodeString(request.value)
-    case request : Imp.Native.RequestOneof.RequestNative => nativeRequestEncoder.apply(request.value)
-    case Imp.Native.RequestOneof.Empty => Json.Null
+    case RequestOneof.Request(string) => string.asJson
+    case RequestOneof.RequestNative(request) => request.asJson
   }
 
-  // @todo handle native request
-  implicit val nativeEncoder: Encoder[Imp.Native] = deriveEncoder[Imp.Native].handleNative.transformBooleans.clean
+  implicit val nativeEncoder: Encoder[Imp.Native] = deriveEncoder[Imp.Native].transformBooleans.clean
 
   // BidRequest encoding
   implicit val segmentEncoder: Encoder[BidRequest.Data.Segment] = deriveEncoder[BidRequest.Data.Segment].transformBooleans.clean
