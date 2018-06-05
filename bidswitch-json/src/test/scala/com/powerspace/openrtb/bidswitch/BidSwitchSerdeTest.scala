@@ -1,10 +1,8 @@
 package com.powerspace.openrtb.bidswitch
 
 import java.net.URL
-import com.google.openrtb.BidRequest.Imp
-import com.google.openrtb.{BidRequest, BidResponse}
-import com.powerspace.bidswitch.BidRequestExt.AdsTxt
-import com.powerspace.bidswitch.{BidRequestExt, BidswitchProto}
+import com.google.openrtb.BidResponse
+import com.powerspace.bidswitch.BidswitchProto
 import io.circe.parser._
 import io.circe.syntax._
 import org.scalatest.{FunSuite, GivenWhenThen}
@@ -12,16 +10,7 @@ import org.scalatest.{FunSuite, GivenWhenThen}
 class BidSwitchSerdeTest extends FunSuite with GivenWhenThen {
 
   import BidSwitchSerdeModule._
-
-  /**
-    * Create a Bid Request with BidSwitch extension
-    */
-  def bidSwitchBidRequest: BidRequest = {
-    val imp = Imp(id = "imp-1")
-    val bidRequest = BidRequest(id = "br-id-1", imp = Seq(imp), cur = Seq("EUR"))
-    val bidRequestExt = BidRequestExt("powerspace", "powerspace", AdsTxt(status = 1, pubId = "pub-id-1"))
-    bidRequest.withExtension(BidswitchProto.bidRequest)(Some(bidRequestExt))
-  }
+  import BidRequestFixtures._
 
   test("BidSwitch bid response deserialization") {
     Given("A BidSwitch bid response in JSON format")
@@ -42,7 +31,7 @@ class BidSwitchSerdeTest extends FunSuite with GivenWhenThen {
     assert(firstBid.h.isEmpty)
     assert(firstBid.price == 9.43)
 
-    val bidResponseExtension = decoded.map(_.extension(BidswitchProto.bidResponse)).toTry.get.get
+    val bidResponseExtension = decoded.map(_.extension(BidswitchProto.bidResponseExt)).toTry.get.get
     assert(bidResponseExtension.protocol.contains("5.3"))
 
     val bidExtension = decoded.map(_.seatbid.flatMap(_.bid).flatMap(_.extension(BidswitchProto.bidExt))).toTry.get.head
@@ -53,14 +42,9 @@ class BidSwitchSerdeTest extends FunSuite with GivenWhenThen {
     assert(bidExtension.native.get.assets.head.required.contains(true))
     assert(bidExtension.native.get.assets.head.getTitle.text.nonEmpty)
 
-    val nativeExtension = bidExtension.native.get.extension(BidswitchProto.nativeExt).get
+    val nativeExtension = bidExtension.native.get.extension(BidswitchProto.responseNativeExt).get
     assert(nativeExtension.adchoiceurl.isEmpty)
     assert(nativeExtension.viewtracker.isEmpty)
-
-    println("BidResponse: " + decoded.toTry)
-    println("BidResponse Extension: " + bidResponseExtension)
-    println("Bid Extension: " + bidExtension)
-    println("Bid Extension / native: " + bidExtension.native)
   }
 
   test("BidSwitch bid response serialization with no-bid") {
@@ -80,14 +64,16 @@ class BidSwitchSerdeTest extends FunSuite with GivenWhenThen {
   }
 
   test("BidSwitch bid request serialization") {
-    Given("A BidSwitch BidRequest")
-    val bidRequest = bidSwitchBidRequest
+    Given("A BidSwitch BidRequest with any possible extension")
+    val bidRequest = sampleBidRequest()
 
     When("I serialize it")
     val json = bidRequest.asJson
 
     Then("It should return a proper bid request in JSON format")
     println(json)
+    //val reqCursor = json.hcursor
+    //assert(reqCursor.downField("id").as[String].value == "fmySKZNcTFcTPOurFYivufGxMtuSYpen")
   }
 
 }

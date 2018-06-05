@@ -5,6 +5,6 @@ import com.powerspace.bidswitch.{BidRequestExt, BidswitchProto}
 
 object BidswitchFactory {
   def apply(bidRequest: BidRequest, ext: BidRequestExt): BidRequest = {
-    bidRequest.withExtension(BidswitchProto.bidRequest)(Some(ext))
+    bidRequest.withExtension(BidswitchProto.bidRequestExt)(Some(ext))
   }
 }

@@ -31,6 +31,7 @@ class OpenRtbSerdeTest extends FunSuite with GivenWhenThen {
     assert(bidResponse.bidid.isEmpty)
     assert(bidResponse.seatbid.nonEmpty)
     assert(bidResponse.seatbid.head.bid.nonEmpty)
+    assert(bidResponse.seatbid.head.bid.nonEmpty)
     val firstBid = bidResponse.seatbid.head.bid.head
     assert(firstBid.language.isEmpty)
     assert(firstBid.h.isEmpty)
@@ -63,7 +64,7 @@ class OpenRtbSerdeTest extends FunSuite with GivenWhenThen {
 
   test("OpenRTB-like bid request serialization") {
     Given("An OpenRTB-like BidRequest")
-    val bidRequest = sampleBidRequest
+    val bidRequest = sampleBidRequest()
 
     When("I serialize it")
     val json = bidRequest.asJson
@@ -117,11 +118,29 @@ class OpenRtbSerdeTest extends FunSuite with GivenWhenThen {
     assert(deviceCursor.downField("geo").downField("lon").as[Double].value == 200.20d)
     assert(deviceCursor.downField("geo").downField("ipservice").as[Int].value == 3)
 
-
     val userCursor = reqCursor.downField("user")
     assert(userCursor.downField("id").as[String].value == "id-1")
     assert(userCursor.downField("gender").as[String].value == "m")
     assert(userCursor.downField("data").downArray.downField("name").as[String].value == "name-1")
+
+    //@todo
+    //val nativeStringCursor = nativeCursor.downField("request_oneof")
+    //assert(nativeStringCursor.downField("request").as[String].value == "native-string")
+  }
+
+  test("OpenRTB-like bid request [with Native Object] serialization") {
+    Given("An OpenRTB-like BidRequest witha a Native Object")
+    val bidRequest = sampleBidRequest(withNativeObject = true)
+
+    When("I serialize it")
+    val json = bidRequest.asJson
+
+    Then("It should return a proper bid request in JSON format")
+    println(json)
+
+    //@todo
+    //val nativeStringCursor = json.hcursor.downField("imp").downArray.downField("native").downField("request_oneof")
+    //assert(nativeStringCursor.downField("request").as[String].value == "native-string")
   }
 
 }

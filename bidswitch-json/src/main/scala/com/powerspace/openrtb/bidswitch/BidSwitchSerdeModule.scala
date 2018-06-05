@@ -1,17 +1,29 @@
 package com.powerspace.openrtb.bidswitch
 
+import com.google.openrtb.BidRequest.Imp
+import com.google.openrtb.BidRequest.Imp.Pmp
 import com.google.openrtb.{BidRequest, BidResponse, NativeResponse}
 import com.google.openrtb.BidResponse.SeatBid
 import com.powerspace.bidswitch.BidExt.{Google, Yieldone}
-import com.powerspace.bidswitch.{BidExt, BidResponseExt, BidswitchProto, NativeResponseExt}
+import com.powerspace.bidswitch.BidRequestExt.Google.DetectedVertical
+import com.powerspace.bidswitch.BidRequestExt.{AdTruth, AdsTxt, Dooh, Gumgum, Publisher, Rubicon, Tv}
+import com.powerspace.bidswitch._
 import com.powerspace.openrtb.json._
-import io.circe._
+import io.circe.generic.extras.Configuration
+import io.circe.syntax._
 
 /**
   * BidSwitch Serialization and Deserialization Module
   * It uses OpenRTB Serdes underneath and applies extensions Serdes at BidResponse and Bid levels
   */
 object BidSwitchSerdeModule extends SerdeModule {
+
+  import com.powerspace.openrtb.bidswitch.util.JsonUtils._
+  import io.circe._
+  import io.circe.generic.extras.semiauto._
+  import com.powerspace.openrtb.json.util.EncodingUtils._
+
+  implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
 
   /**
     * Decoder for bid response extension object.
@@ -41,7 +53,7 @@ object BidSwitchSerdeModule extends SerdeModule {
   private implicit val nativeResponseDecoder: Decoder[NativeResponse] = for {
     native <- NativeSerde.decoder
     ext <- nativeExtDecoder
-  } yield native.withExtension(BidswitchProto.nativeExt)(Some(ext))
+  } yield native.withExtension(BidswitchProto.responseNativeExt)(Some(ext))
 
   /**
     * Decoder for google object.
@@ -119,7 +131,31 @@ object BidSwitchSerdeModule extends SerdeModule {
   override implicit val bidResponseDecoder: Decoder[BidResponse] = for {
     bidResponse <- BidResponseSerde.decoder
     extension <- bidResponseExtDecoder
-  } yield bidResponse.withExtension(BidswitchProto.bidResponse)(Some(extension))
+  } yield bidResponse.withExtension(BidswitchProto.bidResponseExt)(Some(extension))
 
-  override implicit val bidRequestEncoder: Encoder[BidRequest] = Encoder.instance(_ => Json.True)
+  //@todo add extensions
+  override implicit val nativeEncoder: Encoder[Imp.Native] = BidRequestSerde.nativeEncoder
+  override implicit val bannerEncoder: Encoder[Imp.Banner] = BidRequestSerde.bannerEncoder
+  override implicit val dealEncoder: Encoder[Pmp.Deal] = BidRequestSerde.dealEncoder
+  override implicit val videoEncoder: Encoder[Imp.Video] = BidRequestSerde.videoEncoder
+  override implicit val userEncoder: Encoder[BidRequest.User] = BidRequestSerde.userEncoder
+  override implicit val impEncoder: Encoder[BidRequest.Imp] = BidRequestSerde.impEncoder
+
+  implicit val detectedVerticalEncoder: Encoder[DetectedVertical] = deriveEncoder[DetectedVertical].transformBooleans.clean
+  implicit val publisherEncoder: Encoder[Publisher] = deriveEncoder[Publisher].transformBooleans.clean
+  implicit val adsTxtEncoder: Encoder[AdsTxt] = deriveEncoder[AdsTxt].transformBooleans.clean
+  implicit val googleEncoder: Encoder[com.powerspace.bidswitch.BidRequestExt.Google] =
+    deriveEncoder[com.powerspace.bidswitch.BidRequestExt.Google].transformBooleans.clean
+  implicit val gumGumEncoder: Encoder[Gumgum] = deriveEncoder[Gumgum].transformBooleans.clean
+  implicit val rubiconEncoder: Encoder[Rubicon] = deriveEncoder[Rubicon].transformBooleans.clean
+  implicit val adTruthEncoder: Encoder[AdTruth] = deriveEncoder[AdTruth].transformBooleans.clean
+  implicit val tvEncoder: Encoder[Tv] = deriveEncoder[Tv].transformBooleans.clean
+  implicit val doohEncoder: Encoder[Dooh] = deriveEncoder[Dooh].transformBooleans.clean
+
+  implicit val bidRequestExt = deriveEncoder[BidRequestExt].transformBooleans.clean
+
+  override implicit val bidRequestEncoder: Encoder[BidRequest] = bidRequest =>
+    BidRequestSerde.encoder.apply(bidRequest).addExtension(bidRequest.extension(BidswitchProto.bidRequestExt).asJson)
+
+
 }

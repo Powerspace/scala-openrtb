@@ -79,8 +79,17 @@ object BidRequestSerde {
   implicit val assetEncoder: Encoder[Asset] = deriveEncoder[Asset].transformBooleans.clean
   implicit val eventTrackersEncoder: Encoder[EventTrackers] = deriveEncoder[EventTrackers].transformBooleans.clean
   implicit val nativeRequestEncoder: Encoder[NativeRequest] = deriveEncoder[NativeRequest].transformBooleans.clean
-  implicit val requestOneOfEncoder: Encoder[RequestOneof] = deriveEncoder[RequestOneof].transformBooleans.clean
-  implicit val nativeEncoder: Encoder[Imp.Native] = deriveEncoder[Imp.Native].transformBooleans.clean
+
+
+
+  implicit val requestOneOfEncoder: Encoder[RequestOneof] = protobufOneofEncoder[Imp.Native.RequestOneof] {
+    case request : Imp.Native.RequestOneof.Request => Encoder.encodeString(request.value)
+    case request : Imp.Native.RequestOneof.RequestNative => nativeRequestEncoder.apply(request.value)
+    case Imp.Native.RequestOneof.Empty => Json.Null
+  }
+
+  // @todo handle native request
+  implicit val nativeEncoder: Encoder[Imp.Native] = deriveEncoder[Imp.Native].handleNative.transformBooleans.clean
 
   // BidRequest encoding
   implicit val segmentEncoder: Encoder[BidRequest.Data.Segment] = deriveEncoder[BidRequest.Data.Segment].transformBooleans.clean
@@ -98,7 +107,7 @@ object BidRequestSerde {
   /**
     * Encoder for the OpenRTB bid request.
     */
-  def encoder: Encoder[BidRequest] = deriveEncoder[BidRequest].transformBooleans.clean(toKeep = Seq("imp"))
+  def encoder(implicit userEncoder: Encoder[BidRequest.User], impEncoder: Encoder[BidRequest.Imp]): Encoder[BidRequest] = deriveEncoder[BidRequest].transformBooleans.clean(toKeep = Seq("imp"))
 
   /**
     * Decoder for the OpenRTB bid request.

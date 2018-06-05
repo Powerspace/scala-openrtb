@@ -41,18 +41,37 @@ object EncodingUtils {
 
     def clean: Encoder[T] = clean(Seq())
 
+    //@ todo
+    def handleNative: Encoder[T] = {
+      encoder.mapJson({
+        json => json.mapObject(_.mapValues(value => {
+          println(value)
+          value
+        }))
+      })
+    }
   }
 
   /**
     * Allow to generate a JSON integer field from an Enum instance
     */
   def protobufEnumEncoder[T <: _root_.scalapb.GeneratedEnum]: Encoder[T] = {
-    (a: T) => Json.fromInt(a.value)
+    (enum: T) => Json.fromInt(enum.value)
   }
 
   /**
     * @todo user would define a list of protobuf extensions to actually encode
     */
+
   implicit val unknownFieldsEncoder: Encoder[UnknownFieldSet] = (_: UnknownFieldSet) => Json.Null
 
+  type EncoderSelector[T <: _root_.scalapb.GeneratedOneof] = PartialFunction[_ <: T, Json]
+
+  /**
+    * Allow to generate a JSON integer field from an Enum instance
+    */
+  def protobufOneofEncoder[T <: _root_.scalapb.GeneratedOneof](partialFunction: EncoderSelector[T]): Encoder[T] = (
+    (oneOf: _ <: T)
+    => partialFunction.apply(oneOf)
+    )
 }
