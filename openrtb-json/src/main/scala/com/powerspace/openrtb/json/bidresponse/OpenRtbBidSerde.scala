@@ -1,18 +1,18 @@
-package com.powerspace.openrtb.json
+package com.powerspace.openrtb.json.bidresponse
 
 import com.google.openrtb.BidResponse.SeatBid
 import com.google.openrtb.BidResponse.SeatBid.Bid.AdmOneof
 import com.google.openrtb._
-import io.circe.{Decoder, DecodingFailure, Json}
 import io.circe.parser._
+import io.circe.{Decoder, DecodingFailure, Json}
 
 /**
-  * Serialize and Deserialize an OpenRTB Bid
+  * OpenRTB Bid Serde
   */
-object BidSerde {
+object OpenRtbBidSerde {
 
   val nativeObject: Decoder[Json] = cursor => cursor.downField("native").as[Json]
-  val nativeDecoder: Decoder[NativeResponse] = nativeObject.emapTry(NativeSerde.decoder.decodeJson(_).toTry)
+  val nativeDecoder: Decoder[NativeResponse] = nativeObject.emapTry(OpenRtbNativeSerde.decoder.decodeJson(_).toTry)
 
   implicit class LoggableEither[L, R](tryInstance: Either[L, R]) {
     def doOnError(action: (L) => Unit): Either[L, R] = {
