@@ -4,14 +4,14 @@ import com.google.openrtb.BidRequest.Imp
 import com.powerspace.bidswitch.{BidswitchProto, NativeExt}
 import com.powerspace.bidswitch.NativeExt.TripleLift
 import com.powerspace.openrtb.bidswitch.util.JsonUtils
-import com.powerspace.openrtb.json.bidrequest.BidRequestSerde
+import com.powerspace.openrtb.json.bidrequest.OpenRtbImpressionSerde
 import com.powerspace.openrtb.json.util.EncodingUtils
 import io.circe.generic.extras.Configuration
 
 /**
   * Native BidSwitch extension encoders
   */
-object BidSwitchNativeEncoder {
+object BidSwitchNativeSerde {
 
   import EncodingUtils._
   import JsonUtils._
@@ -24,6 +24,6 @@ object BidSwitchNativeEncoder {
   implicit val tripleLiftExt: Encoder[TripleLift] = deriveEncoder[TripleLift].transformBooleans.clean
   implicit val nativeExt: Encoder[NativeExt] = deriveEncoder[NativeExt].transformBooleans.clean
 
-  implicit def encoder: Encoder[Imp.Native] = native =>
-    BidRequestSerde.nativeEncoder.apply(native).addExtension(native.extension(BidswitchProto.requestNativeExt).asJson)
+  implicit val nativeEncoder: Encoder[Imp.Native] = native =>
+    OpenRtbImpressionSerde.nativeEncoder.apply(native).addExtension(native.extension(BidswitchProto.requestNativeExt).asJson)
 }

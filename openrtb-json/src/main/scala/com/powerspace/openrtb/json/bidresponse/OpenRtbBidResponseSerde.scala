@@ -6,9 +6,9 @@ import io.circe.{Decoder, Encoder, Json}
 import scalapb.UnknownFieldSet
 
 /**
-  * Serialize and Deserialize an OpenRTB BidResponse
+  * OpenRTB BidResponse Serde
   */
-object BidResponseSerde {
+object OpenRtbBidResponseSerde {
 
   /**
     * @todo use semi automatic derivation for decoding

@@ -64,7 +64,6 @@ object EncodingUtils {
 
   implicit val unknownFieldsEncoder: Encoder[UnknownFieldSet] = (_: UnknownFieldSet) => Json.Null
 
-
   /**
     * Allow to generate a JSON field from an oneof PB structure
     */

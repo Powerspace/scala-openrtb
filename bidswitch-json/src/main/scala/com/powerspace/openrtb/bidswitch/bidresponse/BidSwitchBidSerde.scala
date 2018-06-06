@@ -4,18 +4,18 @@ import com.google.openrtb.BidResponse.SeatBid
 import com.google.openrtb.NativeResponse
 import com.powerspace.bidswitch.BidExt.{Google, Yieldone}
 import com.powerspace.bidswitch.{BidExt, BidswitchProto}
-import com.powerspace.openrtb.json.bidresponse.{BidSerde, SeatBidSerde}
+import com.powerspace.openrtb.json.bidresponse.{OpenRtbBidSerde, OpenRtbSeatBidSerde}
 import io.circe.Decoder
 import io.circe.generic.extras.Configuration
 
 /**
   * Decoder for bid and seat bid objects and extension
   */
-object BidSwitchBidDecoder {
+object BidSwitchBidSerde {
 
   implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
 
-  implicit val nativeResponseDecoder: Decoder[NativeResponse] = BidSwitchNativeDecoder.decoder
+  implicit val nativeResponseDecoder: Decoder[NativeResponse] = BidSwitchNativeSerde.decoder
 
   private implicit val googleDecoder: Decoder[Google] = {
     cursor =>
@@ -63,10 +63,10 @@ object BidSwitchBidDecoder {
     }
 
   implicit def bidDecoder: Decoder[SeatBid.Bid] = for {
-    bid <- BidSerde.decoder
+    bid <- OpenRtbBidSerde.decoder
     ext <- bidExtDecoder
   } yield bid.withExtension(BidswitchProto.bidExt)(Some(ext))
 
-  implicit def seatBidDecoder: Decoder[SeatBid] = SeatBidSerde.decoder(bidDecoder)
+  implicit def seatBidDecoder: Decoder[SeatBid] = OpenRtbSeatBidSerde.decoder(bidDecoder)
 
 }

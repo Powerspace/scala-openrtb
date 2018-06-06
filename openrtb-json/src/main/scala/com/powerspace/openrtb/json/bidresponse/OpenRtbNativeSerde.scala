@@ -4,7 +4,10 @@ import com.google.openrtb.NativeResponse.Asset.AssetOneof
 import com.google.openrtb._
 import io.circe.Decoder
 
-object NativeSerde {
+/**
+  * OpenRTB Native Serde
+  */
+object OpenRtbNativeSerde {
 
   /**
     * Decoder for the OpenRTB link object.

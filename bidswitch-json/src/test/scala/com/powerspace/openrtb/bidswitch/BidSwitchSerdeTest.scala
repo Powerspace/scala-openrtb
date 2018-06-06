@@ -86,17 +86,17 @@ class BidSwitchSerdeTest extends FunSuite with GivenWhenThen {
     val userCursor = reqCursor.downField("user")
     assert(userCursor.downField("ext").downField("cookie_age").as[Int].value == 3)
 
-    // deal extension
-    val dealCursor = impCursor.downField("pmp").downField("deals").downArray
-    assert(dealCursor.downField("ext").downField("data_src").as[String].value == "datasrc-1")
-
     // video extension
     val videoCursor = impCursor.downField("video")
     assert(videoCursor.downField("ext").downField("player_type").as[Int].value == 3)
 
     // banner extension
     val bannerCursor = impCursor.downField("banner")
-    assert(bannerCursor.downField("ext").downField("extra_sizes").downField("formats").downArray.downField("w").as[Int].value == 20)
+    assert(bannerCursor.downField("ext").downField("extra_sizes").downArray.downField("w").as[Int].value == 20)
+
+    // deal extension
+    val dealCursor = impCursor.downField("pmp").downField("deals").downArray
+    assert(dealCursor.downField("ext").downField("data_src").as[String].value == "datasrc-1")
 
     // native extension
     // @ todo

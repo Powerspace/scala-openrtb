@@ -2,10 +2,10 @@ package com.powerspace.openrtb.bidswitch.bidresponse
 
 import com.google.openrtb.NativeResponse
 import com.powerspace.bidswitch.{BidswitchProto, NativeResponseExt}
-import com.powerspace.openrtb.json.bidresponse.NativeSerde
+import com.powerspace.openrtb.json.bidresponse.OpenRtbNativeSerde
 import io.circe.Decoder
 
-object BidSwitchNativeDecoder {
+object BidSwitchNativeSerde {
 
   /**
     * Decoder for the native extension object.
@@ -22,7 +22,7 @@ object BidSwitchNativeDecoder {
   }
 
   implicit def decoder: Decoder[NativeResponse] = for {
-    native <- NativeSerde.decoder
+    native <- OpenRtbNativeSerde.decoder
     ext <- nativeExtDecoder
   } yield native.withExtension(BidswitchProto.responseNativeExt)(Some(ext))
 

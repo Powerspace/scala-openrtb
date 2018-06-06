@@ -2,16 +2,16 @@ package com.powerspace.openrtb.bidswitch.bidresponse
 
 import com.google.openrtb.BidResponse
 import com.powerspace.bidswitch.{BidResponseExt, BidswitchProto}
-import com.powerspace.openrtb.json.bidresponse.BidResponseSerde
+import com.powerspace.openrtb.json.bidresponse.OpenRtbBidResponseSerde
 import io.circe.generic.extras.Configuration
 
 /**
   * Decoder for the BidSwitch bid response extension
   */
-object BidSwitchBidResponseDecoder {
+object BidSwitchBidResponseSerde {
 
   import io.circe._
-  import BidSwitchBidDecoder._
+  import BidSwitchBidSerde._
 
   implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
 
@@ -21,7 +21,7 @@ object BidSwitchBidResponseDecoder {
     .map(BidResponseExt.apply)
 
   implicit def decoder: Decoder[BidResponse] = for {
-    bidResponse <- BidResponseSerde.decoder
+    bidResponse <- OpenRtbBidResponseSerde.decoder
     extension <- bidResponseExtDecoder
   } yield bidResponse.withExtension(BidswitchProto.bidResponseExt)(Some(extension))
 

@@ -4,9 +4,9 @@ import com.google.openrtb._
 import io.circe.Decoder
 
 /**
-  * Serialize and Deserialize an OpenRTB SeatBid
+  * OpenRTB SeatBid Serde
   */
-object SeatBidSerde {
+object OpenRtbSeatBidSerde {
 
   /**
     * Decoder for the OpenRTB seatBid object.

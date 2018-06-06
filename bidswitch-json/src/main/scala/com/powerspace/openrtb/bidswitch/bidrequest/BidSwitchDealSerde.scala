@@ -3,14 +3,14 @@ package com.powerspace.openrtb.bidswitch.bidrequest
 import com.google.openrtb.BidRequest.Imp.Pmp
 import com.powerspace.bidswitch.{BidswitchProto, DealExt}
 import com.powerspace.openrtb.bidswitch.util.JsonUtils
-import com.powerspace.openrtb.json.bidrequest.BidRequestSerde
+import com.powerspace.openrtb.json.bidrequest.OpenRtbPmpSerde
 import com.powerspace.openrtb.json.util.EncodingUtils
 import io.circe.generic.extras.Configuration
 
 /**
   * Deal BidSwitch extension encoders
   */
-object BidSwitchDealEncoder {
+object BidSwitchDealSerde {
 
   import EncodingUtils._
   import JsonUtils._
@@ -23,6 +23,6 @@ object BidSwitchDealEncoder {
   implicit val dealExt: Encoder[DealExt] = deriveEncoder[DealExt].transformBooleans.clean
 
   implicit def encoder: Encoder[Pmp.Deal] = deal =>
-    BidRequestSerde.dealEncoder.apply(deal).addExtension(deal.extension(BidswitchProto.dealExt).asJson)
+    OpenRtbPmpSerde.dealEncoder.apply(deal).addExtension(deal.extension(BidswitchProto.dealExt).asJson)
 
 }

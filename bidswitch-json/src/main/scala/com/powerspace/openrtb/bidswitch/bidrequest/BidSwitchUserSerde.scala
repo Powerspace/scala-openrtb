@@ -4,7 +4,7 @@ import com.google.openrtb.BidRequest
 import com.powerspace.bidswitch.UserExt.DigiTrust
 import com.powerspace.bidswitch.{BidswitchProto, UserExt}
 import com.powerspace.openrtb.bidswitch.util.JsonUtils
-import com.powerspace.openrtb.json.bidrequest.BidRequestSerde
+import com.powerspace.openrtb.json.bidrequest.OpenRtbUserSerde
 import com.powerspace.openrtb.json.util.EncodingUtils
 import io.circe.generic.extras.Configuration
 
@@ -25,6 +25,6 @@ object BidSwitchUserSerde {
   implicit val userExt: Encoder[UserExt] = deriveEncoder[UserExt].transformBooleans.clean
 
   implicit def encoder: Encoder[BidRequest.User] = user =>
-    BidRequestSerde.userEncoder.apply(user).addExtension(user.extension(BidswitchProto.userExt).asJson)
+    OpenRtbUserSerde.userEncoder.apply(user).addExtension(user.extension(BidswitchProto.userExt).asJson)
 
 }
