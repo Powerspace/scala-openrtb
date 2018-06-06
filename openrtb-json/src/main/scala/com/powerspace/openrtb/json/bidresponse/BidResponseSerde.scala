@@ -1,4 +1,4 @@
-package com.powerspace.openrtb.json
+package com.powerspace.openrtb.json.bidresponse
 
 import com.google.openrtb.{BidResponse, NoBidReason}
 import io.circe.generic.extras.Configuration

@@ -1,10 +1,10 @@
-package com.powerspace.openrtb.json
+package com.powerspace.openrtb.json.bidresponse
 
 import com.google.openrtb.BidResponse.SeatBid
 import com.google.openrtb.BidResponse.SeatBid.Bid.AdmOneof
 import com.google.openrtb._
-import io.circe.{Decoder, DecodingFailure, Json}
 import io.circe.parser._
+import io.circe.{Decoder, DecodingFailure, Json}
 
 /**
   * Serialize and Deserialize an OpenRTB Bid

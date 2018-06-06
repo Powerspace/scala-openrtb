@@ -12,10 +12,7 @@ class OpenRtbSerdeTest extends FunSuite with GivenWhenThen {
 
   import OpenRtbSerdeModule._
   import BidRequestFixtures._
-
-  implicit class DecoderResultEnhancement[T](result: Decoder.Result[T]) {
-    def value: T = result.right.get
-  }
+  import com.powerspace.openrtb.json.util.EncodingUtils._
 
   test("OpenRTB-like (Elastic Ads) bid response deserialization") {
     Given("An OpenRTB-like bid response in JSON format")

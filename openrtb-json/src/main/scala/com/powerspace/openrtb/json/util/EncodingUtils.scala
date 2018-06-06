@@ -1,6 +1,6 @@
 package com.powerspace.openrtb.json.util
 
-import io.circe.{Encoder, Json}
+import io.circe.{Decoder, Encoder, Json}
 import scalapb.UnknownFieldSet
 
 object EncodingUtils {
@@ -45,6 +45,13 @@ object EncodingUtils {
   }
 
   /**
+    * Quick access to the decoding result value. Useful for testing
+    */
+  implicit class DecoderResultEnhancement[T](result: Decoder.Result[T]) {
+    def value: T = result.right.get
+  }
+
+  /**
     * Allow to generate a JSON integer field from an Enum instance
     */
   def protobufEnumEncoder[T <: _root_.scalapb.GeneratedEnum]: Encoder[T] = {
@@ -62,8 +69,7 @@ object EncodingUtils {
     * Allow to generate a JSON field from an oneof PB structure
     */
   def protobufOneofEncoder[Oneof <: _root_.scalapb.GeneratedOneof]
-                          (partialFunction: PartialFunction[Oneof, Json]):
-                              Encoder[Oneof] = {
+    (partialFunction: PartialFunction[Oneof, Json]): Encoder[Oneof] = {
     oneOf: Oneof => {
         if(oneOf.isEmpty) Json.Null
         else partialFunction.apply(oneOf)

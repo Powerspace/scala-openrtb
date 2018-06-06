@@ -4,6 +4,8 @@ import com.google.openrtb.BidRequest.Imp
 import com.google.openrtb.BidRequest.Imp.Pmp
 import com.google.openrtb.{BidRequest, BidResponse}
 import com.google.openrtb.BidResponse.SeatBid
+import com.powerspace.openrtb.json.bidrequest.BidRequestSerde
+import com.powerspace.openrtb.json.bidresponse.{BidResponseSerde, BidSerde, SeatBidSerde}
 import io.circe.{Decoder, Encoder}
 
 /**
@@ -22,7 +24,7 @@ object OpenRtbSerdeModule extends SerdeModule {
 
   // bid response decoding
   override implicit val bidDecoder: Decoder[SeatBid.Bid] = BidSerde.decoder
-  override implicit val seatBidDecoder: Decoder[BidResponse.SeatBid] = SeatBidSerDe.decoder
+  override implicit val seatBidDecoder: Decoder[BidResponse.SeatBid] = SeatBidSerde.decoder
   override implicit val bidResponseDecoder: Decoder[BidResponse] = BidResponseSerde.decoder
 
 }

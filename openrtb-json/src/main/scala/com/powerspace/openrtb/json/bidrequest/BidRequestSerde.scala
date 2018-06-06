@@ -1,4 +1,4 @@
-package com.powerspace.openrtb.json
+package com.powerspace.openrtb.json.bidrequest
 
 import com.google.openrtb.BidRequest.Imp.Banner.Format
 import com.google.openrtb.BidRequest.Imp.Native.RequestOneof
@@ -12,8 +12,10 @@ import com.google.openrtb._
 import com.powerspace.openrtb.json.util.EncodingUtils
 import io.circe.generic.extras.Configuration
 import io.circe.syntax._
+
 /**
   * Serialize and Deserialize an OpenRTB BidRequest
+  * @todo split this object in several objects
   */
 object BidRequestSerde {
 
@@ -76,6 +78,7 @@ object BidRequestSerde {
       case BidRequest.DistributionchannelOneof.Site(site) => site.asJson
     }
 
+  // Asset encoding
   implicit val titleEncoder: Encoder[Asset.Title] = deriveEncoder[Asset.Title].transformBooleans.clean
   implicit val imgEncoder: Encoder[Asset.Image] = deriveEncoder[Asset.Image].transformBooleans.clean
   implicit val assetDataEncoder: Encoder[Asset.Data] = deriveEncoder[Asset.Data].transformBooleans.clean
@@ -85,7 +88,6 @@ object BidRequestSerde {
     case AssetOneof.Video(video) => video.asJson
     case AssetOneof.Title(title) => title.asJson
   }
-
   implicit val assetEncoder: Encoder[Asset] = deriveEncoder[Asset].transformBooleans.clean
   implicit val eventTrackersEncoder: Encoder[EventTrackers] = deriveEncoder[EventTrackers].transformBooleans.clean
   implicit val nativeRequestEncoder: Encoder[NativeRequest] = deriveEncoder[NativeRequest].transformBooleans.clean
@@ -114,7 +116,14 @@ object BidRequestSerde {
   /**
     * Encoder for the OpenRTB bid request.
     */
-  def encoder(implicit userEncoder: Encoder[BidRequest.User], impEncoder: Encoder[BidRequest.Imp]): Encoder[BidRequest] = deriveEncoder[BidRequest].transformBooleans.clean(toKeep = Seq("imp"))
+  def encoder(implicit
+              userEncoder: Encoder[BidRequest.User],
+              impEncoder: Encoder[BidRequest.Imp],
+              videoEncoder: Encoder[BidRequest.Imp.Video],
+              dealEncoder: Encoder[BidRequest.Imp.Pmp.Deal],
+              bannerEncoder: Encoder[BidRequest.Imp.Banner],
+              nativeEncoder: Encoder[BidRequest.Imp.Native]
+             ): Encoder[BidRequest] = deriveEncoder[BidRequest].transformBooleans.clean(toKeep = Seq("imp"))
 
   /**
     * Decoder for the OpenRTB bid request.

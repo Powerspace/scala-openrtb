@@ -11,6 +11,7 @@ class BidSwitchSerdeTest extends FunSuite with GivenWhenThen {
 
   import BidSwitchSerdeModule._
   import BidRequestFixtures._
+  import com.powerspace.openrtb.json.util.EncodingUtils._
 
   test("BidSwitch bid response deserialization") {
     Given("A BidSwitch bid response in JSON format")
@@ -64,16 +65,41 @@ class BidSwitchSerdeTest extends FunSuite with GivenWhenThen {
   }
 
   test("BidSwitch bid request serialization") {
-    Given("A BidSwitch BidRequest with any possible extension")
+    Given("A BidSwitch BidRequest with any possible BidSwitch extension")
     val bidRequest = sampleBidRequest()
 
     When("I serialize it")
     val json = bidRequest.asJson
-
-    Then("It should return a proper bid request in JSON format")
     println(json)
-    //val reqCursor = json.hcursor
-    //assert(reqCursor.downField("id").as[String].value == "fmySKZNcTFcTPOurFYivufGxMtuSYpen")
+
+    Then("It should return a proper bid request with related extensions in JSON format")
+
+    // bid request extensions
+    val reqCursor = json.hcursor
+    assert(reqCursor.downField("ext").downField("media_src").as[String].value == "powerspace")
+
+    // impression extension
+    val impCursor = reqCursor.downField("imp").downArray
+    assert(impCursor.downField("ext").downField("inventory_class").as[Int].value == 1)
+
+    // user extension
+    val userCursor = reqCursor.downField("user")
+    assert(userCursor.downField("ext").downField("cookie_age").as[Int].value == 3)
+
+    // deal extension
+    val dealCursor = impCursor.downField("pmp").downField("deals").downArray
+    assert(dealCursor.downField("ext").downField("data_src").as[String].value == "datasrc-1")
+
+    // video extension
+    val videoCursor = impCursor.downField("video")
+    assert(videoCursor.downField("ext").downField("player_type").as[Int].value == 3)
+
+    // banner extension
+    val bannerCursor = impCursor.downField("banner")
+    assert(bannerCursor.downField("ext").downField("extra_sizes").downField("formats").downArray.downField("w").as[Int].value == 20)
+
+    // native extension
+    // @ todo
   }
 
 }
