@@ -22,10 +22,10 @@ object BidSwitchImpressionSerde {
   implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
 
   implicit val googleImpressionEncoder: Encoder[com.powerspace.bidswitch.ImpressionExt.Google] =
-    deriveEncoder[com.powerspace.bidswitch.ImpressionExt.Google].transformBooleans.clean
+    deriveEncoder[com.powerspace.bidswitch.ImpressionExt.Google].cleanRtb
   implicit val yieldoneImpressionEncoder: Encoder[com.powerspace.bidswitch.ImpressionExt.Yieldone] =
-    deriveEncoder[com.powerspace.bidswitch.ImpressionExt.Yieldone].transformBooleans.clean
-  implicit val impressionExt: Encoder[ImpressionExt] = deriveEncoder[ImpressionExt].transformBooleans.clean
+    deriveEncoder[com.powerspace.bidswitch.ImpressionExt.Yieldone].cleanRtb
+  implicit val impressionExt: Encoder[ImpressionExt] = deriveEncoder[ImpressionExt].cleanRtb
 
   implicit val nativeEncoder: Encoder[Imp.Native] = BidSwitchNativeSerde.nativeEncoder
   implicit val bannerEncoder: Encoder[Imp.Banner] = BidSwitchBannerSerde.bannerEncoder

@@ -64,15 +64,14 @@ class BidSwitchSerdeTest extends FunSuite with GivenWhenThen {
     assert(bidResponse.seatbid.head.bid.isEmpty)
   }
 
-  test("BidSwitch bid request serialization") {
-    Given("A BidSwitch BidRequest with any possible BidSwitch extension")
-    val bidRequest = sampleBidRequest()
+  test("BidSwitch Native bid request serialization") {
+    Given("A BidSwitch BidRequest with any possible BidSwitch extension and a native object")
+    val bidRequest = sampleBidRequest(withNativeObject = true)
 
     When("I serialize it")
     val json = bidRequest.asJson
-    println(json)
 
-    Then("It should return a proper bid request with related extensions in JSON format")
+    Then("It should return a proper native bid request with related extensions in JSON format")
 
     // bid request extensions
     val reqCursor = json.hcursor
@@ -99,7 +98,35 @@ class BidSwitchSerdeTest extends FunSuite with GivenWhenThen {
     assert(dealCursor.downField("ext").downField("data_src").as[String].value == "datasrc-1")
 
     // native extension
-    // @ todo
+    val nativeCursor = impCursor.downField("native")
+    assert(nativeCursor.downField("ext").downField("triplelift").downField("formats").downArray.as[Int].value == 10)
+  }
+
+  test("BidSwitch NON-Native bid request serialization") {
+    Given("A BidSwitch BidRequest without a Native object")
+    val bidRequest = sampleBidRequest(withNativeObject = false)
+
+    When("I serialize it")
+    val json = bidRequest.asJson
+    println(json)
+
+    Then("It should return a proper NON-Native bid request")
+    val nativeCursor = json.hcursor.downField("imp").downArray.downField("native").downField("request")
+    assert(nativeCursor.as[String].value == "native-string")
+  }
+
+  test("BidSwitch Native bid response serialization") {
+    Given("A BidSwitch BidResponse with any possible BidSwitch extension and a native object")
+    val bidResponse = sampleBidResponse(withNativeObject = true)
+
+    When("I serialize it")
+    val json = bidResponse.asJson
+    println(json)
+    Then("It should return a proper native bid response with related extensions in JSON format")
+
+    // bid request extensions
+    val resCursor = json.hcursor
+    //assert(reqCursor.downField("ext").downField("media_src").as[String].value == "powerspace")
   }
 
 }

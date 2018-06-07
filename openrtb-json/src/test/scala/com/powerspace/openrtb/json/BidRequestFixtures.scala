@@ -9,7 +9,7 @@ import com.google.openrtb._
 
 object BidRequestFixtures {
 
-  def sampleBidRequest(withNativeObject: Boolean = false): BidRequest = {
+  def sampleBidRequest(withNativeObject: Boolean): BidRequest = {
 
     val geo = Some(Geo(
       lat = Some(100.10d),

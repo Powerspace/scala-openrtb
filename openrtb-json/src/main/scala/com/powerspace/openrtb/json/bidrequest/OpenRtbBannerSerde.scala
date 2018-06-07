@@ -4,6 +4,7 @@ import com.google.openrtb.BidRequest.Imp
 import com.google.openrtb.BidRequest.Imp.Banner
 import com.google.openrtb.BidRequest.Imp.Banner.Format
 import com.powerspace.openrtb.json.util.EncodingUtils
+import com.powerspace.openrtb.json.common.OpenRtbProtobufEnumEncoders
 
 /**
   * OpenRTB Banner Serde
@@ -15,7 +16,7 @@ object OpenRtbBannerSerde {
   import io.circe._
   import io.circe.generic.extras.semiauto._
 
-  implicit val formatEncoder: Encoder[Format] = deriveEncoder[Format].transformBooleans.clean
-  implicit val bannerEncoder: Encoder[Imp.Banner] = deriveEncoder[Banner].transformBooleans.clean
+  implicit val formatEncoder: Encoder[Format] = deriveEncoder[Format].cleanRtb
+  implicit val bannerEncoder: Encoder[Imp.Banner] = deriveEncoder[Banner].cleanRtb
 
 }

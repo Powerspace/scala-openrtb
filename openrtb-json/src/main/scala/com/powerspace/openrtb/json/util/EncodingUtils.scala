@@ -1,6 +1,6 @@
 package com.powerspace.openrtb.json.util
 
-import io.circe.{Decoder, Encoder, Json}
+import io.circe.{Decoder, Encoder, Json, JsonObject}
 import scalapb.UnknownFieldSet
 
 object EncodingUtils {
@@ -40,6 +40,21 @@ object EncodingUtils {
       })
     }
 
+    def cleanRtb: Encoder[T] = renameOneof.clean.transformBooleans
+
+    def rename(renames: Map[String, String]): Encoder[T] = encoder.mapJson({
+      _.mapObject(obj => JsonObject.fromIterable(obj.toIterable.map {
+        case (key, json) => (renames.getOrElse(key, key), json)
+      }))
+    })
+
+    def renameOneof: Encoder[T] = encoder.mapJson({
+      _.mapObject(obj => JsonObject.fromIterable(obj.toIterable.map {
+        case (key, json) => (key.stripSuffix("_oneof"), json)
+      }))
+    })
+
+
     def clean: Encoder[T] = clean(Seq())
 
   }
@@ -67,10 +82,9 @@ object EncodingUtils {
   /**
     * Allow to generate a JSON field from an oneof PB structure
     */
-  def protobufOneofEncoder[Oneof <: _root_.scalapb.GeneratedOneof]
-    (partialFunction: PartialFunction[Oneof, Json]): Encoder[Oneof] = {
+  def protobufOneofEncoder[Oneof <: _root_.scalapb.GeneratedOneof](partialFunction: PartialFunction[Oneof, Json]): Encoder[Oneof] = {
     oneOf: Oneof => {
-        if(oneOf.isEmpty) Json.Null
+        if (oneOf.isEmpty) Json.Null
         else partialFunction.apply(oneOf)
     }
   }

@@ -20,8 +20,8 @@ object BidSwitchBannerSerde {
 
   implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
 
-  implicit val formatExt: Encoder[Format] = deriveEncoder[Format].transformBooleans.clean
-  implicit val bannerExt: Encoder[BannerExt] = deriveEncoder[BannerExt].transformBooleans.clean
+  implicit val formatExt: Encoder[Format] = deriveEncoder[Format].cleanRtb
+  implicit val bannerExt: Encoder[BannerExt] = deriveEncoder[BannerExt].cleanRtb
 
   implicit val bannerEncoder: Encoder[Imp.Banner] = banner =>
     OpenRtbBannerSerde.bannerEncoder.apply(banner).addExtension(banner.extension(BidswitchProto.bannerExt).asJson)

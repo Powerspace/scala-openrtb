@@ -11,14 +11,14 @@ import com.powerspace.openrtb.json.util.EncodingUtils
 object OpenRtbVideoSerde {
 
   import EncodingUtils._
-  import OpenRtbProtobufEnumEncoders._
+  import com.powerspace.openrtb.json.common.OpenRtbProtobufEnumEncoders._
   import io.circe._
   import io.circe.generic.extras.semiauto._
 
   implicit val bannerEncoder: Encoder[Imp.Banner] = OpenRtbBannerSerde.bannerEncoder
 
-  implicit val companionAdEncoder: Encoder[CompanionAd] = deriveEncoder[CompanionAd].transformBooleans.clean
-  implicit val videoEncoder: Encoder[Video] = deriveEncoder[Video].transformBooleans.clean
+  implicit val companionAdEncoder: Encoder[CompanionAd] = deriveEncoder[CompanionAd].cleanRtb
+  implicit val videoEncoder: Encoder[Video] = deriveEncoder[Video].cleanRtb
 
 
 }

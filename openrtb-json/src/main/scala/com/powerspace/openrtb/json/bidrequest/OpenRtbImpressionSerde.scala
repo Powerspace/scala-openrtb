@@ -6,6 +6,7 @@ import com.google.openrtb.BidRequest.Imp.Native.RequestOneof
 import com.google.openrtb.NativeRequest.{Asset, EventTrackers}
 import com.google.openrtb.NativeRequest.Asset.AssetOneof
 import com.powerspace.openrtb.json.util.EncodingUtils
+import com.powerspace.openrtb.json.common.OpenRtbProtobufEnumEncoders
 
 /**
   * OpenRTB Imp Serde
@@ -28,9 +29,9 @@ object OpenRtbImpressionSerde {
     case BidRequest.DistributionchannelOneof.Site(site) => site.asJson
   }
 
-  implicit val titleEncoder: Encoder[Asset.Title] = deriveEncoder[Asset.Title].transformBooleans.clean
-  implicit val imgEncoder: Encoder[Asset.Image] = deriveEncoder[Asset.Image].transformBooleans.clean
-  implicit val assetDataEncoder: Encoder[Asset.Data] = deriveEncoder[Asset.Data].transformBooleans.clean
+  implicit val titleEncoder: Encoder[Asset.Title] = deriveEncoder[Asset.Title].cleanRtb
+  implicit val imgEncoder: Encoder[Asset.Image] = deriveEncoder[Asset.Image].cleanRtb
+  implicit val assetDataEncoder: Encoder[Asset.Data] = deriveEncoder[Asset.Data].cleanRtb
 
   implicit val assetOneOfEncoder: Encoder[AssetOneof] = protobufOneofEncoder[AssetOneof] {
     case AssetOneof.Img(img) => img.asJson
@@ -39,22 +40,22 @@ object OpenRtbImpressionSerde {
     case AssetOneof.Title(title) => title.asJson
   }
 
-  implicit val assetEncoder: Encoder[Asset] = deriveEncoder[Asset].transformBooleans.clean
-  implicit val eventTrackersEncoder: Encoder[EventTrackers] = deriveEncoder[EventTrackers].transformBooleans.clean
-  implicit val nativeRequestEncoder: Encoder[NativeRequest] = deriveEncoder[NativeRequest].transformBooleans.clean
+  implicit val assetEncoder: Encoder[Asset] = deriveEncoder[Asset].cleanRtb
+  implicit val eventTrackersEncoder: Encoder[EventTrackers] = deriveEncoder[EventTrackers].cleanRtb
+  implicit val nativeRequestEncoder: Encoder[NativeRequest] = deriveEncoder[NativeRequest].cleanRtb
 
   implicit val requestOneOfEncoder: Encoder[RequestOneof] = protobufOneofEncoder[Imp.Native.RequestOneof] {
     case RequestOneof.Request(string) => string.asJson
     case RequestOneof.RequestNative(request) => request.asJson
   }
 
-  implicit val nativeEncoder: Encoder[Imp.Native] = deriveEncoder[Imp.Native].transformBooleans.clean
+  implicit val nativeEncoder: Encoder[Imp.Native] = deriveEncoder[Imp.Native].cleanRtb
 
-  implicit val metricEncoder: Encoder[Imp.Metric] = deriveEncoder[Imp.Metric].transformBooleans.clean()
-  implicit val audioEncoder: Encoder[Imp.Audio] = deriveEncoder[Imp.Audio].transformBooleans.clean
+  implicit val metricEncoder: Encoder[Imp.Metric] = deriveEncoder[Imp.Metric].cleanRtb
+  implicit val audioEncoder: Encoder[Imp.Audio] = deriveEncoder[Imp.Audio].cleanRtb
 
   implicit def encoder(implicit nativeEncoder: Encoder[Imp.Native], bannerEncoder: Encoder[Imp.Banner],
     videoEncoder: Encoder[Imp.Video], pmpEncoder: Encoder[Imp.Pmp]):
-    Encoder[Imp] = deriveEncoder[Imp].transformBooleans.clean
+    Encoder[Imp] = deriveEncoder[Imp].cleanRtb
 
 }

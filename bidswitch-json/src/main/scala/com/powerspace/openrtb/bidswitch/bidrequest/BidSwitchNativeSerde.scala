@@ -21,8 +21,8 @@ object BidSwitchNativeSerde {
 
   implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
 
-  implicit val tripleLiftExt: Encoder[TripleLift] = deriveEncoder[TripleLift].transformBooleans.clean
-  implicit val nativeExt: Encoder[NativeExt] = deriveEncoder[NativeExt].transformBooleans.clean
+  implicit val tripleLiftExt: Encoder[TripleLift] = deriveEncoder[TripleLift].cleanRtb
+  implicit val nativeExt: Encoder[NativeExt] = deriveEncoder[NativeExt].cleanRtb
 
   implicit val nativeEncoder: Encoder[Imp.Native] = native =>
     OpenRtbImpressionSerde.nativeEncoder.apply(native).addExtension(native.extension(BidswitchProto.requestNativeExt).asJson)

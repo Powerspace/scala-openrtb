@@ -1,13 +1,21 @@
 package com.powerspace.openrtb.json.bidresponse
 
 import com.google.openrtb.NativeResponse.Asset.AssetOneof
+import com.google.openrtb.NativeResponse.Asset.AssetOneof.{Data, Img, Title, Video}
+import com.google.openrtb.NativeResponse.{Asset, EventTracker, Link}
 import com.google.openrtb._
-import io.circe.Decoder
-
+import com.powerspace.openrtb.json.common.OpenRtbProtobufEnumEncoders
+import com.powerspace.openrtb.json.util.EncodingUtils
 /**
   * OpenRTB Native Serde
   */
 object OpenRtbNativeSerde {
+
+  import io.circe._
+  import io.circe.syntax._
+  import io.circe.generic.extras.semiauto._
+  import EncodingUtils._
+  import OpenRtbProtobufEnumEncoders._
 
   /**
     * Decoder for the OpenRTB link object.
@@ -106,5 +114,29 @@ object OpenRtbNativeSerde {
       NativeResponse(ver = ver, assets = assets, assetsurl = assetsurl, dcourl = dcourl, link = link,
         imptrackers = imptrackers.getOrElse(Seq()), jstracker = jstracker, eventtrackers = eventtrackers.getOrElse(Seq()), privacy = privacy)
     }
+
+
+  implicit val dataEncoder: Encoder[Asset.Data] = deriveEncoder[Asset.Data].cleanRtb
+  implicit val imgEncoder: Encoder[Asset.Image] = deriveEncoder[Asset.Image].cleanRtb
+  implicit val titleEncoder: Encoder[Asset.Title] = deriveEncoder[Asset.Title].cleanRtb
+  implicit val videoEncoder: Encoder[Asset.Video] = deriveEncoder[Asset.Video].cleanRtb
+
+  implicit val oneofDataEncoder: Encoder[AssetOneof.Data] = deriveEncoder[Data].cleanRtb
+  implicit val oneofImgEncoder: Encoder[AssetOneof.Img] = deriveEncoder[Img].cleanRtb
+  implicit val oneofTitleEncoder: Encoder[AssetOneof.Title] = deriveEncoder[Title].cleanRtb
+  implicit val oneofVideoEncoder: Encoder[AssetOneof.Video] = deriveEncoder[Video].cleanRtb
+
+  implicit val assetsOneofEncoder: Encoder[Asset.AssetOneof] = protobufOneofEncoder[Asset.AssetOneof] {
+    case Asset.AssetOneof.Data(data) => data.asJson
+    case Asset.AssetOneof.Img(img) => img.asJson
+    case Asset.AssetOneof.Title(title) => title.asJson
+    case Asset.AssetOneof.Video(video) => video.asJson
+  }
+
+  implicit val linkEncoder: Encoder[Link] = deriveEncoder[Link].cleanRtb
+  implicit val assetsEncoder: Encoder[Asset] = deriveEncoder[Asset].cleanRtb
+  implicit val eventTrackerEncoder: Encoder[EventTracker] = deriveEncoder[EventTracker].cleanRtb
+
+  implicit val nativeResponseEncoder: Encoder[NativeResponse] = deriveEncoder[NativeResponse].cleanRtb
 
 }
