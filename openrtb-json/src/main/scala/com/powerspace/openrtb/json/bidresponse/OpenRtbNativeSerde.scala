@@ -114,8 +114,6 @@ object OpenRtbNativeSerde {
       NativeResponse(ver = ver, assets = assets, assetsurl = assetsurl, dcourl = dcourl, link = link,
         imptrackers = imptrackers.getOrElse(Seq()), jstracker = jstracker, eventtrackers = eventtrackers.getOrElse(Seq()), privacy = privacy)
     }
-
-
   implicit val dataEncoder: Encoder[Asset.Data] = deriveEncoder[Asset.Data].cleanRtb
   implicit val imgEncoder: Encoder[Asset.Image] = deriveEncoder[Asset.Image].cleanRtb
   implicit val titleEncoder: Encoder[Asset.Title] = deriveEncoder[Asset.Title].cleanRtb
@@ -134,9 +132,11 @@ object OpenRtbNativeSerde {
   }
 
   implicit val linkEncoder: Encoder[Link] = deriveEncoder[Link].cleanRtb
-  implicit val assetsEncoder: Encoder[Asset] = deriveEncoder[Asset].cleanRtb
-  implicit val eventTrackerEncoder: Encoder[EventTracker] = deriveEncoder[EventTracker].cleanRtb
 
+  // @todo make it manual
+  implicit val assetsEncoder: Encoder[Asset] = deriveEncoder[Asset].cleanRtb
+
+  implicit val eventTrackerEncoder: Encoder[EventTracker] = deriveEncoder[EventTracker].cleanRtb
   implicit val nativeResponseEncoder: Encoder[NativeResponse] = deriveEncoder[NativeResponse].cleanRtb
 
 }

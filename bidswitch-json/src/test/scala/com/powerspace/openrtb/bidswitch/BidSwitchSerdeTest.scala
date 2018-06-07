@@ -1,8 +1,11 @@
 package com.powerspace.openrtb.bidswitch
 
 import java.net.URL
+
 import com.google.openrtb.BidResponse
 import com.powerspace.bidswitch.BidswitchProto
+import com.powerspace.openrtb.bidswitch.BidRequestFixtures._
+import com.powerspace.openrtb.bidswitch.BidResponseFixtures._
 import io.circe.parser._
 import io.circe.syntax._
 import org.scalatest.{FunSuite, GivenWhenThen}
@@ -10,7 +13,6 @@ import org.scalatest.{FunSuite, GivenWhenThen}
 class BidSwitchSerdeTest extends FunSuite with GivenWhenThen {
 
   import BidSwitchSerdeModule._
-  import BidRequestFixtures._
   import com.powerspace.openrtb.json.util.EncodingUtils._
 
   test("BidSwitch bid response deserialization") {

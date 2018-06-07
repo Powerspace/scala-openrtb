@@ -39,7 +39,7 @@ object OpenRtbImpressionSerde {
     case AssetOneof.Video(video) => video.asJson
     case AssetOneof.Title(title) => title.asJson
   }
-
+  // @todo name the property accordingly
   implicit val assetEncoder: Encoder[Asset] = deriveEncoder[Asset].cleanRtb
   implicit val eventTrackersEncoder: Encoder[EventTrackers] = deriveEncoder[EventTrackers].cleanRtb
   implicit val nativeRequestEncoder: Encoder[NativeRequest] = deriveEncoder[NativeRequest].cleanRtb
@@ -50,7 +50,6 @@ object OpenRtbImpressionSerde {
   }
 
   implicit val nativeEncoder: Encoder[Imp.Native] = deriveEncoder[Imp.Native].cleanRtb
-
   implicit val metricEncoder: Encoder[Imp.Metric] = deriveEncoder[Imp.Metric].cleanRtb
   implicit val audioEncoder: Encoder[Imp.Audio] = deriveEncoder[Imp.Audio].cleanRtb
 

@@ -9,72 +9,68 @@ import com.google.openrtb._
 
 object BidRequestFixtures {
 
-  def sampleBidRequest(withNativeObject: Boolean): BidRequest = {
+  def getGeo = Geo(
+    lat = Some(100.10d),
+    lon = Some(200.20d),
+    country = Some("Italy"),
+    `type` = Some(LocationType.IP),
+    ipservice = Some(LocationService.MAXMIND)
+  )
 
-    val geo = Some(Geo(
-      lat = Some(100.10d),
-      lon = Some(200.20d),
-      country = Some("Italy"),
-      `type` = Some(LocationType.IP),
-      ipservice = Some(LocationService.MAXMIND)
-    ))
+  def getDevice = Device(
+    dnt = Some(true),
+    ua = Some("ua-1"),
+    ip = Some("ip-1"),
+    geo = Some(getGeo),
+    didsha1 = Some("didsha1-1")
+  )
 
-    val device = Some(Device(
-      dnt = Some(true),
-      ua = Some("ua-1"),
-      ip = Some("ip-1"),
-      geo = geo,
-      didsha1 = Some("didsha1-1")
-    ))
+  def getUser = User(
+    id = Some("id-1"),
+    buyeruid = Some("buyerid-1"),
+    yob = Some(10),
+    gender = Some("m"),
+    keywords = Some("keywords-1"),
+    customdata = Some("customdata-1"),
+    geo = Some(getGeo),
+    data = Seq(Data(id = Some("data-1"), name = Some("name-1"), segment = Seq()))
+  )
 
-    val user = Some(User(
-      id = Some("id-1"),
-      buyeruid = Some("buyerid-1"),
-      yob = Some(10),
-      gender = Some("m"),
-      keywords = Some("keywords-1"),
-      customdata = Some("customdata-1"),
-      geo = geo,
-      data = Seq(Data(id = Some("data-1"), name = Some("name-1"), segment = Seq()))
-    ))
+  def getBanner = Banner(w = Some(10), h = Some(10), api = Seq(APIFramework.MRAID_1), format = Seq(Format(w = Some(10))))
 
-    val banner = Banner(w = Some(10), h = Some(10), api = Seq(APIFramework.MRAID_1), format = Seq(Format(w = Some(10))))
-    val requestOneof = if (withNativeObject) {
-      val nativeRequest = NativeRequest(plcmtcnt = Some(40))
-      RequestOneof.RequestNative(nativeRequest)
-    }
-    else {
-      RequestOneof.Request("native-string")
-    }
 
-    val imp = Seq(Imp(
-      id = "imp-1",
-      banner = Some(banner),
-      video = Some(Video(mimes = Seq("mimes-1"), api = Seq(APIFramework.MRAID_1), pos = Some(AdPosition.HEADER), skip = Some(true), companionad = Seq(banner))),
-      audio = Some(Audio(minduration = Some(10), maxseq = Some(10))),
-      displaymanager = Some("displaymanager-1"),
-      displaymanagerver = Some("displaymanagerver-1"),
-      instl = Some(true),
-      tagid = Some("tagid-1"),
-      bidfloor = Some(10d),
-      bidfloorcur = Some("bidflooorcur-1"),
-      clickbrowser = Some(true),
-      secure = Some(true),
-      iframebuster = Seq("iframebuster-1"),
-      pmp = Some(Pmp(privateAuction = Some(true), deals = Seq(Deal(id = "deal-1")))),
-      native = Some(Native(ver = Some("ver-1"), api = Seq(APIFramework.MRAID_1), battr = Seq(CreativeAttribute.FLASH), requestOneof = requestOneof)),
-      exp = Some(10),
-      metric = Seq(Metric(Some("type-1"), Some(10d), Some("vendor-1")))
-    ))
+  def getImpression(requestOneof: RequestOneof) = Imp(
+    id = "imp-1",
+    banner = Some(getBanner),
+    video = Some(Video(mimes = Seq("mimes-1"), api = Seq(APIFramework.MRAID_1), pos = Some(AdPosition.HEADER), skip = Some(true), companionad = Seq(getBanner))),
+    audio = Some(Audio(minduration = Some(10), maxseq = Some(10))),
+    displaymanager = Some("displaymanager-1"),
+    displaymanagerver = Some("displaymanagerver-1"),
+    instl = Some(true),
+    tagid = Some("tagid-1"),
+    bidfloor = Some(10d),
+    bidfloorcur = Some("bidflooorcur-1"),
+    clickbrowser = Some(true),
+    secure = Some(true),
+    iframebuster = Seq("iframebuster-1"),
+    pmp = Some(Pmp(privateAuction = Some(true), deals = Seq(Deal(id = "deal-1")))),
+    native = Some(Native(ver = Some("ver-1"), api = Seq(APIFramework.MRAID_1), battr = Seq(CreativeAttribute.FLASH), requestOneof = requestOneof)),
+    exp = Some(10),
+    metric = Seq(Metric(Some("type-1"), Some(10d), Some("vendor-1")))
+  )
+
+  def getBidRequest(withNativeObject: Boolean): BidRequest = {
+
+    val requestOneof = if (withNativeObject) RequestOneof.RequestNative(NativeRequest(plcmtcnt = Some(40))) else RequestOneof.Request("native-string")
 
     BidRequest(
       id = "fmySKZNcTFcTPOurFYivufGxMtuSYpen",
       at = Some(AuctionType.fromValue(value = 2)),
-      imp = imp,
+      imp = Seq(getImpression(requestOneof)),
       cur = Seq("EUR"),
-      device = device,
+      device = Some(getDevice),
       regs = Some(Regs(coppa = Some(true))),
-      user = user,
+      user = Some(getUser),
       tmax = Some(10),
       wseat = Seq("wseat-1", "wseat-2"),
       allimps = Some(true),
