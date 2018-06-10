@@ -30,8 +30,14 @@ object OpenRtbBidRequestSerde {
   implicit val deviceEncoder: Encoder[BidRequest.Device] = deriveEncoder[BidRequest.Device].transformBooleans.clean
   implicit val regsEncoder: Encoder[BidRequest.Regs] = deriveEncoder[BidRequest.Regs].transformBooleans.clean
 
-  def encoder(implicit userEncoder: Encoder[BidRequest.User], impressionEncoder: Encoder[BidRequest.Imp]):
-    Encoder[BidRequest] = deriveEncoder[BidRequest].transformBooleans.clean(toKeep = Seq("imp"))
+  def encoder(
+               implicit userEncoder: Encoder[BidRequest.User],
+               impressionEncoder: Encoder[BidRequest.Imp]): Encoder[BidRequest] = {
+    deriveEncoder[BidRequest]
+     // .transformBooleans
+     // .clean(toKeep = Seq("imp")
+      //)
+  }
 
   /**
     * Decoder for the OpenRTB bid request.

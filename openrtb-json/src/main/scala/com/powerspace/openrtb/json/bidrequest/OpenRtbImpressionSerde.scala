@@ -53,7 +53,7 @@ object OpenRtbImpressionSerde {
   implicit val metricEncoder: Encoder[Imp.Metric] = deriveEncoder[Imp.Metric].transformBooleans.clean()
   implicit val audioEncoder: Encoder[Imp.Audio] = deriveEncoder[Imp.Audio].transformBooleans.clean
 
-  implicit def encoder(implicit nativeEncoder: Encoder[Imp.Native], bannerEncoder: Encoder[Imp.Banner],
+  def encoder(implicit nativeEncoder: Encoder[Imp.Native], bannerEncoder: Encoder[Imp.Banner],
     videoEncoder: Encoder[Imp.Video], pmpEncoder: Encoder[Imp.Pmp]):
     Encoder[Imp] = deriveEncoder[Imp].transformBooleans.clean
 

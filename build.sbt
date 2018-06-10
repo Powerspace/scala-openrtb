@@ -13,12 +13,13 @@ scalacOptions in ThisBuild := Seq(
   "-opt-inline-from:**",
   "-unchecked",
   "-Ywarn-dead-code", "-Ywarn-numeric-widen" /*, "-Ywarn-unused"*/ , "-Ywarn-unused-import",
-  "-language:postfixOps", "-language:implicitConversions","-language:existentials","-language:higherKinds"
+  "-language:postfixOps", "-language:implicitConversions", "-language:existentials", "-language:higherKinds"
   /*,"-Ymacro-debug-lite"*/)
 
-val testDependencies = Seq(libraryDependencies ++= Seq("org.scalactic" %% "scalactic" % "3.0.1" % "test",
-"org.scalatest" %% "scalatest" % "3.0.1" % "test",
-"org.scalamock" %% "scalamock-scalatest-support" % "3.5.0" % "test"))
+val testDependencies = Seq(libraryDependencies ++= Seq(
+  "org.scalactic" %% "scalactic" % "3.0.1" % "test",
+  "org.scalatest" %% "scalatest" % "3.0.1" % "test",
+  "org.scalamock" %% "scalamock-scalatest-support" % "3.5.0" % "test"))
 
 // plain openrtb scala model
 lazy val openRtbModel = Project(id = "openrtb-model", base = file("openrtb-model"))
