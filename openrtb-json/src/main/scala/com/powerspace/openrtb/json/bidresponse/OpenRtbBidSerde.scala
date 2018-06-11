@@ -18,7 +18,8 @@ object OpenRtbBidSerde {
   import io.circe.generic.extras.semiauto._
   import EncodingUtils._
   import OpenRtbProtobufEnumEncoders._
-  private implicit val configuration: Configuration = Configuration.default.withDefaults
+
+  private implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
 
   val nativeObject: Decoder[Json] = cursor => cursor.downField("native").as[Json]
   val nativeDecoder: Decoder[NativeResponse] = nativeObject.emapTry(OpenRtbNativeSerde.decoder.decodeJson(_).toTry)

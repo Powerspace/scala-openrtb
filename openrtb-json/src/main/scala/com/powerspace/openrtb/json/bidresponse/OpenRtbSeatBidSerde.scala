@@ -15,7 +15,7 @@ object OpenRtbSeatBidSerde {
   import EncodingUtils._
   import OpenRtbProtobufEnumEncoders._
 
-  private implicit val configuration: Configuration = Configuration.default.withDefaults
+  private implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
 
 
   /**
@@ -30,7 +30,9 @@ object OpenRtbSeatBidSerde {
       BidResponse.SeatBid(seat = seat, bid = bids, group = group)
     }
 
-  implicit def encoder(implicit bidDecoder: Encoder[BidResponse.SeatBid.Bid]): Encoder[BidResponse.SeatBid] =
+  private implicit val bidEncoder = OpenRtbBidSerde.encoder
+
+  implicit def encoder: Encoder[BidResponse.SeatBid] =
       deriveEncoder[BidResponse.SeatBid].cleanRtb
 
 }

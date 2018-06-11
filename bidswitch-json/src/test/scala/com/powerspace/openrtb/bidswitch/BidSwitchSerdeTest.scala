@@ -103,7 +103,7 @@ class BidSwitchSerdeTest extends FunSuite with GivenWhenThen {
 
     // native extension
     val nativeCursor = impCursor.downField("native")
-    assert(nativeCursor.downField("ext").downField("triplelift").downField("formats").downArray.as[Int].value == 10)
+    assert(nativeCursor.downField("ext").downField("triplelift").downField("formats").downArray.as[Int].contains(10))
   }
 
   test("BidSwitch NON-Native bid request serialization") {

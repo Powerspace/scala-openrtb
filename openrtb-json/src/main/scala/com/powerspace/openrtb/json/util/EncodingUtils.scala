@@ -1,9 +1,17 @@
 package com.powerspace.openrtb.json.util
 
-import io.circe.{Decoder, Encoder, Json, JsonObject}
+import io.circe.generic.extras.decoding.ConfiguredDecoder
+import io.circe.generic.extras.encoding.ConfiguredObjectEncoder
+import io.circe._
+import io.circe.generic.extras.Configuration
 import scalapb.UnknownFieldSet
+import shapeless.Lazy
 
 object EncodingUtils {
+  import io.circe.generic.extras.semiauto._
+  private implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
+
+  def openrtbEncoder[A](implicit encode: Lazy[ConfiguredObjectEncoder[A]]): Encoder[A] = deriveEncoder[A](encode).cleanRtb
 
   /**
     * Convert a boolean to the related integer value

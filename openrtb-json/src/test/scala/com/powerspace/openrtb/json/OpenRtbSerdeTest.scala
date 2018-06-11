@@ -108,6 +108,8 @@ class OpenRtbSerdeTest extends FunSuite with GivenWhenThen {
     assert(nativeCursor.downField("ver").as[String].value == "ver-1")
     assert(nativeCursor.downField("battr").downArray.as[Int].value == 17)
     // @todo test native spec
+    assert(nativeCursor.downField("request").as[String].contains("native-string"))
+
 
     val regsCursor = reqCursor.downField("regs")
     assert(regsCursor.downField("coppa").as[Int].value == 1)
@@ -122,7 +124,6 @@ class OpenRtbSerdeTest extends FunSuite with GivenWhenThen {
     assert(userCursor.downField("gender").as[String].value == "m")
     assert(userCursor.downField("data").downArray.downField("name").as[String].value == "name-1")
 
-    assert(nativeCursor.downField("request").as[String].value == "native-string")
   }
 
   test("OpenRTB-like bid request [with Native Object] serialization") {
@@ -155,13 +156,13 @@ class OpenRtbSerdeTest extends FunSuite with GivenWhenThen {
 
     val bidCursor = seatBidCursor.downField("bid").downArray
     assert(bidCursor.downField("price").as[Float].value == 10d)
-    assert(bidCursor.downField("burl").as[String].value.nonEmpty)
-    assert(bidCursor.downField("language").as[String].value.nonEmpty)
+    assert(bidCursor.downField("burl").as[String].toOption.nonEmpty)
+    assert(bidCursor.downField("language").as[String].toOption.nonEmpty)
 
     val admCursor = bidCursor.downField("adm")
-    assert(admCursor.downField("privacy").as[String].value.nonEmpty)
-    assert(admCursor.downField("link").downField("url").as[String].value.nonEmpty)
-    assert(admCursor.downField("link").downField("clicktrackers").downArray.as[String].value.nonEmpty)
+    assert(admCursor.downField("privacy").as[String].toOption.nonEmpty)
+    assert(admCursor.downField("link").downField("url").as[String].toOption.nonEmpty)
+    assert(admCursor.downField("link").downField("clicktrackers").downArray.as[String].toOption.nonEmpty)
 
     val assetCursor = admCursor.downField("assets").downArray
     assert(assetCursor.downField("id").as[Int].value == 10)

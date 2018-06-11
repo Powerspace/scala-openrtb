@@ -14,9 +14,8 @@ object OpenRtbPmpSerde extends EncoderProvider[Imp.Pmp] {
   import com.powerspace.openrtb.json.common.OpenRtbProtobufEnumEncoders._
   import io.circe._
   import io.circe.generic.extras.semiauto._
-  private implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
 
-  implicit val dealEncoder: Encoder[Imp.Pmp.Deal] = deriveEncoder[Deal].cleanRtb
+  implicit val dealEncoder: Encoder[Imp.Pmp.Deal] = openrtbEncoder[Deal]
 
-  def encoder: Encoder[Imp.Pmp] = deriveEncoder[Imp.Pmp].cleanRtb
+  def encoder: Encoder[Imp.Pmp] = openrtbEncoder[Imp.Pmp]
 }

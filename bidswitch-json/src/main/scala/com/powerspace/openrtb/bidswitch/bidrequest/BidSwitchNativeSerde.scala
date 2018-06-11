@@ -20,8 +20,6 @@ object BidSwitchNativeSerde extends EncoderProvider[Imp.Native] {
   import io.circe.generic.extras.semiauto._
   import io.circe.syntax._
 
-  private implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
-
   private implicit val tripleLiftExt: Encoder[TripleLift] = deriveEncoder[TripleLift].cleanRtb
   private implicit val nativeExt: Encoder[NativeExt] = deriveEncoder[NativeExt].cleanRtb
 

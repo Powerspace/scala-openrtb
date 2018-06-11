@@ -19,9 +19,7 @@ object BidSwitchVideoSerde extends EncoderProvider[Imp.Video] {
   import io.circe.generic.extras.semiauto._
   import io.circe.syntax._
 
-  implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
-
-  implicit val videoExt: Encoder[VideoExt] = deriveEncoder[VideoExt].transformBooleans.clean
+  implicit val videoExt: Encoder[VideoExt] = openrtbEncoder[VideoExt]
 
   def encoder: Encoder[Imp.Video] = video =>
     OpenRtbVideoSerde.encoder.apply(video).addExtension(video.extension(BidswitchProto.videoExt).asJson)

@@ -2,16 +2,15 @@ package com.powerspace.openrtb.json
 
 import com.google.openrtb.BidRequest.Imp.Native.RequestOneof
 import com.powerspace.openrtb.conversion.RequestLenses
-import com.powerspace.openrtb.json.bidrequest.{OpenRtbBidRequestSerde, OpenRtbImpressionSerde, OpenRtbNativeRequestSerde}
+import com.powerspace.openrtb.json.bidrequest.OpenRtbNativeRequestSerde
 
 /** Manipulation of native property **/
 object NativeManipulation {
   import RequestLenses._
-  import com.powerspace.openrtb.json.bidrequest.OpenRtbUserSerde._
-  import com.powerspace.openrtb.json.bidrequest.OpenRtbPmpSerde._
-  import com.powerspace.openrtb.json.bidrequest.OpenRtbImpressionSerde._
 
-  implicit val impEncoder = com.powerspace.openrtb.json.bidrequest.OpenRtbImpressionSerde.encoder
+  implicit val impEncoder = OpenRtbSerdeModule.impEncoder
+
+
 
   val toNativeAsString = nativeRequestOneOfTraversal.modify{
     case RequestOneof.RequestNative(native) => RequestOneof.Request(OpenRtbNativeRequestSerde.nativeRequestEncoder(native).noSpaces)
@@ -24,7 +23,7 @@ object NativeManipulation {
   }**/
 
   /** specific encoder that always return native as string request **/
-  def toNativeStringEncoder = OpenRtbBidRequestSerde.encoder.contramap(toNativeAsString)
+  def toNativeStringEncoder = OpenRtbSerdeModule.bidRequestEncoder.contramap(toNativeAsString)
 
   /** specific encoder that always return native as object request **/
   //val toNativeObjectEncoder = OpenRtbBidRequestSerde.encoder.contramap(toNativeAsObject)

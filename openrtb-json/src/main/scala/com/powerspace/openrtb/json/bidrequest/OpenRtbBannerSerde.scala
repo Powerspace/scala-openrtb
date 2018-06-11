@@ -15,9 +15,7 @@ object OpenRtbBannerSerde extends EncoderProvider[Imp.Banner] {
   import EncodingUtils._
   import OpenRtbProtobufEnumEncoders._
   import io.circe._
-  import io.circe.generic.extras.semiauto._
-  private implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
 
-  implicit val formatEncoder: Encoder[Format] = deriveEncoder[Format].cleanRtb
-  def encoder: Encoder[Imp.Banner] = deriveEncoder[Banner].cleanRtb
+  implicit val formatEncoder: Encoder[Format] = openrtbEncoder[Format]
+  def encoder: Encoder[Imp.Banner] = openrtbEncoder[Banner]
 }

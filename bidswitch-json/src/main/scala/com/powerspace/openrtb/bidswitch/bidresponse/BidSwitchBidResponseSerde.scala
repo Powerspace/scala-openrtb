@@ -22,8 +22,6 @@ object BidSwitchBidResponseSerde extends EncoderProvider[BidResponse] {
   import BidSwitchBidSerde._
   import OpenRtbProtobufEnumEncoders._
 
-  private implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
-
   private implicit val bidResponseExtDecoder: Decoder[BidResponseExt] = _.downField("ext")
     .downField("protocol")
     .as[Option[String]]

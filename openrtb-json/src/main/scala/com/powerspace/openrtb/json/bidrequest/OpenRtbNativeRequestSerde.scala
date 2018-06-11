@@ -17,19 +17,16 @@ object OpenRtbNativeRequestSerde extends EncoderProvider[Native] with NativeDepe
   import io.circe._
   import io.circe.syntax._
   import EncodingUtils._
-  import io.circe.generic.extras.semiauto._
   import com.powerspace.openrtb.json.common.OpenRtbProtobufEnumEncoders._
 
-  private implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
-
   import io.circe.generic.extras.semiauto._
 
-  private implicit val titleEncoder: Encoder[NativeRequest.Asset.Title] = deriveEncoder[Asset.Title].transformBooleans.clean
-  private implicit val imgEncoder: Encoder[NativeRequest.Asset.Image] = deriveEncoder[Asset.Image].transformBooleans.clean
+  private implicit val titleEncoder: Encoder[NativeRequest.Asset.Title] = openrtbEncoder[Asset.Title]
+  private implicit val imgEncoder: Encoder[NativeRequest.Asset.Image] = openrtbEncoder[Asset.Image]
 
   private implicit val videoEncoder = OpenRtbVideoSerde.encoder
 
-  private implicit val assetDataEncoder: Encoder[NativeRequest.Asset.Data] = deriveEncoder[Asset.Data].transformBooleans.clean
+  private implicit val assetDataEncoder: Encoder[NativeRequest.Asset.Data] = openrtbEncoder[Asset.Data].cleanRtb
   private implicit val assetOneOfEncoder: Encoder[NativeRequest.Asset.AssetOneof] = protobufOneofEncoder[NativeRequest.Asset.AssetOneof] {
     case NativeRequest.Asset.AssetOneof.Img(img) => img.asJson
     case NativeRequest.Asset.AssetOneof.Data(data) => data.asJson
@@ -37,15 +34,15 @@ object OpenRtbNativeRequestSerde extends EncoderProvider[Native] with NativeDepe
     case NativeRequest.Asset.AssetOneof.Title(title) => title.asJson
   }
 
-  private implicit val assetEncoder: Encoder[NativeRequest.Asset] = deriveEncoder[Asset].transformBooleans.clean
-  private implicit val eventTrackersEncoder: Encoder[NativeRequest.EventTrackers] = deriveEncoder[EventTrackers].transformBooleans.clean
+  private implicit val assetEncoder: Encoder[NativeRequest.Asset] = openrtbEncoder[Asset]
+  private implicit val eventTrackersEncoder: Encoder[NativeRequest.EventTrackers] = openrtbEncoder[EventTrackers]
 
   private implicit val requestOneOfEncoder: Encoder[Imp.Native.RequestOneof] = protobufOneofEncoder[Imp.Native.RequestOneof] {
     case Imp.Native.RequestOneof.Request(string) => string.asJson
     case Imp.Native.RequestOneof.RequestNative(request) => request.asJson
   }
 
-  implicit val nativeRequestEncoder: Encoder[NativeRequest] = deriveEncoder[NativeRequest].transformBooleans.clean
+  implicit val nativeRequestEncoder: Encoder[NativeRequest] = openrtbEncoder[NativeRequest]
 
-  def encoder: Encoder[Imp.Native] = deriveEncoder[Imp.Native].transformBooleans.clean
+  def encoder: Encoder[Imp.Native] = openrtbEncoder[Imp.Native]
 }

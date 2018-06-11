@@ -19,8 +19,6 @@ object BidSwitchBannerSerde extends EncoderProvider[Imp.Banner] {
   import io.circe.generic.extras.semiauto._
   import io.circe.syntax._
 
-  implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
-
   implicit val formatExt: Encoder[Format] = deriveEncoder[Format].cleanRtb
   implicit val bannerExt: Encoder[BannerExt] = deriveEncoder[BannerExt].cleanRtb
 

@@ -13,7 +13,6 @@ object BidSwitchPmpSerde extends EncoderProvider[Imp.Pmp] {
   import OpenRtbProtobufEnumEncoders._
   import io.circe._
   import io.circe.generic.extras.semiauto._
-  private implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
 
   implicit val dealEncoder: Encoder[Imp.Pmp.Deal] = BidSwitchDealSerde.encoder
   implicit val pmpEncoder: Encoder[Imp.Pmp] = deriveEncoder[Imp.Pmp].cleanRtb

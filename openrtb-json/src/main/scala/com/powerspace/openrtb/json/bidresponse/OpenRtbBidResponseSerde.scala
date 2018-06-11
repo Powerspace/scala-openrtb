@@ -12,17 +12,18 @@ import scalapb.UnknownFieldSet
 object OpenRtbBidResponseSerde {
 
   import io.circe._
-  import io.circe.generic.extras.semiauto._
   import EncodingUtils._
   import OpenRtbProtobufEnumEncoders._
-  private implicit val configuration: Configuration = Configuration.default.withDefaults
+
+  private implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
+  import io.circe.generic.extras.semiauto._
 
   /**
     * @todo use semi automatic derivation for decoding
     */
   private implicit val noBidReasonDecoder: Decoder[Option[NoBidReason]] = Decoder.decodeOption[Int].map(_.map(NoBidReason.fromValue))
   private implicit val unknownFieldSet: Decoder[UnknownFieldSet] = _ => Right(UnknownFieldSet(Map()))
-
+  private implicit val seatBidEncoder = OpenRtbSeatBidSerde.encoder
   /**
     * Decoder for the OpenRTB bid response.
     */
@@ -43,6 +44,6 @@ object OpenRtbBidResponseSerde {
   /**
     * Encoder for the OpenRTB bid response.
     */
-  def encoder(implicit seatBidEncoder: Encoder[BidResponse.SeatBid]): Encoder[BidResponse] = deriveEncoder[BidResponse].cleanRtb
+  def encoder: Encoder[BidResponse] = deriveEncoder[BidResponse].cleanRtb
 
 }

@@ -4,7 +4,6 @@ import com.google.openrtb.{BidRequest, BidResponse}
 import io.circe.{Decoder, Encoder}
 
 trait SerdeModule {
-
   // bid request encoding
   implicit val userEncoder: Encoder[BidRequest.User]
   implicit val impEncoder: Encoder[BidRequest.Imp]
