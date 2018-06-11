@@ -1,11 +1,14 @@
 package com.powerspace.openrtb.bidswitch.bidresponse
 
 import com.google.openrtb.BidResponse.SeatBid
-import com.google.openrtb.NativeResponse
+import com.google.openrtb.BidResponse.SeatBid.Bid.AdmOneof
+import com.google.openrtb.{BidResponse, NativeResponse}
 import com.powerspace.bidswitch.BidExt.{Google, Yieldone}
 import com.powerspace.bidswitch.{BidExt, BidswitchProto}
-import com.powerspace.openrtb.json.bidresponse.{OpenRtbBidSerde, OpenRtbSeatBidSerde}
-import io.circe.Decoder
+import com.powerspace.openrtb.bidswitch.util.JsonUtils
+import com.powerspace.openrtb.json.bidresponse.{OpenRtbBidSerde, OpenRtbNativeSerde, OpenRtbSeatBidSerde}
+import com.powerspace.openrtb.json.common.OpenRtbProtobufEnumEncoders
+import com.powerspace.openrtb.json.util.EncodingUtils
 import io.circe.generic.extras.Configuration
 
 /**
@@ -13,8 +16,17 @@ import io.circe.generic.extras.Configuration
   */
 object BidSwitchBidSerde {
 
-  implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
+  import io.circe._
+  import io.circe.syntax._
+  import io.circe.generic.extras.semiauto._
+  import JsonUtils._
+  import EncodingUtils._
+  import OpenRtbProtobufEnumEncoders._
+  private implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
 
+  /**
+    * Decoding
+    */
   implicit val nativeResponseDecoder: Decoder[NativeResponse] = BidSwitchNativeSerde.decoder
 
   private implicit val googleDecoder: Decoder[Google] = {
@@ -68,5 +80,22 @@ object BidSwitchBidSerde {
   } yield bid.withExtension(BidswitchProto.bidExt)(Some(ext))
 
   implicit def seatBidDecoder: Decoder[SeatBid] = OpenRtbSeatBidSerde.decoder(bidDecoder)
+
+  /**
+    * Encoding
+    */
+  implicit val googleEncoder: Encoder[Google] = deriveEncoder[Google].cleanRtb
+  implicit val yieldoneEncoder: Encoder[Yieldone] = deriveEncoder[Yieldone].cleanRtb
+
+  implicit val nativeResponseEncoder: Encoder[NativeResponse] = OpenRtbNativeSerde.nativeResponseEncoder
+  implicit val bidExtensionEncoder: Encoder[BidExt] = deriveEncoder[BidExt].cleanRtb
+  implicit val admOneofEncoder: Encoder[AdmOneof] = OpenRtbBidSerde.admOneofEncoder
+
+  implicit val bidEncoder: Encoder[SeatBid.Bid] =
+    bid => OpenRtbBidSerde.encoder.apply(bid).addExtension(bid.extension(BidswitchProto.bidExt).asJson)
+
+  def seatBidEncoder: Encoder[SeatBid] =
+    seatBid => OpenRtbSeatBidSerde.encoder.apply(seatBid)
+
 
 }

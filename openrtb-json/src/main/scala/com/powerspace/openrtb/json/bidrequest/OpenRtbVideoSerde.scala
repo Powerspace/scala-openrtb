@@ -12,14 +12,13 @@ import io.circe.generic.extras.Configuration
 object OpenRtbVideoSerde {
 
   import EncodingUtils._
-  import OpenRtbProtobufEnumEncoders._
+  import com.powerspace.openrtb.json.common.OpenRtbProtobufEnumEncoders._
   import io.circe._
   import io.circe.generic.extras.semiauto._
   private implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
 
   implicit val bannerEncoder: Encoder[Imp.Banner] = OpenRtbBannerSerde.encoder
+  implicit val companionAdEncoder: Encoder[CompanionAd] = deriveEncoder[CompanionAd].cleanRtb
 
-  implicit val companionAdEncoder: Encoder[CompanionAd] = deriveEncoder[CompanionAd].transformBooleans.clean
-
-  def encoder: Encoder[Video] = deriveEncoder[Video].transformBooleans.clean
+  def encoder: Encoder[Video] = deriveEncoder[Video].cleanRtb
 }

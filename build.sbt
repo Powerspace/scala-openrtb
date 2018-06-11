@@ -33,11 +33,11 @@ lazy val openRtbJson = Project(id = "openrtb-json", base = file("openrtb-json"))
 
 // proto ser/deser
 lazy val bidswitchModel = Project(id = "bidswitch-model", base = file("bidswitch-model"))
-  .dependsOn(openRtbModel)
+  .dependsOn(openRtbModel % "compile->compile;test->test")
 
 // proto ser/deser
 lazy val bidswitchJson = Project(id = "bidswitch-json", base = file("bidswitch-json"))
-  .dependsOn(bidswitchModel, openRtbJson)
+  .dependsOn(bidswitchModel % "compile->compile;test->test", openRtbJson % "compile->compile;test->test")
   .settings(testDependencies: _*)
 
 lazy val root = (project in file("."))

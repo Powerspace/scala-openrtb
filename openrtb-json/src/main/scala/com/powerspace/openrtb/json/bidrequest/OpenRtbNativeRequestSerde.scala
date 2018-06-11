@@ -13,12 +13,12 @@ trait NativeDependencies {
   implicit val nativeRequestEncoder: Encoder[NativeRequest]
 }
 
-object OpenRtbNativeSerde extends EncoderProvider[Native] with NativeDependencies {
+object OpenRtbNativeRequestSerde extends EncoderProvider[Native] with NativeDependencies {
   import io.circe._
   import io.circe.syntax._
   import EncodingUtils._
   import io.circe.generic.extras.semiauto._
-  import OpenRtbProtobufEnumEncoders._
+  import com.powerspace.openrtb.json.common.OpenRtbProtobufEnumEncoders._
 
   private implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
 

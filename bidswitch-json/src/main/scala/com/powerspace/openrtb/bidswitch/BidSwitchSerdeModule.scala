@@ -25,6 +25,13 @@ object BidSwitchSerdeModule extends SerdeModule {
   override implicit val bidResponseDecoder: Decoder[BidResponse] = BidSwitchBidResponseSerde.decoder
 
   /**
+    * BidSwitch bid response encoders
+    */
+  override implicit val bidEncoder: Encoder[SeatBid.Bid] = BidSwitchBidSerde.bidEncoder
+  override implicit val seatBidEncoder: Encoder[SeatBid] = BidSwitchBidSerde.seatBidEncoder
+  override implicit val bidResponseEncoder: Encoder[BidResponse] = BidSwitchBidResponseSerde.encoder
+
+  /**
     * BidSwitch bid request encoders
     */
   override implicit val userEncoder: Encoder[BidRequest.User] = BidSwitchUserSerde.encoder

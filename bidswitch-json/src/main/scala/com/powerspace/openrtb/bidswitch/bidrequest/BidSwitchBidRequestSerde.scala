@@ -23,16 +23,16 @@ object BidSwitchBidRequestSerde extends EncoderProvider[BidRequest]{
 
   implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
 
-  implicit val detectedVerticalEncoder: Encoder[DetectedVertical] = deriveEncoder[DetectedVertical].transformBooleans.clean
-  implicit val publisherEncoder: Encoder[Publisher] = deriveEncoder[Publisher].transformBooleans.clean
-  implicit val adsTxtEncoder: Encoder[AdsTxt] = deriveEncoder[AdsTxt].transformBooleans.clean
-  implicit val googleEncoder: Encoder[Google] = deriveEncoder[Google].transformBooleans.clean
-  implicit val gumGumEncoder: Encoder[Gumgum] = deriveEncoder[Gumgum].transformBooleans.clean
-  implicit val rubiconEncoder: Encoder[Rubicon] = deriveEncoder[Rubicon].transformBooleans.clean
-  implicit val adTruthEncoder: Encoder[AdTruth] = deriveEncoder[AdTruth].transformBooleans.clean
-  implicit val tvEncoder: Encoder[Tv] = deriveEncoder[Tv].transformBooleans.clean
-  implicit val doohEncoder: Encoder[Dooh] = deriveEncoder[Dooh].transformBooleans.clean
-  implicit val bidRequestExt: Encoder[BidRequestExt] = deriveEncoder[BidRequestExt].transformBooleans.clean
+  implicit val detectedVerticalEncoder: Encoder[DetectedVertical] = deriveEncoder[DetectedVertical].cleanRtb
+  implicit val publisherEncoder: Encoder[Publisher] = deriveEncoder[Publisher].cleanRtb
+  implicit val adsTxtEncoder: Encoder[AdsTxt] = deriveEncoder[AdsTxt].cleanRtb
+  implicit val googleEncoder: Encoder[Google] = deriveEncoder[Google].cleanRtb
+  implicit val gumGumEncoder: Encoder[Gumgum] = deriveEncoder[Gumgum].cleanRtb
+  implicit val rubiconEncoder: Encoder[Rubicon] = deriveEncoder[Rubicon].cleanRtb
+  implicit val adTruthEncoder: Encoder[AdTruth] = deriveEncoder[AdTruth].cleanRtb
+  implicit val tvEncoder: Encoder[Tv] = deriveEncoder[Tv].cleanRtb
+  implicit val doohEncoder: Encoder[Dooh] = deriveEncoder[Dooh].cleanRtb
+  implicit val bidRequestExt: Encoder[BidRequestExt] = deriveEncoder[BidRequestExt].cleanRtb
 
   def encoder:
     Encoder[BidRequest] = bidRequest => {

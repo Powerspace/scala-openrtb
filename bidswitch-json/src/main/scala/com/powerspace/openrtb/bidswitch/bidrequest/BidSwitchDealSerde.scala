@@ -20,7 +20,7 @@ object BidSwitchDealSerde {
 
   implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
 
-  implicit val dealExt: Encoder[DealExt] = deriveEncoder[DealExt].transformBooleans.clean
+  implicit val dealExt: Encoder[DealExt] = deriveEncoder[DealExt].cleanRtb
 
   implicit def encoder: Encoder[Pmp.Deal] = deal =>
     OpenRtbPmpSerde.dealEncoder.apply(deal).addExtension(deal.extension(BidswitchProto.dealExt).asJson)

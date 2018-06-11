@@ -7,11 +7,6 @@ import io.circe.Decoder
 
 object BidSwitchNativeSerde {
 
-  /**
-    * Decoder for the native extension object.
-    * `viewtracker` represents the view tracking URL that will be called when the ad is visible, if supported by the Supplier.
-    * `adchoiceurl` is a Buyer specific AdChoices URL that will replace default Supplier AdChoices URL.
-    */
   implicit val nativeExtDecoder: Decoder[NativeResponseExt] = {
     cursor =>
       val ext = cursor.downField("ext")

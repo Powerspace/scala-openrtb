@@ -2,7 +2,7 @@ package com.powerspace.openrtb.json
 
 import com.google.openrtb.BidRequest.Imp.Native.RequestOneof
 import com.powerspace.openrtb.conversion.RequestLenses
-import com.powerspace.openrtb.json.bidrequest.{OpenRtbBidRequestSerde, OpenRtbImpressionSerde, OpenRtbNativeSerde}
+import com.powerspace.openrtb.json.bidrequest.{OpenRtbBidRequestSerde, OpenRtbImpressionSerde, OpenRtbNativeRequestSerde}
 
 /** Manipulation of native property **/
 object NativeManipulation {
@@ -14,7 +14,7 @@ object NativeManipulation {
   implicit val impEncoder = com.powerspace.openrtb.json.bidrequest.OpenRtbImpressionSerde.encoder
 
   val toNativeAsString = nativeRequestOneOfTraversal.modify{
-    case RequestOneof.RequestNative(native) => RequestOneof.Request(OpenRtbNativeSerde.nativeRequestEncoder(native).noSpaces)
+    case RequestOneof.RequestNative(native) => RequestOneof.Request(OpenRtbNativeRequestSerde.nativeRequestEncoder(native).noSpaces)
     case str: RequestOneof.Request => str
   }
 
