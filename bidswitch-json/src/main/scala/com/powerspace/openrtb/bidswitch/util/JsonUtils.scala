@@ -10,7 +10,8 @@ object JsonUtils {
     * Add an RTB extension to the JSON object
     */
   implicit class JsonEnhancement(json: Json) {
-    def addExtension(extension: Json): Json = json.asObject.get.add("ext", extension).asJson
+    def addExtension(extension: Json): Json =
+      json.asObject.map(_.add("ext", extension)).asJson
   }
 
 }

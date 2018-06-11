@@ -10,7 +10,7 @@ import io.circe.generic.extras.Configuration
   */
 object OpenRtbProtobufEnumEncoders {
 
-  implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
+  private implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
 
   implicit val companionTypeEncoder: Encoder[CompanionType] = protobufEnumEncoder[CompanionType]
   implicit val apiFrameworkEncoder: Encoder[APIFramework] = protobufEnumEncoder[APIFramework]

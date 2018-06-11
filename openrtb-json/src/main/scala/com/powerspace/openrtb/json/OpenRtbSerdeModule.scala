@@ -14,12 +14,12 @@ import io.circe.{Decoder, Encoder}
 object OpenRtbSerdeModule extends SerdeModule {
 
   // bid request encoding
-  implicit val nativeEncoder: Encoder[Imp.Native] = OpenRtbImpressionSerde.nativeEncoder
-  implicit val bannerEncoder: Encoder[Imp.Banner] = OpenRtbBannerSerde.bannerEncoder
-  implicit val videoEncoder: Encoder[Imp.Video] = OpenRtbVideoSerde.videoEncoder
-  implicit val pmpEncoder: Encoder[Pmp] = OpenRtbPmpSerde.pmpEncoder //@todo make the custom using deal serde
+  implicit val nativeEncoder: Encoder[Imp.Native] = OpenRtbNativeSerde.encoder
+  implicit val bannerEncoder: Encoder[Imp.Banner] = OpenRtbBannerSerde.encoder
+  implicit val videoEncoder: Encoder[Imp.Video] = OpenRtbVideoSerde.encoder
+  implicit val pmpEncoder: Encoder[Pmp] = OpenRtbPmpSerde.encoder
 
-  override implicit val userEncoder: Encoder[BidRequest.User] = OpenRtbUserSerde.userEncoder
+  override implicit val userEncoder: Encoder[BidRequest.User] = OpenRtbUserSerde.encoder
   override implicit val impEncoder: Encoder[BidRequest.Imp] = OpenRtbImpressionSerde.encoder
   override implicit val bidRequestEncoder: Encoder[BidRequest] = OpenRtbBidRequestSerde.encoder
 

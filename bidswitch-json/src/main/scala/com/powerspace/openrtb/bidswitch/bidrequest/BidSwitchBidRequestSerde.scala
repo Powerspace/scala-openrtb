@@ -5,6 +5,7 @@ import com.powerspace.bidswitch.BidRequestExt.Google.DetectedVertical
 import com.powerspace.bidswitch.BidRequestExt.{AdTruth, AdsTxt, Dooh, Google, Gumgum, Publisher, Rubicon, Tv}
 import com.powerspace.bidswitch.{BidRequestExt, BidswitchProto}
 import com.powerspace.openrtb.bidswitch.util.JsonUtils
+import com.powerspace.openrtb.json.EncoderProvider
 import com.powerspace.openrtb.json.bidrequest.OpenRtbBidRequestSerde
 import com.powerspace.openrtb.json.util.EncodingUtils
 import io.circe.generic.extras.Configuration
@@ -12,7 +13,7 @@ import io.circe.generic.extras.Configuration
 /**
   * Bid request BidSwitch extension encoders
   */
-object BidSwitchBidRequestSerde {
+object BidSwitchBidRequestSerde extends EncoderProvider[BidRequest]{
 
   import EncodingUtils._
   import JsonUtils._
@@ -33,8 +34,10 @@ object BidSwitchBidRequestSerde {
   implicit val doohEncoder: Encoder[Dooh] = deriveEncoder[Dooh].transformBooleans.clean
   implicit val bidRequestExt: Encoder[BidRequestExt] = deriveEncoder[BidRequestExt].transformBooleans.clean
 
-  implicit def encoder(implicit userEncoder: Encoder[BidRequest.User], impEncoder: Encoder[BidRequest.Imp]):
-    Encoder[BidRequest] = bidRequest =>
-    OpenRtbBidRequestSerde.encoder.apply(bidRequest).addExtension(bidRequest.extension(BidswitchProto.bidRequestExt).asJson)
-
+  def encoder:
+    Encoder[BidRequest] = bidRequest => {
+    val json: Json = bidRequest.extension(BidswitchProto.bidRequestExt).asJson
+    OpenRtbBidRequestSerde.encoder.apply(bidRequest).asObject
+      .map(_.add("ext", json)).asJson
+  }
 }

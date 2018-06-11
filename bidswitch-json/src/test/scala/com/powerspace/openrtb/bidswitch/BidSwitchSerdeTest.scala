@@ -1,8 +1,10 @@
 package com.powerspace.openrtb.bidswitch
 
 import java.net.URL
+
 import com.google.openrtb.BidResponse
 import com.powerspace.bidswitch.BidswitchProto
+import com.powerspace.openrtb.bidswitch.bidrequest.BidSwitchBidRequestSerde
 import io.circe.parser._
 import io.circe.syntax._
 import org.scalatest.{FunSuite, GivenWhenThen}
@@ -69,34 +71,34 @@ class BidSwitchSerdeTest extends FunSuite with GivenWhenThen {
     val bidRequest = sampleBidRequest()
 
     When("I serialize it")
-    val json = bidRequest.asJson
+    val json = bidRequest.asJson(BidSwitchBidRequestSerde.encoder)
     println(json)
 
     Then("It should return a proper bid request with related extensions in JSON format")
 
     // bid request extensions
     val reqCursor = json.hcursor
-    assert(reqCursor.downField("ext").downField("media_src").as[String].value == "powerspace")
+    assert(reqCursor.downField("ext").downField("media_src").as[String].contains("powerspace"))
 
     // impression extension
     val impCursor = reqCursor.downField("imp").downArray
-    assert(impCursor.downField("ext").downField("inventory_class").as[Int].value == 1)
+    assert(impCursor.downField("ext").downField("inventory_class").as[Int].contains(1))
 
     // user extension
     val userCursor = reqCursor.downField("user")
-    assert(userCursor.downField("ext").downField("cookie_age").as[Int].value == 3)
+    assert(userCursor.downField("ext").downField("cookie_age").as[Int].contains(3))
 
     // video extension
     val videoCursor = impCursor.downField("video")
-    assert(videoCursor.downField("ext").downField("player_type").as[Int].value == 3)
+    assert(videoCursor.downField("ext").downField("player_type").as[Int].contains(3))
 
     // banner extension
     val bannerCursor = impCursor.downField("banner")
-    assert(bannerCursor.downField("ext").downField("extra_sizes").downArray.downField("w").as[Int].value == 20)
+    assert(bannerCursor.downField("ext").downField("extra_sizes").downArray.downField("w").as[Int].contains(20))
 
     // deal extension
     val dealCursor = impCursor.downField("pmp").downField("deals").downArray
-    assert(dealCursor.downField("ext").downField("data_src").as[String].value == "datasrc-1")
+    assert(dealCursor.downField("ext").downField("data_src").as[String].contains("datasrc-1"))
 
     // native extension
     // @ todo

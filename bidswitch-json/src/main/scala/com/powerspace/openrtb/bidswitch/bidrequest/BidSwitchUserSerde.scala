@@ -25,6 +25,6 @@ object BidSwitchUserSerde {
   implicit val userExt: Encoder[UserExt] = deriveEncoder[UserExt].transformBooleans.clean
 
   implicit def encoder: Encoder[BidRequest.User] = user =>
-    OpenRtbUserSerde.userEncoder.apply(user).addExtension(user.extension(BidswitchProto.userExt).asJson)
+    OpenRtbUserSerde.encoder.apply(user).addExtension(user.extension(BidswitchProto.userExt).asJson)
 
 }
