@@ -1,4 +1,4 @@
-package com.powerspace.openrtb.json.bidrequest
+package com.powerspace.openrtb.json.common
 
 import com.google.openrtb._
 import com.powerspace.openrtb.json.util.EncodingUtils.protobufEnumEncoder
@@ -10,7 +10,7 @@ import io.circe.generic.extras.Configuration
   */
 object OpenRtbProtobufEnumEncoders {
 
-  implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
+  private implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
 
   implicit val companionTypeEncoder: Encoder[CompanionType] = protobufEnumEncoder[CompanionType]
   implicit val apiFrameworkEncoder: Encoder[APIFramework] = protobufEnumEncoder[APIFramework]
@@ -43,5 +43,6 @@ object OpenRtbProtobufEnumEncoders {
   implicit val placementTypeEncoder: Encoder[PlacementType] = protobufEnumEncoder[PlacementType]
   implicit val productionQualityEncoder: Encoder[ProductionQuality] = protobufEnumEncoder[ProductionQuality]
   implicit val qAGMediaRatingContextEncoder: Encoder[QAGMediaRating] = protobufEnumEncoder[QAGMediaRating]
+  implicit val noBidReasonEncoder: Encoder[NoBidReason] = protobufEnumEncoder[NoBidReason]
 
 }

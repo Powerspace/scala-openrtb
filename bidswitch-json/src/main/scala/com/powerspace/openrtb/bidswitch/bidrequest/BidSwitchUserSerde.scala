@@ -21,10 +21,10 @@ object BidSwitchUserSerde {
 
   implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
 
-  implicit val digiTrustEncoder: Encoder[DigiTrust] = deriveEncoder[DigiTrust].transformBooleans.clean
-  implicit val userExt: Encoder[UserExt] = deriveEncoder[UserExt].transformBooleans.clean
+  implicit val digiTrustEncoder: Encoder[DigiTrust] = deriveEncoder[DigiTrust].cleanRtb
+  implicit val userExt: Encoder[UserExt] = deriveEncoder[UserExt].cleanRtb
 
   implicit def encoder: Encoder[BidRequest.User] = user =>
-    OpenRtbUserSerde.userEncoder.apply(user).addExtension(user.extension(BidswitchProto.userExt).asJson)
+    OpenRtbUserSerde.encoder.apply(user).addExtension(user.extension(BidswitchProto.userExt).asJson)
 
 }

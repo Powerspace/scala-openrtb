@@ -1,10 +1,9 @@
 package com.powerspace.openrtb.bidswitch
 
-import com.google.openrtb.BidRequest.Imp.Banner.Format
 import com.google.openrtb.BidRequest.Imp.Native.RequestOneof
 import com.google.openrtb.BidRequest.Imp.Pmp.Deal
-import com.google.openrtb.BidRequest.Imp.{Audio, Banner, Metric, Native, Pmp, Video}
-import com.google.openrtb.BidRequest.{Data, Device, DistributionchannelOneof, Geo, Imp, Regs, Source, User}
+import com.google.openrtb.BidRequest.Imp.{Audio, Metric, Native, Pmp, Video}
+import com.google.openrtb.BidRequest.{DistributionchannelOneof, Imp, Regs, Source}
 import com.google.openrtb._
 import com.powerspace.bidswitch.BidRequestExt.AdsTxt
 import com.powerspace.bidswitch.ImpressionExt.Google
@@ -13,52 +12,23 @@ import com.powerspace.bidswitch._
 
 object BidRequestFixtures {
 
-  def sampleBidRequest(withNativeObject: Boolean = false): BidRequest = {
+  import com.powerspace.openrtb.json.BidRequestFixtures._
 
-    val geo = Some(Geo(
-      lat = Some(100.10d),
-      lon = Some(200.20d),
-      country = Some("Italy"),
-      `type` = Some(LocationType.IP),
-      ipservice = Some(LocationService.MAXMIND)
-    ))
-
-    val device = Some(Device(
-      dnt = Some(true),
-      ua = Some("ua-1"),
-      ip = Some("ip-1"),
-      geo = geo,
-      didsha1 = Some("didsha1-1")
-    ))
-
-    val user = User(
-      id = Some("id-1"),
-      buyeruid = Some("buyerid-1"),
-      yob = Some(10),
-      gender = Some("m"),
-      keywords = Some("keywords-1"),
-      customdata = Some("customdata-1"),
-      geo = geo,
-      data = Seq(Data(id = Some("data-1"), name = Some("name-1"), segment = Seq()))
-    )
+  def sampleBidRequest(withNativeObject: Boolean): BidRequest = {
 
     // extended user
+    val user = getUser
     val userExtension = UserExt(ug = 30, cookieAge = Some(3), googleConsent = Seq(43))
     val extendedUser = user.withExtension(BidswitchProto.userExt)(Some(userExtension))
 
     // extended banner
-    val banner = Banner(w = Some(10), h = Some(10), api = Seq(APIFramework.MRAID_1), format = Seq(Format(w = Some(10))))
+    val banner = getBanner
     val bannerExtension = BannerExt(Seq(com.powerspace.bidswitch.Format(h = 10, w = 20)))
     val extendedBanner = banner.withExtension(BidswitchProto.bannerExt)(Some(bannerExtension))
 
+    val requestOneof = if (withNativeObject) RequestOneof.RequestNative(NativeRequest(plcmtcnt = Some(40))) else RequestOneof.Request("native-string")
+
     // extended native
-    val requestOneof = if (withNativeObject) {
-      val nativeRequest = NativeRequest(plcmtcnt = Some(40))
-      RequestOneof.RequestNative(nativeRequest)
-    }
-    else {
-      RequestOneof.Request("native-string")
-    }
     val native = Native(ver = Some("ver-1"), api = Seq(APIFramework.MRAID_1), battr = Seq(CreativeAttribute.FLASH), requestOneof = requestOneof)
     val nativeExtension = NativeExt(triplelift = Some(TripleLift(formats = Seq(10))))
     val extendedNative = native.withExtension(BidswitchProto.requestNativeExt)(Some(nativeExtension))
@@ -97,12 +67,13 @@ object BidRequestFixtures {
     val impressionExtension = ImpressionExt(google = Google(excludedAttribute = Seq(1), allowedVendorType = Seq(2)), inventoryClass = Some(1))
     val extendedImpression = impression.withExtension(BidswitchProto.impressionExt)(Some(impressionExtension))
 
+    val device = getDevice
     val bidRequest = BidRequest(
       id = "fmySKZNcTFcTPOurFYivufGxMtuSYpen",
       at = Some(AuctionType.fromValue(value = 2)),
       imp = Seq(extendedImpression),
       cur = Seq("EUR"),
-      device = device,
+      device = Some(device),
       regs = Some(Regs(coppa = Some(true))),
       user = Some(extendedUser),
       tmax = Some(10),

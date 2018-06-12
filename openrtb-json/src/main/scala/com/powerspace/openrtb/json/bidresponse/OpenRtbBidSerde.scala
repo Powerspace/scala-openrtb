@@ -3,13 +3,23 @@ package com.powerspace.openrtb.json.bidresponse
 import com.google.openrtb.BidResponse.SeatBid
 import com.google.openrtb.BidResponse.SeatBid.Bid.AdmOneof
 import com.google.openrtb._
+import com.powerspace.openrtb.json.common.OpenRtbProtobufEnumEncoders
+import com.powerspace.openrtb.json.util.EncodingUtils
+import io.circe.generic.extras.Configuration
 import io.circe.parser._
-import io.circe.{Decoder, DecodingFailure, Json}
 
 /**
   * OpenRTB Bid Serde
   */
 object OpenRtbBidSerde {
+
+  import io.circe._
+  import io.circe.syntax._
+  import io.circe.generic.extras.semiauto._
+  import EncodingUtils._
+  import OpenRtbProtobufEnumEncoders._
+
+  private implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
 
   val nativeObject: Decoder[Json] = cursor => cursor.downField("native").as[Json]
   val nativeDecoder: Decoder[NativeResponse] = nativeObject.emapTry(OpenRtbNativeSerde.decoder.decodeJson(_).toTry)
@@ -81,5 +91,14 @@ object OpenRtbBidSerde {
         exp = exp, burl = burl, lurl = lurl, tactic = tactic, language = language, wratio = wratio,
         hratio = hratio, admOneof = admOneof.getOrElse(AdmOneof.Empty))
     }
+
+  implicit val nativeResponseEncoder: Encoder[NativeResponse] = OpenRtbNativeSerde.nativeResponseEncoder
+
+  implicit val admOneofEncoder: Encoder[AdmOneof] = protobufOneofEncoder[AdmOneof] {
+    case AdmOneof.Adm(string) => string.asJson
+    case AdmOneof.AdmNative(native) => native.asJson
+  }
+
+  def encoder: Encoder[BidResponse.SeatBid.Bid] = deriveEncoder[BidResponse.SeatBid.Bid].cleanRtb
 
 }
