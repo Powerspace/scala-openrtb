@@ -18,11 +18,18 @@ object BidSwitchSerdeModule extends SerdeModule {
   implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
 
   /**
-    * BidSwitch bid response decoders
+    * BidSwitch bid request encoders
     */
-  override implicit val bidDecoder: Decoder[SeatBid.Bid] = BidSwitchBidSerde.bidDecoder
-  override implicit val seatBidDecoder: Decoder[SeatBid] = BidSwitchBidSerde.seatBidDecoder
-  override implicit val bidResponseDecoder: Decoder[BidResponse] = BidSwitchBidResponseSerde.decoder
+  override implicit val userEncoder: Encoder[BidRequest.User] = BidSwitchUserSerde.encoder
+  override implicit val impEncoder: Encoder[BidRequest.Imp] = BidSwitchImpressionSerde.encoder
+  override implicit val bidRequestEncoder: Encoder[BidRequest] = BidSwitchBidRequestSerde.encoder
+
+  /**
+    * BidSwitch bid request decoders
+    */
+  override implicit val userDecoder: Decoder[BidRequest.User] = ???
+  override implicit val impDecoder: Decoder[BidRequest.Imp] = ???
+  override implicit val bidRequestDecoder: Decoder[BidRequest] = ???
 
   /**
     * BidSwitch bid response encoders
@@ -32,10 +39,10 @@ object BidSwitchSerdeModule extends SerdeModule {
   override implicit val bidResponseEncoder: Encoder[BidResponse] = BidSwitchBidResponseSerde.encoder
 
   /**
-    * BidSwitch bid request encoders
+    * BidSwitch bid response decoders
     */
-  override implicit val userEncoder: Encoder[BidRequest.User] = BidSwitchUserSerde.encoder
-  override implicit val impEncoder: Encoder[BidRequest.Imp] = BidSwitchImpressionSerde.encoder
-  override implicit val bidRequestEncoder: Encoder[BidRequest] = BidSwitchBidRequestSerde.encoder
+  override implicit val bidDecoder: Decoder[SeatBid.Bid] = BidSwitchBidSerde.bidDecoder
+  override implicit val seatBidDecoder: Decoder[SeatBid] = BidSwitchBidSerde.seatBidDecoder
+  override implicit val bidResponseDecoder: Decoder[BidResponse] = BidSwitchBidResponseSerde.decoder
 
 }

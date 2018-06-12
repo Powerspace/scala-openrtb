@@ -208,4 +208,100 @@ class OpenRtbSerdeTest extends FunSuite with GivenWhenThen {
     //assert(imgCursor.downField("url").as[String].value == "url-img")
   }
 
+  test("OpenRTB-like (Elastic Ads) Native bid request decoding") {
+    Given("An OpenRTB-like native bid response in JSON format")
+    val stream: URL = getClass.getResource("/elasticads-bidrequest.json")
+    val json: String = scala.io.Source.fromFile(stream.toURI).mkString
+
+    When("I decode it")
+    val decoded = decode[BidRequest](json)
+
+    Then("It should return a proper Scala BidRequest")
+    val bidRequest = decoded.toTry.get
+
+    // Bid Request
+    assert(bidRequest.id.nonEmpty)
+    assert(bidRequest.tmax.nonEmpty)
+
+    // Distribution Channel
+    val distribution = bidRequest.distributionchannelOneof
+    //assert(distribution.app)
+
+    // Source
+    val source = bidRequest.source.get
+    assert(source.fd.nonEmpty)
+    assert(source.pchain.nonEmpty)
+
+    // Regs
+    val regs = bidRequest.regs.get
+    assert(regs.coppa.nonEmpty)
+
+    // User & Data & Segment & Content $ Producer & Geo
+    val user = bidRequest.user.get
+    assert(user.id.nonEmpty)
+    assert(user.keywords.nonEmpty)
+    val data = user.data.head
+    assert(data.id.nonEmpty)
+    assert(data.name.nonEmpty)
+    assert(data.segment.head.id.nonEmpty)
+    assert(data.segment.head.name.nonEmpty)
+    assert(data.segment.head.value.nonEmpty)
+    assert(user.geo.get.ipservice.nonEmpty)
+    assert(user.geo.get.zip.nonEmpty)
+    assert(user.geo.get.`type`.nonEmpty)
+
+    // Impressions
+     val impression = bidRequest.imp.head
+    assert(impression.id.nonEmpty)
+    assert(impression.clickbrowser.nonEmpty)
+    assert(impression.tagid.nonEmpty)
+
+    // Native
+    val native = impression.native.get
+    assert(native.requestOneof.isRequestNative)
+    val nativeRequest = native.requestOneof.requestNative.get
+    assert(nativeRequest.layout.nonEmpty)
+    assert(nativeRequest.ver.nonEmpty)
+    assert(nativeRequest.context.nonEmpty)
+
+    // Video
+    val video = impression.video.get
+    assert(video.companionad.nonEmpty)
+    assert(video.companionad.head.hmax.nonEmpty)
+    assert(video.delivery.nonEmpty)
+    assert(video.minbitrate.nonEmpty)
+
+    // Audio
+    val audio = impression.audio.get
+    assert(audio.maxbitrate.nonEmpty)
+    assert(audio.protocols.nonEmpty)
+
+    // Banner
+    val banner = impression.banner.get
+    assert(banner.hmax.nonEmpty)
+    assert(banner.pos.nonEmpty)
+    assert(banner.wmax.nonEmpty)
+
+    // Metrics
+    assert(impression.metric.nonEmpty)
+    val metric = impression.metric.head
+    assert(metric.value.nonEmpty)
+    assert(metric.vendor.nonEmpty)
+    assert(metric.`type`.nonEmpty)
+
+    // Pmp & Deal
+    val pmp = impression.pmp.get
+    assert(pmp.privateAuction.nonEmpty)
+    assert(pmp.deals.head.id.nonEmpty)
+    assert(pmp.deals.head.wadomain.nonEmpty)
+    assert(pmp.deals.head.wseat.nonEmpty)
+
+
+
+    // Distribution Channel
+    //assert(bidRequest.)
+
+  }
+
+
 }
