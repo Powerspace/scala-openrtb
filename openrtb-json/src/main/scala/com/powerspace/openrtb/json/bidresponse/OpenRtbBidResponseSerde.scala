@@ -23,7 +23,8 @@ object OpenRtbBidResponseSerde {
     */
   private implicit val noBidReasonDecoder: Decoder[Option[NoBidReason]] = Decoder.decodeOption[Int].map(_.map(NoBidReason.fromValue))
   private implicit val unknownFieldSet: Decoder[UnknownFieldSet] = _ => Right(UnknownFieldSet(Map()))
-  private implicit val seatBidEncoder = OpenRtbSeatBidSerde.encoder
+  private implicit val seatBidEncoder: Encoder[BidResponse.SeatBid] = OpenRtbSeatBidSerde.encoder
+
   /**
     * Decoder for the OpenRTB bid response.
     */

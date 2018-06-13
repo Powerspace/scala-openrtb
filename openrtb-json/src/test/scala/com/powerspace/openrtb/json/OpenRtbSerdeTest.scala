@@ -208,6 +208,7 @@ class OpenRtbSerdeTest extends FunSuite with GivenWhenThen {
     //assert(imgCursor.downField("url").as[String].value == "url-img")
   }
 
+  // Work in Progress
   test("OpenRTB-like (Elastic Ads) Native bid request decoding") {
     Given("An OpenRTB-like native bid response in JSON format")
     val stream: URL = getClass.getResource("/elasticads-bidrequest.json")
@@ -295,8 +296,6 @@ class OpenRtbSerdeTest extends FunSuite with GivenWhenThen {
     assert(pmp.deals.head.id.nonEmpty)
     assert(pmp.deals.head.wadomain.nonEmpty)
     assert(pmp.deals.head.wseat.nonEmpty)
-
-
 
     // Distribution Channel
     //assert(bidRequest.)

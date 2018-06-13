@@ -5,7 +5,7 @@ import com.google.openrtb.BidRequest.Imp.Video.CompanionAd
 import com.google.openrtb.BidRequest.Imp.Video
 import com.powerspace.openrtb.json.EncoderProvider
 import com.powerspace.openrtb.json.util.EncodingUtils
-import io.circe.generic.extras.Configuration
+import com.powerspace.openrtb.json.common.OpenRtbProtobufEnumEncoders
 
 /**
   * OpenRTB Video Serde
@@ -13,7 +13,7 @@ import io.circe.generic.extras.Configuration
 object OpenRtbVideoSerde extends EncoderProvider[Video] {
 
   import EncodingUtils._
-  import com.powerspace.openrtb.json.common.OpenRtbProtobufEnumEncoders._
+  import OpenRtbProtobufEnumEncoders._
   import io.circe._
 
   implicit val bannerEncoder: Encoder[Imp.Banner] = OpenRtbBannerSerde.encoder

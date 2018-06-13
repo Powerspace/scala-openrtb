@@ -3,7 +3,6 @@ package com.powerspace.openrtb.json.bidrequest
 import com.google.openrtb.BidRequest
 import com.powerspace.openrtb.json.EncoderProvider
 import com.powerspace.openrtb.json.util.EncodingUtils
-import io.circe.generic.extras.Configuration
 import com.powerspace.openrtb.json.common.OpenRtbProtobufEnumEncoders
 
 /**
@@ -21,4 +20,5 @@ object OpenRtbUserSerde extends EncoderProvider[BidRequest.User] {
 
   def encoder: Encoder[BidRequest.User] =
     openrtbEncoder[BidRequest.User]
+
 }

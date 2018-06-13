@@ -6,7 +6,6 @@ import com.powerspace.openrtb.bidswitch.util.JsonUtils
 import com.powerspace.openrtb.json.EncoderProvider
 import com.powerspace.openrtb.json.bidrequest.OpenRtbVideoSerde
 import com.powerspace.openrtb.json.util.EncodingUtils
-import io.circe.generic.extras.Configuration
 
 /**
   * Video BidSwitch extension encoders
@@ -16,7 +15,6 @@ object BidSwitchVideoSerde extends EncoderProvider[Imp.Video] {
   import EncodingUtils._
   import JsonUtils._
   import io.circe._
-  import io.circe.generic.extras.semiauto._
   import io.circe.syntax._
 
   implicit val videoExt: Encoder[VideoExt] = openrtbEncoder[VideoExt]

@@ -5,9 +5,7 @@ import com.google.openrtb._
 import com.powerspace.openrtb.json.common.OpenRtbProtobufEnumEncoders
 import com.powerspace.openrtb.json.util.EncodingUtils
 import io.circe.Decoder.Result
-import io.circe.Encoder
 import io.circe.generic.extras.Configuration
-
 
 /**
   * OpenRTB BidRequest Serde
@@ -51,8 +49,6 @@ object OpenRtbBidRequestSerde {
   /**
     * Decoder for the OpenRTB bid request.
     */
-  def decoder: Decoder[BidRequest] = new Decoder[BidRequest] {
-    override def apply(c: HCursor): Result[BidRequest] = ???
-  }
+  def decoder: Decoder[BidRequest] = (c: HCursor) => ???
 
 }

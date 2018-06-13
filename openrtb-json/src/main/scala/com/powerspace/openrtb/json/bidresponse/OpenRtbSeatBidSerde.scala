@@ -1,5 +1,6 @@
 package com.powerspace.openrtb.json.bidresponse
 
+import com.google.openrtb.BidResponse.SeatBid
 import com.google.openrtb._
 import com.powerspace.openrtb.json.common.OpenRtbProtobufEnumEncoders
 import com.powerspace.openrtb.json.util.EncodingUtils
@@ -17,7 +18,6 @@ object OpenRtbSeatBidSerde {
 
   private implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
 
-
   /**
     * Decoder for the OpenRTB seatBid object.
     */
@@ -30,7 +30,7 @@ object OpenRtbSeatBidSerde {
       BidResponse.SeatBid(seat = seat, bid = bids, group = group)
     }
 
-  private implicit val bidEncoder = OpenRtbBidSerde.encoder
+  private implicit val bidEncoder: Encoder[SeatBid.Bid] = OpenRtbBidSerde.encoder
 
   implicit def encoder: Encoder[BidResponse.SeatBid] =
       deriveEncoder[BidResponse.SeatBid].cleanRtb

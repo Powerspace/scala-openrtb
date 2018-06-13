@@ -7,7 +7,6 @@ import com.powerspace.openrtb.bidswitch.util.JsonUtils
 import com.powerspace.openrtb.json.EncoderProvider
 import com.powerspace.openrtb.json.bidrequest.{ImpressionLevelEncoders, OpenRtbImpressionSerde}
 import com.powerspace.openrtb.json.util.EncodingUtils
-import io.circe.generic.extras.Configuration
 
 /**
   * Impression BidSwitch extension encoders
@@ -15,7 +14,6 @@ import io.circe.generic.extras.Configuration
 object BidSwitchImpressionSerde extends EncoderProvider[BidRequest.Imp] {
 
   import EncodingUtils._
-  import JsonUtils._
   import io.circe._
   import io.circe.generic.extras.semiauto._
   import io.circe.syntax._
@@ -39,4 +37,5 @@ object BidSwitchImpressionSerde extends EncoderProvider[BidRequest.Imp] {
 
     impJson.asObject.map(_.add("ext", extJson)).asJson
   }
+
 }

@@ -27,9 +27,9 @@ object BidSwitchSerdeModule extends SerdeModule {
   /**
     * BidSwitch bid request decoders
     */
-  override implicit val userDecoder: Decoder[BidRequest.User] = ???
-  override implicit val impDecoder: Decoder[BidRequest.Imp] = ???
-  override implicit val bidRequestDecoder: Decoder[BidRequest] = ???
+  override implicit val userDecoder: Decoder[BidRequest.User] = _ => ???
+  override implicit val impDecoder: Decoder[BidRequest.Imp] = _ => ???
+  override implicit val bidRequestDecoder: Decoder[BidRequest] = _ => ???
 
   /**
     * BidSwitch bid response encoders

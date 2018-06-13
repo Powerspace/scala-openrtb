@@ -5,11 +5,9 @@ import com.google.openrtb.BidRequest.{Imp, User}
 import com.powerspace.bidswitch.BidRequestExt.Google.DetectedVertical
 import com.powerspace.bidswitch.BidRequestExt.{AdTruth, AdsTxt, Dooh, Google, Gumgum, Publisher, Rubicon, Tv}
 import com.powerspace.bidswitch.{BidRequestExt, BidswitchProto}
-import com.powerspace.openrtb.bidswitch.util.JsonUtils
 import com.powerspace.openrtb.json.EncoderProvider
 import com.powerspace.openrtb.json.bidrequest.OpenRtbBidRequestSerde
 import com.powerspace.openrtb.json.util.EncodingUtils
-import io.circe.generic.extras.Configuration
 
 /**
   * Bid request BidSwitch extension encoders
@@ -17,7 +15,6 @@ import io.circe.generic.extras.Configuration
 object BidSwitchBidRequestSerde extends EncoderProvider[BidRequest]{
 
   import EncodingUtils._
-  import JsonUtils._
   import io.circe._
   import io.circe.generic.extras.semiauto._
   import io.circe.syntax._

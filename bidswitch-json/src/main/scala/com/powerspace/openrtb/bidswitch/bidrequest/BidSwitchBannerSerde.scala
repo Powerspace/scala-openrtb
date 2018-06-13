@@ -6,7 +6,6 @@ import com.powerspace.openrtb.bidswitch.util.JsonUtils
 import com.powerspace.openrtb.json.EncoderProvider
 import com.powerspace.openrtb.json.bidrequest.OpenRtbBannerSerde
 import com.powerspace.openrtb.json.util.EncodingUtils
-import io.circe.generic.extras.Configuration
 
 /**
   * Banner BidSwitch extension encoders

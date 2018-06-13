@@ -4,7 +4,7 @@ import com.google.openrtb.{BidRequest, BidResponse}
 import com.google.openrtb.BidResponse.SeatBid
 import com.powerspace.openrtb.json.bidrequest._
 import com.powerspace.openrtb.json.bidresponse.{OpenRtbBidResponseSerde, OpenRtbBidSerde, OpenRtbSeatBidSerde}
-import io.circe.{Decoder, Encoder}
+import io.circe.{Decoder, Encoder, HCursor, Json}
 
 /**
   * Provides serialization and deserialization for OpenRTB entities.
@@ -27,9 +27,9 @@ object OpenRtbSerdeModule extends SerdeModule {
   /**
     * Bid request decoders
     */
-  override implicit val userDecoder: Decoder[BidRequest.User] = ???
-  override implicit val impDecoder: Decoder[BidRequest.Imp] = ???
-  override implicit val bidRequestDecoder: Decoder[BidRequest] = ???
+  override implicit val userDecoder: Decoder[BidRequest.User] = _ => ???
+  override implicit val impDecoder: Decoder[BidRequest.Imp] = _ => ???
+  override implicit val bidRequestDecoder: Decoder[BidRequest] = _ => ???
 
   /**
     * Bid response encoders

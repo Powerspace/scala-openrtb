@@ -7,6 +7,7 @@ import com.google.openrtb._
 import com.powerspace.openrtb.json.common.OpenRtbProtobufEnumEncoders
 import com.powerspace.openrtb.json.util.EncodingUtils
 import io.circe.generic.extras.Configuration
+
 /**
   * OpenRTB Native Serde
   */
@@ -17,6 +18,7 @@ object OpenRtbNativeSerde {
   import io.circe.generic.extras.semiauto._
   import EncodingUtils._
   import OpenRtbProtobufEnumEncoders._
+
   private implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
 
   /**

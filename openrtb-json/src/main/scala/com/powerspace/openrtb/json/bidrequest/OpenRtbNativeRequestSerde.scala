@@ -7,24 +7,23 @@ import com.google.openrtb.NativeRequest.{Asset, EventTrackers}
 import com.powerspace.openrtb.json.EncoderProvider
 import com.powerspace.openrtb.json.util.EncodingUtils
 import io.circe.Encoder
-import io.circe.generic.extras.Configuration
+import com.powerspace.openrtb.json.common.OpenRtbProtobufEnumEncoders
 
 trait NativeDependencies {
   implicit val nativeRequestEncoder: Encoder[NativeRequest]
 }
 
 object OpenRtbNativeRequestSerde extends EncoderProvider[Native] with NativeDependencies {
+
   import io.circe._
   import io.circe.syntax._
   import EncodingUtils._
-  import com.powerspace.openrtb.json.common.OpenRtbProtobufEnumEncoders._
-
-  import io.circe.generic.extras.semiauto._
+  import OpenRtbProtobufEnumEncoders._
 
   private implicit val titleEncoder: Encoder[NativeRequest.Asset.Title] = openrtbEncoder[Asset.Title]
   private implicit val imgEncoder: Encoder[NativeRequest.Asset.Image] = openrtbEncoder[Asset.Image]
 
-  private implicit val videoEncoder = OpenRtbVideoSerde.encoder
+  private implicit val videoEncoder: Encoder[Imp.Video] = OpenRtbVideoSerde.encoder
 
   private implicit val assetDataEncoder: Encoder[NativeRequest.Asset.Data] = openrtbEncoder[Asset.Data].cleanRtb
   private implicit val assetOneOfEncoder: Encoder[NativeRequest.Asset.AssetOneof] = protobufOneofEncoder[NativeRequest.Asset.AssetOneof] {
@@ -45,4 +44,5 @@ object OpenRtbNativeRequestSerde extends EncoderProvider[Native] with NativeDepe
   implicit val nativeRequestEncoder: Encoder[NativeRequest] = openrtbEncoder[NativeRequest]
 
   def encoder: Encoder[Imp.Native] = openrtbEncoder[Imp.Native]
+
 }
