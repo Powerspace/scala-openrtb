@@ -6,6 +6,7 @@ import com.google.openrtb._
 import com.powerspace.openrtb.json.BidRequestFixtures._
 import com.powerspace.openrtb.json.BidResponseFixtures._
 import com.powerspace.openrtb.json.util.EncodingUtils
+import io.circe
 import io.circe.parser._
 import io.circe.syntax._
 import org.scalatest.{FunSuite, GivenWhenThen}
@@ -208,10 +209,9 @@ class OpenRtbSerdeTest extends FunSuite with GivenWhenThen {
     //assert(imgCursor.downField("url").as[String].value == "url-img")
   }
 
-  // Work in Progress
-  test("OpenRTB-like (Elastic Ads) Native bid request decoding") {
+  test("OpenRTB-like Native bid request decoding") {
     Given("An OpenRTB-like native bid response in JSON format")
-    val stream: URL = getClass.getResource("/elasticads-bidrequest.json")
+    val stream: URL = getClass.getResource("/openrtb-like-bidrequest-native.json")
     val json: String = scala.io.Source.fromFile(stream.toURI).mkString
 
     When("I decode it")
@@ -226,27 +226,37 @@ class OpenRtbSerdeTest extends FunSuite with GivenWhenThen {
 
     // Distribution Channel
     val distribution = bidRequest.distributionchannelOneof
-    //assert(distribution.app)
+    assert(distribution.isSite)
+    assert(distribution.site.get.id.nonEmpty)
+    assert(distribution.site.get.domain.nonEmpty)
+    assert(distribution.site.get.publisher.nonEmpty)
+    assert(distribution.site.get.publisher.get.id.nonEmpty)
 
     // Source
     val source = bidRequest.source.get
-    assert(source.fd.nonEmpty)
     assert(source.pchain.nonEmpty)
+    assert(source.fd.nonEmpty)
 
     // Regs
     val regs = bidRequest.regs.get
     assert(regs.coppa.nonEmpty)
 
-    // User & Data & Segment & Content $ Producer & Geo
+    // User
     val user = bidRequest.user.get
     assert(user.id.nonEmpty)
     assert(user.keywords.nonEmpty)
+
+    // User Data
     val data = user.data.head
     assert(data.id.nonEmpty)
     assert(data.name.nonEmpty)
+
+    // Data Segment
     assert(data.segment.head.id.nonEmpty)
     assert(data.segment.head.name.nonEmpty)
     assert(data.segment.head.value.nonEmpty)
+
+    // User Geo
     assert(user.geo.get.ipservice.nonEmpty)
     assert(user.geo.get.zip.nonEmpty)
     assert(user.geo.get.`type`.nonEmpty)
@@ -259,48 +269,79 @@ class OpenRtbSerdeTest extends FunSuite with GivenWhenThen {
 
     // Native
     val native = impression.native.get
+    assert(native.ver.nonEmpty)
     assert(native.requestOneof.isRequestNative)
+
+    // Native Request
     val nativeRequest = native.requestOneof.requestNative.get
     assert(nativeRequest.layout.nonEmpty)
     assert(nativeRequest.ver.nonEmpty)
     assert(nativeRequest.context.nonEmpty)
 
+    // Assets
+    val asset = nativeRequest.assets.head
+    assert(asset.id == 1)
+    assert(asset.required.get)
+
+    // Assets Title
+    assert(asset.getTitle.len == 28)
+
+    // Assets Img
+    val assetTitle = nativeRequest.assets(1)
+    assert(assetTitle.getImg.w.get == 120)
+
+    // Assets Data
+    val assetData = nativeRequest.assets(3)
+    assert(assetData.getData.len.get == 134)
+
     // Video
     val video = impression.video.get
-    assert(video.companionad.nonEmpty)
+    assert(video.protocols.nonEmpty)
     assert(video.companionad.head.hmax.nonEmpty)
-    assert(video.delivery.nonEmpty)
-    assert(video.minbitrate.nonEmpty)
+    assert(video.maxduration.nonEmpty)
+    assert(video.mimes.nonEmpty)
 
     // Audio
     val audio = impression.audio.get
-    assert(audio.maxbitrate.nonEmpty)
-    assert(audio.protocols.nonEmpty)
+    assert(audio.startdelay.nonEmpty)
+    assert(audio.mimes.nonEmpty)
 
     // Banner
     val banner = impression.banner.get
-    assert(banner.hmax.nonEmpty)
+    assert(banner.h.nonEmpty)
     assert(banner.pos.nonEmpty)
-    assert(banner.wmax.nonEmpty)
 
     // Metrics
     assert(impression.metric.nonEmpty)
     val metric = impression.metric.head
     assert(metric.value.nonEmpty)
-    assert(metric.vendor.nonEmpty)
     assert(metric.`type`.nonEmpty)
 
     // Pmp & Deal
     val pmp = impression.pmp.get
     assert(pmp.privateAuction.nonEmpty)
     assert(pmp.deals.head.id.nonEmpty)
-    assert(pmp.deals.head.wadomain.nonEmpty)
+    assert(pmp.deals.head.bidfloor.nonEmpty)
     assert(pmp.deals.head.wseat.nonEmpty)
 
-    // Distribution Channel
-    //assert(bidRequest.)
-
   }
+
+//  test("Cross encoding") {
+//    Given("")
+//    val stream: URL = getClass.getResource("/elasticads-bidresponse.json")
+//    val json: String = scala.io.Source.fromFile(stream.toURI).mkString
+//
+//    When("")
+//    val decoded = decode[BidResponse](json).right.get
+//    val encoded = decoded.asJson.toString()
+//
+//    Then("")
+//    //assert(json == encoded)
+//    println(json)
+//    println("_______")
+//    println(encoded)
+//    assert(true)
+//  }
 
 
 }

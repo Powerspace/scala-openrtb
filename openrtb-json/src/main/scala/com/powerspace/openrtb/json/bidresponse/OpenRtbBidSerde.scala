@@ -34,7 +34,9 @@ object OpenRtbBidSerde {
   /**
     * Decoder for OpenRTB adm object.
     * `adm` can contain either a serialized native response string or a whole native response object
+    *
     * @todo simplify this code
+    * @todo remove println
     */
   private implicit val admOneOfDecoder: Decoder[SeatBid.Bid.AdmOneof] =
     cursor => for {
@@ -44,18 +46,20 @@ object OpenRtbBidSerde {
         .flatMap(nativeDecoder.decodeJson(_).doOnError(println("An error occurred while decoding adm tag.", _)))
         .toOption
     } yield {
-      val maybeNative = decoded.map(AdmOneof.AdmNative)
+      val maybeNative: Option[AdmOneof.AdmNative] = decoded.map(AdmOneof.AdmNative)
       val maybeOneof: Option[AdmOneof] = maybeNative.orElse(adm.map(AdmOneof.Adm))
       maybeOneof.getOrElse(AdmOneof.Empty)
     }
 
   /**
     * Decoder for OpenRTB bid object.
+    * @todo handle bidid
     */
   def decoder: Decoder[BidResponse.SeatBid.Bid] =
     cursor => for {
       id <- cursor.downField("id").as[String]
       impid <- cursor.downField("impid").as[String]
+      bidid <- cursor.downField("bidid").as[String]
       price <- cursor.downField("price").as[Double]
       adid <- cursor.downField("adid").as[Option[String]]
       adomain <- cursor.downField("adomain").as[Seq[String]]
@@ -93,12 +97,10 @@ object OpenRtbBidSerde {
     }
 
   implicit val nativeResponseEncoder: Encoder[NativeResponse] = OpenRtbNativeSerde.nativeResponseEncoder
-
   implicit val admOneofEncoder: Encoder[AdmOneof] = protobufOneofEncoder[AdmOneof] {
     case AdmOneof.Adm(string) => string.asJson
     case AdmOneof.AdmNative(native) => native.asJson
   }
-
   def encoder: Encoder[BidResponse.SeatBid.Bid] = deriveEncoder[BidResponse.SeatBid.Bid].cleanRtb
 
 }

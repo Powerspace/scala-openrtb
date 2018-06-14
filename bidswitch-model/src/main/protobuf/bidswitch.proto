@@ -1,4 +1,4 @@
-syntax = "proto2";
+   syntax = "proto2";
 import "openrtb.proto";
 option java_outer_classname = "BidSwitchExt";
 package com.powerspace.bidswitch;

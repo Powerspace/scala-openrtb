@@ -21,7 +21,6 @@ object BidSwitchNativeSerde extends EncoderProvider[Imp.Native] {
 
   private implicit val tripleLiftExt: Encoder[TripleLift] = deriveEncoder[TripleLift].cleanRtb
   private implicit val nativeExt: Encoder[NativeExt] = deriveEncoder[NativeExt].cleanRtb
-
   def encoder: Encoder[Imp.Native] = native =>
     OpenRtbNativeRequestSerde.encoder.apply(native).addExtension(native.extension(BidswitchProto.requestNativeExt).asJson)
 

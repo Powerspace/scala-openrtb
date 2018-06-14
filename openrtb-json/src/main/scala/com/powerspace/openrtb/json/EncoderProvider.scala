@@ -1,5 +1,6 @@
 package com.powerspace.openrtb.json
 
+import com.google.openrtb.NativeRequest
 import scalapb.GeneratedMessage
 import io.circe.generic.extras.Configuration
 import scalapb.{ExtendableMessage, GeneratedExtension}
@@ -13,9 +14,11 @@ import scala.reflect.ClassTag
   * @tparam T the type we want to provide an encoder for
   */
 trait EncoderProvider[T] {
-  protected implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
+  protected implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames.withDefaults
+}
 
-  def encoder: Encoder[T]
+trait NativeDependencies {
+  implicit val nativeRequestEncoder: Encoder[NativeRequest]
 }
 
 /** Set of features that should be able to manage json openrtb extensions */

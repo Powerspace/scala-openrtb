@@ -18,9 +18,6 @@ object OpenRtbSeatBidSerde {
 
   private implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
 
-  /**
-    * Decoder for the OpenRTB seatBid object.
-    */
   implicit def decoder(implicit bidDecoder: Decoder[BidResponse.SeatBid.Bid]): Decoder[BidResponse.SeatBid] =
     cursor => for {
       seat <- cursor.downField("seat").as[Option[String]]

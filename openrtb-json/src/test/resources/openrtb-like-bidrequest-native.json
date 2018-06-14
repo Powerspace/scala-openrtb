@@ -1,0 +1,222 @@
+{
+  "id": "fmySKZNcTFcTPOurFYivufGxMtuSYpen",
+  "at": 2,
+  "tmax": 50,
+  "source": {
+    "fd": 1,
+    "pchain": "p474tjtyj840"
+  },
+  "regs":{
+    "coppa":0
+  },
+  "imp": [
+    {
+      "id": "1",
+      "tagid": "458",
+      "clickbrowser": 1,
+      "native": {
+        "ver": "1",
+        "battr": [1],
+        "api": [1],
+        "request": {
+          "ver": "1",
+          "layout": 6,
+          "adunit": 5,
+          "plcmtcnt": 1,
+          "seq": 0,
+          "context": 1,
+          "assets": [
+            {
+              "id": 1,
+              "required": 1,
+              "title": {
+                "len": 28
+              }
+            },
+            {
+              "id": 2,
+              "required": 1,
+              "img": {
+                "type": 3,
+                "w": 120,
+                "wmin": 90,
+                "h": 100,
+                "hmin": 75
+              }
+            },
+            {
+              "id": 3,
+              "required": 0,
+              "img": {
+                "type": 2,
+                "wmin": 25,
+                "hmin": 25
+              }
+            },
+            {
+              "id": 4,
+              "required": 1,
+              "data": {
+                "type": 2,
+                "len": 134
+              }
+            },
+            {
+              "id": 5,
+              "required": 1,
+              "data": {
+                "type": 1,
+                "len": 30
+              }
+            },
+            {
+              "id": 6,
+              "required": 0,
+              "video": {
+                "mimes": [
+                  "video/mp4",
+                  "video/webm",
+                  "video/mpeg"
+                ],
+                "minduration": 1,
+                "maxduration": 900,
+                "protocols": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6
+                ],
+                "ext": {
+                  "playbackmethod": [
+                    3,
+                    2
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      },
+      "pmp": {
+        "private_auction": 0,
+        "deals": [
+          {
+            "id": "deal-1",
+            "wseat": [
+              "4",
+              "15"
+            ],
+            "bidfloor": 2.5,
+            "at": 1
+          },
+          {
+            "id": "deal-2",
+            "bidfloor": 2,
+            "at": 2
+          }
+        ]
+      },
+      "banner": {
+        "pos":1,
+        "h":600,
+        "w": 1100
+      },
+      "metric": [
+        {
+          "type": "viewability",
+          "value": 0.85
+        }
+      ],
+      "audio": {
+          "startdelay":0,
+          "minduration":5,
+          "maxduration":30,
+          "api":[
+            1,
+            2
+          ],
+          "protocols":[
+            9,
+            10
+          ],
+          "mimes":[
+            "audio/aac",
+            "audio/mp4",
+            "audio/mpeg"
+          ]
+        },
+        "video": {
+          "protocols": [2, 5],
+          "placement": 2,
+          "playbackend": 1,
+          "minduration": 5,
+          "playbackmethod": [1],
+          "maxduration": 30,
+          "startdelay": 0,
+          "linearity": 1,
+          "mimes":[
+            "video/mp4"
+          ],
+          "companionad":[
+            {
+              "hmax":250,
+              "id":"1",
+              "w":300
+            }
+          ]
+        }
+    }
+  ],
+  "site": {
+    "id": "154",
+    "domain": "fmySKZNcTFcTPOurFYivufGxMtuSYpen.com",
+    "cat": [],
+    "page": "http://ddf56ace-a502-45bd-8ef9-89503e5d564e.com/3df7f288-0f67-4d59-9431-5d61787a50db",
+    "publisher": {
+      "id": "-40350884640627059",
+      "cat": []
+    }
+  },
+  "device": {
+    "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36",
+    "geo": {
+      "contry": "FR"
+    },
+    "ip": "84.232.242.187",
+    "devicetype": 2,
+    "make": "Apple",
+    "os": "Mac OS X",
+    "language": "en"
+  },
+  "bcat": [
+    "IAB1"
+  ],
+  "user": {
+    "id": "793ff4b0-d077-4002-aeb6-b8ea64dd4b2b",
+    "keywords": "asb,todo,rock",
+    "data": [
+      {
+        "id": "077-4002-ae",
+        "name": "provider-b",
+        "segment": [
+          {
+            "id": "b8ea64dd4b2b",
+            "name": "segment-cpc",
+            "value": "hashes"
+          }]
+      }
+    ],
+    "geo": {
+      "lat": "50.5",
+      "lon": "544.04",
+      "type": 1,
+      "country": "Italy",
+      "region": "Lazio",
+      "city": "Rome",
+      "zip": "04026",
+      "ipservice": 2
+    }
+  }
+}

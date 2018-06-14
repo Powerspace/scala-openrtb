@@ -10,12 +10,12 @@ Build it lika any other SBT project. Go to the root folder and run:
 sbt compile
 ```
 
-## TODOs
+## Work in Progress
  - Maven artifact upload
  - OpenRTB versioning and Lens (?)
  - Macro replacement
- 
-Any contribution is very welcome!
+ - Add Travis Continuous Integration
+ - Optimised extension registry
 
 ## Links
 

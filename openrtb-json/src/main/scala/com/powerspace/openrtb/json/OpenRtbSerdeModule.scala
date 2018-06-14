@@ -4,7 +4,7 @@ import com.google.openrtb.{BidRequest, BidResponse}
 import com.google.openrtb.BidResponse.SeatBid
 import com.powerspace.openrtb.json.bidrequest._
 import com.powerspace.openrtb.json.bidresponse.{OpenRtbBidResponseSerde, OpenRtbBidSerde, OpenRtbSeatBidSerde}
-import io.circe.{Decoder, Encoder, HCursor, Json}
+import io.circe.{Decoder, Encoder}
 
 /**
   * Provides serialization and deserialization for OpenRTB entities.
@@ -16,10 +16,10 @@ object OpenRtbSerdeModule extends SerdeModule {
     */
   override implicit val userEncoder: Encoder[BidRequest.User] = OpenRtbUserSerde.encoder
   override implicit val impEncoder: Encoder[BidRequest.Imp] = OpenRtbImpressionSerde.encoder(
-    ImpressionLevelEncoders.bannerEncoder,
-    ImpressionLevelEncoders.videoEncoder,
-    ImpressionLevelEncoders.audioEncoder,
-    ImpressionLevelEncoders.pmpEncoder,
+    ImpressionLevelSerdes.bannerEncoder,
+    ImpressionLevelSerdes.videoEncoder,
+    ImpressionLevelSerdes.audioEncoder,
+    ImpressionLevelSerdes.pmpEncoder,
     OpenRtbNativeRequestSerde.encoder
   )
   override implicit val bidRequestEncoder: Encoder[BidRequest] = OpenRtbBidRequestSerde.encoder
@@ -27,9 +27,15 @@ object OpenRtbSerdeModule extends SerdeModule {
   /**
     * Bid request decoders
     */
-  override implicit val userDecoder: Decoder[BidRequest.User] = _ => ???
-  override implicit val impDecoder: Decoder[BidRequest.Imp] = _ => ???
-  override implicit val bidRequestDecoder: Decoder[BidRequest] = _ => ???
+  override implicit val userDecoder: Decoder[BidRequest.User] = OpenRtbUserSerde.decoder
+  override implicit val impDecoder: Decoder[BidRequest.Imp] = OpenRtbImpressionSerde.decoder(
+    ImpressionLevelSerdes.bannerDecoder,
+    ImpressionLevelSerdes.videoDecoder,
+    ImpressionLevelSerdes.audioDecoder,
+    ImpressionLevelSerdes.pmpDecoder,
+    OpenRtbNativeRequestSerde.decoder
+  )
+  override implicit val bidRequestDecoder: Decoder[BidRequest] = OpenRtbBidRequestSerde.decoder
 
   /**
     * Bid response encoders
