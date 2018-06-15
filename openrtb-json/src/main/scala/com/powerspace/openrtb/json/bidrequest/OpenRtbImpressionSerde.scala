@@ -2,6 +2,7 @@ package com.powerspace.openrtb.json.bidrequest
 
 import com.google.openrtb.BidRequest.Imp
 import com.powerspace.openrtb.json.EncoderProvider
+import com.powerspace.openrtb.json.bidrequest.OpenRtbBannerSerde.{OpenRtbBannerDecoder, OpenRtbBannerEncoder}
 import com.powerspace.openrtb.json.util.EncodingUtils
 import com.powerspace.openrtb.json.common.OpenRtbProtobufEnumEncoders
 import com.powerspace.openrtb.json.common.OpenRtbProtobufEnumDecoders
@@ -11,6 +12,7 @@ import io.circe.generic.extras.semiauto._
 
 /**
   * OpenRTB Imp Encoder and Decoder
+  * @todo split up decoder and encoder
   */
 object ImpressionLevelSerdes {
 
@@ -20,12 +22,12 @@ object ImpressionLevelSerdes {
 
   private implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames.withDefaults
 
-  implicit val bannerEncoder: Encoder[Imp.Banner] = OpenRtbBannerSerde.encoder
+  implicit val bannerEncoder: Encoder[Imp.Banner] = OpenRtbBannerEncoder.encoder
   implicit val videoEncoder: Encoder[Imp.Video] = OpenRtbVideoSerde.encoder
   implicit val audioEncoder: Encoder[Imp.Audio] = openRtbEncoder[Imp.Audio]
   implicit val pmpEncoder: Encoder[Imp.Pmp] = OpenRtbPmpSerde.encoder
 
-  implicit val bannerDecoder: Decoder[Imp.Banner] = OpenRtbBannerSerde.decoder
+  implicit val bannerDecoder: Decoder[Imp.Banner] = OpenRtbBannerDecoder.decoder
   implicit val videoDecoder: Decoder[Imp.Video] = OpenRtbVideoSerde.decoder
   implicit val audioDecoder: Decoder[Imp.Audio] = openRtbDecoder[Imp.Audio]
   implicit val pmpDecoder: Decoder[Imp.Pmp] = OpenRtbPmpSerde.decoder

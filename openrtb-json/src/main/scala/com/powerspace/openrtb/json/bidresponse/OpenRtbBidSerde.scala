@@ -3,15 +3,15 @@ package com.powerspace.openrtb.json.bidresponse
 import com.google.openrtb.BidResponse.SeatBid
 import com.google.openrtb.BidResponse.SeatBid.Bid.AdmOneof
 import com.google.openrtb._
+import com.powerspace.openrtb.json.EncoderProvider
 import com.powerspace.openrtb.json.common.OpenRtbProtobufEnumEncoders
 import com.powerspace.openrtb.json.util.EncodingUtils
-import io.circe.generic.extras.Configuration
-import io.circe.parser._
 
 /**
-  * OpenRTB Bid Serde
+  * OpenRTB Bid Encoder and Decoder
+  * @todo split up decoder and encoder
   */
-object OpenRtbBidSerde {
+object OpenRtbBidSerde extends EncoderProvider[BidResponse.SeatBid.Bid] {
 
   import io.circe._
   import io.circe.syntax._
@@ -19,47 +19,27 @@ object OpenRtbBidSerde {
   import EncodingUtils._
   import OpenRtbProtobufEnumEncoders._
 
-  private implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
+  implicit val nativeResponseEncoder: Encoder[NativeResponse] = OpenRtbNativeSerde.nativeResponseEncoder
+  implicit val admOneofEncoder: Encoder[AdmOneof] = protobufOneofEncoder[AdmOneof] {
+    case AdmOneof.Adm(string) => string.asJson
+    case AdmOneof.AdmNative(native) => native.asJson
+  }
+  def encoder: Encoder[BidResponse.SeatBid.Bid] = deriveEncoder[BidResponse.SeatBid.Bid].cleanRtb
 
-  val nativeObject: Decoder[Json] = cursor => cursor.downField("native").as[Json]
-  val nativeDecoder: Decoder[NativeResponse] = nativeObject.emapTry(OpenRtbNativeSerde.decoder.decodeJson(_).toTry)
 
-  implicit class LoggableEither[L, R](tryInstance: Either[L, R]) {
-    def doOnError(action: (L) => Unit): Either[L, R] = {
-      tryInstance.fold(throwable => action(throwable), _ => Unit)
-      tryInstance
-    }
+  implicit val nativeDecoder: Decoder[NativeResponse] = OpenRtbNativeSerde.decoder.prepare(_.downField("native"))
+
+  private implicit val admOneOfDecoder: Decoder[SeatBid.Bid.AdmOneof] = {
+    cursor => cursor.focus.map {
+      case json if json.isString => json.asString.map(AdmOneof.Adm).getOrElse(AdmOneof.Empty)
+      case json if json.isObject => json.as[NativeResponse].map(AdmOneof.AdmNative).getOrElse(AdmOneof.Empty)
+    }.orElse(Some(AdmOneof.Empty)).map(Right(_)).get
   }
 
-  /**
-    * Decoder for OpenRTB adm object.
-    * `adm` can contain either a serialized native response string or a whole native response object
-    *
-    * @todo simplify this code
-    * @todo remove println
-    */
-  private implicit val admOneOfDecoder: Decoder[SeatBid.Bid.AdmOneof] =
-    cursor => for {
-      adm <- cursor.as[Option[String]]
-      parsed = adm.toRight(DecodingFailure("Unparsable tag adm.", List())).flatMap(parse)
-      decoded = parsed
-        .flatMap(nativeDecoder.decodeJson(_).doOnError(println("An error occurred while decoding adm tag.", _)))
-        .toOption
-    } yield {
-      val maybeNative: Option[AdmOneof.AdmNative] = decoded.map(AdmOneof.AdmNative)
-      val maybeOneof: Option[AdmOneof] = maybeNative.orElse(adm.map(AdmOneof.Adm))
-      maybeOneof.getOrElse(AdmOneof.Empty)
-    }
-
-  /**
-    * Decoder for OpenRTB bid object.
-    * @todo handle bidid
-    */
   def decoder: Decoder[BidResponse.SeatBid.Bid] =
     cursor => for {
       id <- cursor.downField("id").as[String]
       impid <- cursor.downField("impid").as[String]
-      bidid <- cursor.downField("bidid").as[String]
       price <- cursor.downField("price").as[Double]
       adid <- cursor.downField("adid").as[Option[String]]
       adomain <- cursor.downField("adomain").as[Seq[String]]
@@ -95,12 +75,5 @@ object OpenRtbBidSerde {
         exp = exp, burl = burl, lurl = lurl, tactic = tactic, language = language, wratio = wratio,
         hratio = hratio, admOneof = admOneof.getOrElse(AdmOneof.Empty))
     }
-
-  implicit val nativeResponseEncoder: Encoder[NativeResponse] = OpenRtbNativeSerde.nativeResponseEncoder
-  implicit val admOneofEncoder: Encoder[AdmOneof] = protobufOneofEncoder[AdmOneof] {
-    case AdmOneof.Adm(string) => string.asJson
-    case AdmOneof.AdmNative(native) => native.asJson
-  }
-  def encoder: Encoder[BidResponse.SeatBid.Bid] = deriveEncoder[BidResponse.SeatBid.Bid].cleanRtb
 
 }

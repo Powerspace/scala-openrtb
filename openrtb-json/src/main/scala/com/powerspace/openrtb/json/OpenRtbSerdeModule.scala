@@ -2,6 +2,7 @@ package com.powerspace.openrtb.json
 
 import com.google.openrtb.{BidRequest, BidResponse}
 import com.google.openrtb.BidResponse.SeatBid
+import com.powerspace.openrtb.json.bidrequest.OpenRtbBidRequestSerde.{OpenRtbBidRequestDecoder, OpenRtbBidRequestEncoder}
 import com.powerspace.openrtb.json.bidrequest._
 import com.powerspace.openrtb.json.bidresponse.{OpenRtbBidResponseSerde, OpenRtbBidSerde, OpenRtbSeatBidSerde}
 import io.circe.{Decoder, Encoder}
@@ -22,7 +23,7 @@ object OpenRtbSerdeModule extends SerdeModule {
     ImpressionLevelSerdes.pmpEncoder,
     OpenRtbNativeRequestSerde.encoder
   )
-  override implicit val bidRequestEncoder: Encoder[BidRequest] = OpenRtbBidRequestSerde.encoder
+  override implicit val bidRequestEncoder: Encoder[BidRequest] = OpenRtbBidRequestEncoder.encoder
 
   /**
     * Bid request decoders
@@ -35,7 +36,7 @@ object OpenRtbSerdeModule extends SerdeModule {
     ImpressionLevelSerdes.pmpDecoder,
     OpenRtbNativeRequestSerde.decoder
   )
-  override implicit val bidRequestDecoder: Decoder[BidRequest] = OpenRtbBidRequestSerde.decoder
+  override implicit val bidRequestDecoder: Decoder[BidRequest] = OpenRtbBidRequestDecoder.decoder
 
   /**
     * Bid response encoders

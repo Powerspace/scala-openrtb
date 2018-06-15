@@ -12,6 +12,7 @@ import com.powerspace.openrtb.json.common.OpenRtbProtobufEnumDecoders
 
 /**
   * OpenRTB Native Encoder and Decoder
+  * @todo split up decoder and encoder
   */
 object OpenRtbNativeRequestSerde extends EncoderProvider[Imp.Native] {
 

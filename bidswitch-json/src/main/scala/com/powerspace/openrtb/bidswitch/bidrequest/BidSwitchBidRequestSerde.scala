@@ -6,7 +6,7 @@ import com.powerspace.bidswitch.BidRequestExt.Google.DetectedVertical
 import com.powerspace.bidswitch.BidRequestExt.{AdTruth, AdsTxt, Dooh, Google, Gumgum, Publisher, Rubicon, Tv}
 import com.powerspace.bidswitch.{BidRequestExt, BidswitchProto}
 import com.powerspace.openrtb.json.EncoderProvider
-import com.powerspace.openrtb.json.bidrequest.OpenRtbBidRequestSerde
+import com.powerspace.openrtb.json.bidrequest.OpenRtbBidRequestSerde.OpenRtbBidRequestEncoder
 import com.powerspace.openrtb.json.util.EncodingUtils
 
 /**
@@ -36,7 +36,7 @@ object BidSwitchBidRequestSerde extends EncoderProvider[BidRequest]{
     Encoder[BidRequest] = bidRequest => {
     val json: Json = bidRequest.extension(BidswitchProto.bidRequestExt).asJson
 
-    OpenRtbBidRequestSerde.encoder.apply(bidRequest).asObject
+    OpenRtbBidRequestEncoder.encoder.apply(bidRequest).asObject
       .map(_.add("ext", json)).asJson
   }
 }

@@ -9,6 +9,7 @@ import com.powerspace.openrtb.json.common.OpenRtbProtobufEnumDecoders
 
 /**
   * OpenRTB Pmp Encoder and Decoder
+  * @todo split up decoder and encoder
   */
 object OpenRtbPmpSerde extends EncoderProvider[Imp.Pmp] {
 

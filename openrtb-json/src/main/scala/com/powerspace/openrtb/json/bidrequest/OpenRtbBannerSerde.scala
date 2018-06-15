@@ -12,15 +12,21 @@ import com.powerspace.openrtb.json.common.OpenRtbProtobufEnumDecoders
   */
 object OpenRtbBannerSerde extends EncoderProvider[Imp.Banner] {
 
-    import EncodingUtils._
-    import OpenRtbProtobufEnumEncoders._
-    import OpenRtbProtobufEnumDecoders._
     import io.circe._
+    import EncodingUtils._
 
-    implicit val formatEncoder: Encoder[Format] = openRtbEncoder[Format]
-    def encoder: Encoder[Imp.Banner] = openRtbEncoder[Imp.Banner]
+    object OpenRtbBannerEncoder {
+        import OpenRtbProtobufEnumEncoders._
 
-    implicit val formatDecoder: Decoder[Format] = openRtbDecoder[Format]
-    def decoder: Decoder[Imp.Banner] = openRtbDecoder[Imp.Banner]
+        implicit val formatEncoder: Encoder[Format] = openRtbEncoder[Format]
+        def encoder: Encoder[Imp.Banner] = openRtbEncoder[Imp.Banner]
+    }
+
+    object OpenRtbBannerDecoder {
+        import OpenRtbProtobufEnumDecoders._
+
+        implicit val formatDecoder: Decoder[Format] = openRtbDecoder[Format]
+        def decoder: Decoder[Imp.Banner] = openRtbDecoder[Imp.Banner]
+    }
 
 }

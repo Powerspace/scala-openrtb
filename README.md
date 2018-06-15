@@ -4,7 +4,7 @@ Scala OpenRTB is a full Scala library that provides protobuf bindings as well as
 This library also provides SerDes for [BidSwitch](http://www.bidswitch.com/) bidding models, and aims to support other DSPs in the near future.
 
 ## Building
-Build it lika any other SBT project. Go to the root folder and run:
+Build it like any other SBT project. Go to the root folder and run:
 
 ```sbt
 sbt compile

@@ -7,6 +7,9 @@ import com.google.openrtb.BidRequest.Imp.{Audio, Banner, Metric, Native, Pmp, Vi
 import com.google.openrtb.BidRequest.{Data, Device, DistributionchannelOneof, Geo, Imp, Regs, Source, User}
 import com.google.openrtb._
 
+/**
+  * BidRequest entities needed for testing purposes
+  */
 object BidRequestFixtures {
 
   def getGeo = Geo(
@@ -60,9 +63,7 @@ object BidRequestFixtures {
   )
 
   def getBidRequest(withNativeObject: Boolean): BidRequest = {
-
     val requestOneof = if (withNativeObject) RequestOneof.RequestNative(NativeRequest(plcmtcnt = Some(40))) else RequestOneof.Request("native-string")
-
     BidRequest(
       id = "fmySKZNcTFcTPOurFYivufGxMtuSYpen",
       at = Some(AuctionType.fromValue(value = 2)),

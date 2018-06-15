@@ -1,7 +1,7 @@
 package com.powerspace.openrtb.json.util
 
-import io.circe.generic.extras.encoding.ConfiguredObjectEncoder
 import io.circe._
+import io.circe.generic.extras.encoding.ConfiguredObjectEncoder
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.decoding.ConfiguredDecoder
 import scalapb.{GeneratedEnumCompanion, UnknownFieldSet}

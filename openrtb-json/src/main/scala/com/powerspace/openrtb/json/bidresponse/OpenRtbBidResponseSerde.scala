@@ -1,27 +1,25 @@
 package com.powerspace.openrtb.json.bidresponse
 
 import com.google.openrtb.{BidResponse, NoBidReason}
+import com.powerspace.openrtb.json.EncoderProvider
 import com.powerspace.openrtb.json.common.OpenRtbProtobufEnumEncoders
 import com.powerspace.openrtb.json.util.EncodingUtils
-import io.circe.generic.extras.Configuration
-import scalapb.UnknownFieldSet
 
 /**
-  * OpenRTB BidResponse Serde
+  * OpenRTB BidResponse Encoder and Decoder
+  * @todo split up decoder and encoder
   */
-object OpenRtbBidResponseSerde {
+object OpenRtbBidResponseSerde extends EncoderProvider[BidResponse] {
 
   import io.circe._
   import EncodingUtils._
   import OpenRtbProtobufEnumEncoders._
   import io.circe.generic.extras.semiauto._
 
-  private implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
+  private implicit val seatBidEncoder: Encoder[BidResponse.SeatBid] = OpenRtbSeatBidSerde.encoder
+  def encoder: Encoder[BidResponse] = deriveEncoder[BidResponse].cleanRtb
 
   private implicit val noBidReasonDecoder: Decoder[Option[NoBidReason]] = Decoder.decodeOption[Int].map(_.map(NoBidReason.fromValue))
-  private implicit val unknownFieldSet: Decoder[UnknownFieldSet] = _ => Right(UnknownFieldSet(Map()))
-  private implicit val seatBidEncoder: Encoder[BidResponse.SeatBid] = OpenRtbSeatBidSerde.encoder
-
   def decoder(implicit seatBidDecoder: Decoder[BidResponse.SeatBid]): Decoder[BidResponse] = {
     cursor =>
       for {
@@ -35,7 +33,5 @@ object OpenRtbBidResponseSerde {
         BidResponse(id = id, seatbid = seatBids.getOrElse(Seq()), bidid = bidid, cur = cur, customdata = customdata, nbr = nbr)
       }
   }
-
-  def encoder: Encoder[BidResponse] = deriveEncoder[BidResponse].cleanRtb
 
 }
