@@ -25,7 +25,7 @@ object OpenRtbNativeRequestSerde extends EncoderProvider[Imp.Native] {
   private implicit val titleEncoder: Encoder[NativeRequest.Asset.Title] = openRtbEncoder[Asset.Title]
   private implicit val imgEncoder: Encoder[NativeRequest.Asset.Image] = openRtbEncoder[Asset.Image]
   private implicit val videoEncoder: Encoder[Imp.Video] = OpenRtbVideoSerde.encoder
-  private implicit val assetDataEncoder: Encoder[NativeRequest.Asset.Data] = openRtbEncoder[Asset.Data].cleanRtb
+  private implicit val assetDataEncoder: Encoder[NativeRequest.Asset.Data] = openRtbEncoder[Asset.Data]
   private implicit val assetOneOfEncoder: Encoder[NativeRequest.Asset.AssetOneof] = protobufOneofEncoder[NativeRequest.Asset.AssetOneof] {
     case NativeRequest.Asset.AssetOneof.Img(img) => img.asJson
     case NativeRequest.Asset.AssetOneof.Data(data) => data.asJson
@@ -49,6 +49,9 @@ object OpenRtbNativeRequestSerde extends EncoderProvider[Imp.Native] {
   private implicit val videoDecoder: Decoder[Imp.Video] = OpenRtbVideoSerde.decoder
   private implicit val assetDataDecoder: Decoder[NativeRequest.Asset.Data] = openRtbDecoder[Asset.Data]
 
+  /**
+    * Each asset object may contain only one of title, img, data or video.
+    */
   private implicit val assetDecoder: Decoder[NativeRequest.Asset] = cursor =>
     for {
       id <- cursor.downField("id").as[Int]
@@ -75,14 +78,9 @@ object OpenRtbNativeRequestSerde extends EncoderProvider[Imp.Native] {
       case json if json.isObject => json.as[NativeRequest].map(RequestOneof.RequestNative).getOrElse(RequestOneof.Empty)
     }.orElse(Some(RequestOneof.Empty)).map(Right(_)).get
 
-  def decoder: Decoder[Imp.Native] = cursor =>
-    for {
-      ver <- cursor.downField("ver").as[Option[String]]
-      api <- cursor.downField("api").as[Seq[Int]].map(_.map(APIFramework.fromValue))
-      blockedAttributes <- cursor.downField("battr").as[Seq[Int]].map(_.map(CreativeAttribute.fromValue))
-      requestOneof <- cursor.downField("request").as[Imp.Native.RequestOneof]
-    } yield {
-      Imp.Native(ver = ver, api = api, battr = blockedAttributes, requestOneof = requestOneof)
-    }
+  def decoder: Decoder[Imp.Native] = for {
+    native <- openRtbDecoder[Imp.Native]
+    oneof <- Decoder[Imp.Native.RequestOneof].prepare(_.downField("request"))
+  } yield native.copy(requestOneof = oneof)
 
 }

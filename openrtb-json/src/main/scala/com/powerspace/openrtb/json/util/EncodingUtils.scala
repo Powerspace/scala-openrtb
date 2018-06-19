@@ -1,5 +1,6 @@
 package com.powerspace.openrtb.json.util
 
+import io.circe.Json.JBoolean
 import io.circe._
 import io.circe.generic.extras.encoding.ConfiguredObjectEncoder
 import io.circe.generic.extras.Configuration
@@ -115,7 +116,13 @@ object EncodingUtils {
   }
 
   implicit val booleanDecoder: Decoder[Boolean] = Decoder.decodeBoolean.prepare(cursor => {
-    cursor.withFocus(json => json.asNumber.map(number => Json.fromBoolean(number.toInt.map(_.toBoolean).get)).get)
+    cursor.withFocus(
+      _.asNumber.map(
+        _.toInt
+          .map(_.toBoolean)
+          .map(Json.fromBoolean)
+          getOrElse Json.False
+      ).getOrElse(Json.False))
   })
 
 }

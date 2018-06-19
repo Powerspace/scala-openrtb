@@ -37,7 +37,6 @@ object ImpressionLevelSerdes {
 object OpenRtbImpressionSerde extends EncoderProvider[Imp] {
 
   import EncodingUtils._
-  import OpenRtbProtobufEnumDecoders._
 
   implicit val metricEncoder: Encoder[Imp.Metric] = deriveEncoder[Imp.Metric].cleanRtb
   def encoder(implicit bannerEncoder: Encoder[Imp.Banner],

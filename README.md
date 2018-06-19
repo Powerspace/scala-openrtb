@@ -12,7 +12,7 @@ sbt compile
 
 ## Work in Progress
  - Maven artifact upload
- - OpenRTB versioning and Lens (?)
+ - OpenRTB versioning and Lens
  - Macro replacement
  - Add Travis Continuous Integration
  - Optimised extension registry
@@ -20,6 +20,15 @@ sbt compile
 ## Links
 
 * [OpenRTB](https://www.iab.com/guidelines/real-time-bidding-rtb-project/) specifications:
-  * [OpenRTB API Spec Version 2.5](https://github.com/twitter/scalding/wiki/Type-safe-api-reference)
-  * [OpenRTB Dynamic Native Ads API Spec Version 1.1](https://github.com/twitter/scalding/wiki/Fields-based-API-Reference)
+  * [OpenRTB API Spec Version 2.5](https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf)
+  * [OpenRTB Dynamic Native Ads API Spec Version 1.1](https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-Native-Ads-Specification-1-1_2016.pdf)
 * [Powerspace](https://powerspace.com/en/): Powerspace is the 1st native advertising platform for e-mail. Powerspace allows brands to broadcast their content at scale across hundreds of media newsletters leveraging cutting-edge technology solutions.
+
+
+## Contributions
+
+Feel free to:
+
+- add support for other DSPs
+- raise an issue
+- submit your pull request
