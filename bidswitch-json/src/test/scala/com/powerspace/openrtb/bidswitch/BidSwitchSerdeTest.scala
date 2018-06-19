@@ -16,28 +16,33 @@ class BidSwitchSerdeTest extends FunSuite with GivenWhenThen {
   import BidSwitchSerdeModule._
   import com.powerspace.openrtb.json.util.EncodingUtils._
 
-  test("BidSwitch bid response deserialization") {
-    Given("A BidSwitch bid response in JSON format")
+  test("BidSwitch BidResponse deserialization") {
+    Given("A BidSwitch BidResponse in JSON format")
     val stream: URL = getClass.getResource("/bidswitch-bidresponse.json")
     val json: String = scala.io.Source.fromFile(stream.toURI).mkString
 
     When("I deserialize it")
     val decoded = decode[BidResponse](json)
 
-    Then("It should return a proper Scala BidResponse")
+    Then("I should get a proper Scala BidResponse")
+    // bid response
     val bidResponse = decoded.toTry.get
     assert(bidResponse.id == "1234567890")
     assert(bidResponse.bidid.isEmpty)
     assert(bidResponse.seatbid.size == 1)
     assert(bidResponse.seatbid.head.bid.size == 2)
+
+    // bid
     val firstBid = bidResponse.seatbid.head.bid.head
     assert(firstBid.language.contains("en"))
     assert(firstBid.h.isEmpty)
     assert(firstBid.price == 9.43)
 
+    // bid response extension
     val bidResponseExtension = decoded.map(_.extension(BidswitchProto.bidResponseExt)).toTry.get.get
     assert(bidResponseExtension.protocol.contains("5.3"))
 
+    // bid extension
     val bidExtension = decoded.map(_.seatbid.flatMap(_.bid).flatMap(_.extension(BidswitchProto.bidExt))).toTry.get.head
     assert(bidExtension.advertiserName.nonEmpty)
 
@@ -46,6 +51,7 @@ class BidSwitchSerdeTest extends FunSuite with GivenWhenThen {
     assert(bidExtension.native.get.assets.head.required.contains(true))
     assert(bidExtension.native.get.assets.head.getTitle.text.nonEmpty)
 
+    // native extension
     val nativeExtension = bidExtension.native.get.extension(BidswitchProto.responseNativeExt).get
     assert(nativeExtension.adchoiceurl.isEmpty)
     assert(nativeExtension.viewtracker.isEmpty)
@@ -59,7 +65,7 @@ class BidSwitchSerdeTest extends FunSuite with GivenWhenThen {
     When("I deserialize it")
     val decoded = decode[BidResponse](json)
 
-    Then("It should return a proper Scala BidResponse with no bid in it")
+    Then("I should get a proper Scala BidResponse with no bid in it")
     val bidResponse = decoded.toTry.get
     assert(bidResponse.id.nonEmpty)
     assert(bidResponse.bidid.isEmpty)
@@ -73,10 +79,8 @@ class BidSwitchSerdeTest extends FunSuite with GivenWhenThen {
 
     When("I serialize it")
     val json = bidRequest.asJson(BidSwitchBidRequestSerde.encoder)
-    println(json)
 
-    Then("It should return a proper native bid request with related extensions in JSON format")
-
+    Then("I should get a proper native bid request with related extensions in JSON format")
     // bid request extensions
     val reqCursor = json.hcursor
     assert(reqCursor.downField("ext").downField("media_src").as[String].contains("powerspace"))
@@ -112,9 +116,8 @@ class BidSwitchSerdeTest extends FunSuite with GivenWhenThen {
 
     When("I serialize it")
     val json = bidRequest.asJson
-    println(json)
 
-    Then("It should return a proper NON-Native bid request")
+    Then("I should get a proper NON-Native bid request")
     val nativeCursor = json.hcursor.downField("imp").downArray.downField("native").downField("request")
     assert(nativeCursor.as[String].value == "native-string")
   }
@@ -125,10 +128,9 @@ class BidSwitchSerdeTest extends FunSuite with GivenWhenThen {
 
     When("I serialize it")
     val json = bidResponse.asJson
-    println(json)
-    Then("It should return a proper native bid response with related extensions in JSON format")
 
-    // bid request extensions
+    Then("I should get a proper native bid response with related extensions in JSON format")
+    // @todo bid request extensions
     val resCursor = json.hcursor
     //assert(reqCursor.downField("ext").downField("media_src").as[String].value == "powerspace")
   }

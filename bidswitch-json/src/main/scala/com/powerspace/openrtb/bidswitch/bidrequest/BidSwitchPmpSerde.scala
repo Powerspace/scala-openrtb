@@ -3,9 +3,7 @@ package com.powerspace.openrtb.bidswitch.bidrequest
 import com.google.openrtb.BidRequest.Imp
 import com.powerspace.openrtb.json.common.OpenRtbProtobufEnumEncoders
 import com.powerspace.openrtb.json.EncoderProvider
-
 import com.powerspace.openrtb.json.util.EncodingUtils
-import io.circe.generic.extras.Configuration
 
 object BidSwitchPmpSerde extends EncoderProvider[Imp.Pmp] {
 
@@ -18,4 +16,5 @@ object BidSwitchPmpSerde extends EncoderProvider[Imp.Pmp] {
   implicit val pmpEncoder: Encoder[Imp.Pmp] = deriveEncoder[Imp.Pmp].cleanRtb
 
   def encoder: Encoder[Imp.Pmp] = deriveEncoder[Imp.Pmp].transformBooleans.clean
+
 }

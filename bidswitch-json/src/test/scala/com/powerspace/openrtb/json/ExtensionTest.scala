@@ -33,9 +33,5 @@ class ExtensionTest extends FunSuite with GivenWhenThen {
       .hcursor.downField("ext").as[Json]
 
     assert(result.toOption.isDefined)
-
-    // @todo make openrtbEncoder with extensions management
-    // @todo make openrtbDecoder with extensions management
-
   }
 }

@@ -1,15 +1,14 @@
 {
-  "id": "fmySKZNcTFcTPOurFYivufGxMtuSYpen",
+  "id": "379ca852-554f-3709-923b-985a763ac8d6",
   "seatbid": [
     {
       "bid": [
         {
-          "id": "fmySKZNcTFcTPOurFYivufGxMtuSYpen",
-          "bidid": "fmySKZNcTFcTPOurFYivufGxMtuSYpen",
+          "id": "379ca852-554f-3709-923b-985a763ac8d6",
           "impid": "1",
-          "price": 0.9,
-          "nurl": "https://tracking-eu.dsp.theadtech.com:4431/v1/win?media_cost=${AUCTION_PRICE}&bid_request_id=fmySKZNcTFcTPOurFYivufGxMtuSYpen&bid_id=37144464&imp_id=1&tag_id=458&auction_timestamp=1494602342&user_id=r1KznwG8Xe-&domain=ddf56ace-a502-45bd-8ef9-89503e5d564e.com&deal=deal-2&pva=0&seat_id=1&advertiser_id=1&line_item_id=1&campaign_id=249&ad_id=150&ad_flavour_id=1626&channel_id=30&revenue_type=none&revenue=&bid_price=0.90000000000000002&country=RO&type=WIN&supply_type=web&dsp_salt=1366074880",
-          "adm": "{\"native\":{\"assets\":[{\"id\":1,\"title\":{\"text\":\"Le printemps est là > jusqu\"}},{\"id\":2,\"img\":{\"h\":150,\"url\":\"https://d39mhyf1137x0k.cloudfront.net/media/image/ahilwc1b/scale-150x150\",\"w\":150}},{\"data\":{\"value\":\"Profitez de jusqu'à -50% sur des milliers de modèles avec nos promotions de printemps !\"},\"id\":4},{\"data\":{\"value\":\"Sarenza\"},\"id\":5}],\"imptrackers\":[\"https://tracking.dsp.theadtech.com/v1/track?auction_id=fmySKZNcTFcTPOurFYivufGxMtuSYpen&auction_bid_id=37144464&type=IMP&user_id=r1KznwG8Xe-\",\"https://pixels.dsp.theadtech.com/sync?ssp=trl&uid=r1KznwG8Xe-\",\"https://pixels.dsp.theadtech.com/sync?ssp=pwl&uid=r1KznwG8Xe-\",\"https://pixels.dsp.theadtech.com/sync?ssp=tbl&uid=r1KznwG8Xe-\",\"https://pixels.dsp.theadtech.com/sync?ssp=bsw&uid=r1KznwG8Xe-\",\"https://pixels.dsp.theadtech.com/sync?ssp=ivd&uid=r1KznwG8Xe-\",\"https://pixels.dsp.theadtech.com/sync?ssp=pws&uid=r1KznwG8Xe-\",\"https://pixels.dsp.theadtech.com/sync?ssp=sas&uid=r1KznwG8Xe-\"],\"link\":{\"url\":\"https://tracking.dsp.theadtech.com/v1/track?auction_id=fmySKZNcTFcTPOurFYivufGxMtuSYpen&auction_bid_id=37144464&type=CLICK&user_id=r1KznwG8Xe-&re=http%3A%2F%2Fwww.sarenza.com%2Fchaussure-pas-cher\"}}}",
+          "price": 0.712,
+          "nurl": "https://tracking-eu.dsp.theadtech.com/v1/win?media_cost=${AUCTION_PRICE}&bid_request_id=379ca852-554f-3709-923b-985a763ac8d6&bid_id=3007528809&imp_id=1&tag_id=powerspace_7JM7VK8J_2501&auction_timestamp=1529065494&user_id=Bk3-ldamZWm&domain=site-323.siteid&deal=0&pva=0&seat_id=1&advertiser_id=1&line_item_id=1&campaign_id=249&ad_id=150&ad_type=native&ad_flavour_id=1630&channel_id=30&connector_id=0&revenue_type=none&revenue=&bid_price=0.71199999999999997&country=FRA&region=CA&department=__DEPARTMENT__&postal_code=&device_ifa=&geo_loc=1:1&type=WIN&supply_type=mobile_web&device_type=4&venue_id=c0c0649814eee6d48002a3dcee03ffec&bid_type=man&dsp_salt=1051974656",
+          "adm": "{\"native\":{\"assets\":[{\"id\":1,\"title\":{\"text\":\"Le printemps est là > jusqu'à -50% \"}},{\"data\":{\"value\":\"Profitez de jusqu'à -50% sur des milliers de modèles avec nos promotions de printemps !\"},\"id\":3},{\"data\":{\"value\":\"Sarenza\"},\"id\":4},{\"id\":6,\"img\":{\"h\":417,\"url\":\"https://d39mhyf1137x0k.cloudfront.net/media/image/azp5et74/scale-900x500\",\"w\":750}}],\"imptrackers\":[\"https://pixels.dsp.theadtech.com/trk?channel=30&trk_url=https%3A%2F%2Ftracking.dsp.theadtech.com%2Fv1%2Ftrack%3Fauction_id%3d379ca852-554f-3709-923b-985a763ac8d6%26auction_bid_id%3d3007528809%26type%3dIMP%26user_id%3d${DSP_UID}%26seat_id%3D1%26advertiser_id%3D1%26line_item_id%3D1%26campaign_id%3D249%26ad_id%3D150%26ad_type%3Dnative%26ad_flavour_id%3D1630%26channel_id%3D30%26revenue_type%3Dnone&redir=\",\"https://pixels.dsp.theadtech.com/sync?ssp=trl&uid=Bk3-ldamZWm\",\"https://pixels.dsp.theadtech.com/sync?ssp=pwl&uid=Bk3-ldamZWm\",\"https://pixels.dsp.theadtech.com/sync?ssp=tbl&uid=Bk3-ldamZWm\",\"https://pixels.dsp.theadtech.com/sync?ssp=bsw&uid=Bk3-ldamZWm\",\"https://pixels.dsp.theadtech.com/sync?ssp=ayl&uid=Bk3-ldamZWm\",\"https://pixels.dsp.theadtech.com/sync?ssp=ivd&uid=Bk3-ldamZWm\",\"https://pixels.dsp.theadtech.com/sync?ssp=pws&uid=Bk3-ldamZWm\",\"https://pixels.dsp.theadtech.com/sync?ssp=sas&uid=Bk3-ldamZWm\",\"https://pixels.dsp.theadtech.com/sync?ssp=m6s&uid=Bk3-ldamZWm\"],\"link\":{\"url\":\"https://pixels.dsp.theadtech.com/trk?channel=30&trk_url=https%3A%2F%2Ftracking.dsp.theadtech.com%2Fv1%2Ftrack%3Fauction_id%3d379ca852-554f-3709-923b-985a763ac8d6%26auction_bid_id%3d3007528809%26type%3dCLICK%26user_id%3d${DSP_UID}%26seat_id%3D1%26advertiser_id%3D1%26line_item_id%3D1%26campaign_id%3D249%26ad_id%3D150%26ad_type%3Dnative%26ad_flavour_id%3D1630%26channel_id%3D30%26revenue_type%3Dnone&redir=http%3A%2F%2Fwww.sarenza.com%2Fchaussure-pas-cher\"},\"ver\":1}}",
           "adomain": [
             "sarenza.com"
           ],
@@ -17,11 +16,12 @@
             "IAB18-3"
           ],
           "cid": "249:30",
-          "crid": "150:1626"
+          "crid": "150:1630"
         }
       ],
       "seat": "1"
     }
   ],
+  "bidid": "3007528809",
   "cur": "USD"
 }

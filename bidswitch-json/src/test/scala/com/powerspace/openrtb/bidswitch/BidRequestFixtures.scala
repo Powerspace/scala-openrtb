@@ -10,6 +10,9 @@ import com.powerspace.bidswitch.ImpressionExt.Google
 import com.powerspace.bidswitch.NativeExt.TripleLift
 import com.powerspace.bidswitch._
 
+/**
+  * BidSwitch BidRequest entities needed for testing purposes
+  */
 object BidRequestFixtures {
 
   import com.powerspace.openrtb.json.BidRequestFixtures._

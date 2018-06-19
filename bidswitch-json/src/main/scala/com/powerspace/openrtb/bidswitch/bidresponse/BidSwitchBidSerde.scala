@@ -2,7 +2,7 @@ package com.powerspace.openrtb.bidswitch.bidresponse
 
 import com.google.openrtb.BidResponse.SeatBid
 import com.google.openrtb.BidResponse.SeatBid.Bid.AdmOneof
-import com.google.openrtb.{BidResponse, NativeResponse}
+import com.google.openrtb.NativeResponse
 import com.powerspace.bidswitch.BidExt.{Google, Yieldone}
 import com.powerspace.bidswitch.{BidExt, BidswitchProto}
 import com.powerspace.openrtb.bidswitch.util.JsonUtils
@@ -22,6 +22,7 @@ object BidSwitchBidSerde {
   import JsonUtils._
   import EncodingUtils._
   import OpenRtbProtobufEnumEncoders._
+
   private implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
 
   /**
@@ -96,6 +97,5 @@ object BidSwitchBidSerde {
 
   def seatBidEncoder: Encoder[SeatBid] =
     seatBid => OpenRtbSeatBidSerde.encoder.apply(seatBid)
-
 
 }

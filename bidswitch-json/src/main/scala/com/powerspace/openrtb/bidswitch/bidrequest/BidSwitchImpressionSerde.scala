@@ -3,11 +3,9 @@ package com.powerspace.openrtb.bidswitch.bidrequest
 import com.google.openrtb.BidRequest
 import com.google.openrtb.BidRequest.Imp
 import com.powerspace.bidswitch.{BidswitchProto, ImpressionExt}
-import com.powerspace.openrtb.bidswitch.util.JsonUtils
 import com.powerspace.openrtb.json.EncoderProvider
-import com.powerspace.openrtb.json.bidrequest.{ImpressionLevelEncoders, OpenRtbImpressionSerde}
+import com.powerspace.openrtb.json.bidrequest.{ImpressionLevelSerdes, OpenRtbImpressionSerde}
 import com.powerspace.openrtb.json.util.EncodingUtils
-import io.circe.generic.extras.Configuration
 
 /**
   * Impression BidSwitch extension encoders
@@ -15,7 +13,6 @@ import io.circe.generic.extras.Configuration
 object BidSwitchImpressionSerde extends EncoderProvider[BidRequest.Imp] {
 
   import EncodingUtils._
-  import JsonUtils._
   import io.circe._
   import io.circe.generic.extras.semiauto._
   import io.circe.syntax._
@@ -29,7 +26,7 @@ object BidSwitchImpressionSerde extends EncoderProvider[BidRequest.Imp] {
   private implicit val nativeEncoder: Encoder[Imp.Native] = BidSwitchNativeSerde.encoder
   private implicit val bannerEncoder: Encoder[Imp.Banner] = BidSwitchBannerSerde.encoder
   private implicit val videoEncoder: Encoder[Imp.Video] = BidSwitchVideoSerde.encoder
-  private implicit val audioEncoder: Encoder[Imp.Audio] = ImpressionLevelEncoders.audioEncoder
+  private implicit val audioEncoder: Encoder[Imp.Audio] = ImpressionLevelSerdes.audioEncoder
 
   private implicit val pmpEncoder: Encoder[Imp.Pmp] = BidSwitchPmpSerde.encoder
 
@@ -39,4 +36,5 @@ object BidSwitchImpressionSerde extends EncoderProvider[BidRequest.Imp] {
 
     impJson.asObject.map(_.add("ext", extJson)).asJson
   }
+
 }

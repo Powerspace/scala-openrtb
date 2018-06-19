@@ -3,15 +3,16 @@ package com.powerspace.openrtb.json.bidresponse
 import com.google.openrtb.BidResponse.SeatBid
 import com.google.openrtb.BidResponse.SeatBid.Bid.AdmOneof
 import com.google.openrtb._
+import com.powerspace.openrtb.json.EncoderProvider
 import com.powerspace.openrtb.json.common.OpenRtbProtobufEnumEncoders
 import com.powerspace.openrtb.json.util.EncodingUtils
-import io.circe.generic.extras.Configuration
-import io.circe.parser._
+import io.circe.parser.decode
 
 /**
-  * OpenRTB Bid Serde
+  * OpenRTB Bid Encoder and Decoder
+  * @todo split up decoder and encoder
   */
-object OpenRtbBidSerde {
+object OpenRtbBidSerde extends EncoderProvider[BidResponse.SeatBid.Bid] {
 
   import io.circe._
   import io.circe.syntax._
@@ -19,39 +20,34 @@ object OpenRtbBidSerde {
   import EncodingUtils._
   import OpenRtbProtobufEnumEncoders._
 
-  private implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
+  implicit val nativeResponseEncoder: Encoder[NativeResponse] = OpenRtbNativeSerde.nativeResponseEncoder
+  implicit val admOneofEncoder: Encoder[AdmOneof] = protobufOneofEncoder[AdmOneof] {
+    case AdmOneof.Adm(string) => string.asJson
+    case AdmOneof.AdmNative(native) => native.asJson
+  }
+  def encoder: Encoder[BidResponse.SeatBid.Bid] = deriveEncoder[BidResponse.SeatBid.Bid].cleanRtb
 
-  val nativeObject: Decoder[Json] = cursor => cursor.downField("native").as[Json]
-  val nativeDecoder: Decoder[NativeResponse] = nativeObject.emapTry(OpenRtbNativeSerde.decoder.decodeJson(_).toTry)
 
-  implicit class LoggableEither[L, R](tryInstance: Either[L, R]) {
-    def doOnError(action: (L) => Unit): Either[L, R] = {
-      tryInstance.fold(throwable => action(throwable), _ => Unit)
-      tryInstance
-    }
+  implicit val nativeDecoder: Decoder[NativeResponse] = OpenRtbNativeSerde.decoder.prepare(_.downField("native"))
+
+  /**
+    * The field `adm` can appear either in a form of escaped JSON string or in a form of a JSON object
+    * As long as the content is compatible with a NativeResponse, the library will de-serialize it as
+    * expected.
+    */
+  private implicit val admOneOfDecoder: Decoder[SeatBid.Bid.AdmOneof] = {
+    cursor => cursor.focus.map {
+      case json if json.isString =>
+        json.asString.map(s => {
+          decode[NativeResponse](s)
+            .map(AdmOneof.AdmNative) // the string can be decoded as native
+            .getOrElse(AdmOneof.Adm(s)) // the string cannot be decoded
+        }).getOrElse(AdmOneof.Empty) // there's no string or it's impossible to decode it
+      case json if json.isObject =>
+        json.as[NativeResponse].map(AdmOneof.AdmNative).getOrElse(AdmOneof.Empty)
+    }.orElse(Some(AdmOneof.Empty)).map(Right(_)).get
   }
 
-  /**
-    * Decoder for OpenRTB adm object.
-    * `adm` can contain either a serialized native response string or a whole native response object
-    * @todo simplify this code
-    */
-  private implicit val admOneOfDecoder: Decoder[SeatBid.Bid.AdmOneof] =
-    cursor => for {
-      adm <- cursor.as[Option[String]]
-      parsed = adm.toRight(DecodingFailure("Unparsable tag adm.", List())).flatMap(parse)
-      decoded = parsed
-        .flatMap(nativeDecoder.decodeJson(_).doOnError(println("An error occurred while decoding adm tag.", _)))
-        .toOption
-    } yield {
-      val maybeNative = decoded.map(AdmOneof.AdmNative)
-      val maybeOneof: Option[AdmOneof] = maybeNative.orElse(adm.map(AdmOneof.Adm))
-      maybeOneof.getOrElse(AdmOneof.Empty)
-    }
-
-  /**
-    * Decoder for OpenRTB bid object.
-    */
   def decoder: Decoder[BidResponse.SeatBid.Bid] =
     cursor => for {
       id <- cursor.downField("id").as[String]
@@ -91,14 +87,5 @@ object OpenRtbBidSerde {
         exp = exp, burl = burl, lurl = lurl, tactic = tactic, language = language, wratio = wratio,
         hratio = hratio, admOneof = admOneof.getOrElse(AdmOneof.Empty))
     }
-
-  implicit val nativeResponseEncoder: Encoder[NativeResponse] = OpenRtbNativeSerde.nativeResponseEncoder
-
-  implicit val admOneofEncoder: Encoder[AdmOneof] = protobufOneofEncoder[AdmOneof] {
-    case AdmOneof.Adm(string) => string.asJson
-    case AdmOneof.AdmNative(native) => native.asJson
-  }
-
-  def encoder: Encoder[BidResponse.SeatBid.Bid] = deriveEncoder[BidResponse.SeatBid.Bid].cleanRtb
 
 }

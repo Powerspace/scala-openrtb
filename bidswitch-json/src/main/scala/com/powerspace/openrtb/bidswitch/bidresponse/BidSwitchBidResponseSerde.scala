@@ -7,7 +7,6 @@ import com.powerspace.openrtb.json.EncoderProvider
 import com.powerspace.openrtb.json.util.EncodingUtils
 import com.powerspace.openrtb.json.bidresponse.OpenRtbBidResponseSerde
 import com.powerspace.openrtb.json.common.OpenRtbProtobufEnumEncoders
-import io.circe.generic.extras.Configuration
 
 /**
   * Decoder for the BidSwitch bid response extension
@@ -28,7 +27,7 @@ object BidSwitchBidResponseSerde extends EncoderProvider[BidResponse] {
     .map(BidResponseExt.apply)
   private implicit val bidResponseExtEncoder: Encoder[BidResponseExt] = deriveEncoder[BidResponseExt].cleanRtb
 
-  private implicit val seatBidEncoder = BidSwitchBidSerde.seatBidEncoder
+  private implicit val seatBidEncoder: Encoder[BidResponse.SeatBid] = BidSwitchBidSerde.seatBidEncoder
 
   def decoder: Decoder[BidResponse] = for {
     bidResponse <- OpenRtbBidResponseSerde.decoder
