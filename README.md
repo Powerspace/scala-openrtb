@@ -22,4 +22,4 @@ sbt compile
 * [OpenRTB](https://www.iab.com/guidelines/real-time-bidding-rtb-project/) specifications:
   * [OpenRTB API Spec Version 2.5](https://github.com/twitter/scalding/wiki/Type-safe-api-reference)
   * [OpenRTB Dynamic Native Ads API Spec Version 1.1](https://github.com/twitter/scalding/wiki/Fields-based-API-Reference)
-* [Powerspace](https://powerspace.com/en/): Powerspace is the 1st native advertising platform for E-mail. Powerspace allows brands to broadcast their content at scale across hundreds of media newsletters leveraging cutting-edge technology solutions.
+* [Powerspace](https://powerspace.com/en/): Powerspace is the 1st native advertising platform for e-mail. Powerspace allows brands to broadcast their content at scale across hundreds of media newsletters leveraging cutting-edge technology solutions.

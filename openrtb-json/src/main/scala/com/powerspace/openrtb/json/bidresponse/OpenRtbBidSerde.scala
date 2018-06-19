@@ -6,6 +6,7 @@ import com.google.openrtb._
 import com.powerspace.openrtb.json.EncoderProvider
 import com.powerspace.openrtb.json.common.OpenRtbProtobufEnumEncoders
 import com.powerspace.openrtb.json.util.EncodingUtils
+import io.circe.parser.decode
 
 /**
   * OpenRTB Bid Encoder and Decoder
@@ -29,10 +30,21 @@ object OpenRtbBidSerde extends EncoderProvider[BidResponse.SeatBid.Bid] {
 
   implicit val nativeDecoder: Decoder[NativeResponse] = OpenRtbNativeSerde.decoder.prepare(_.downField("native"))
 
+  /**
+    * The field `adm` can appear either in a form of escaped JSON string or in a form of a JSON object
+    * As long as the content is compatible with a NativeResponse, the library will de-serialize it as
+    * expected.
+    */
   private implicit val admOneOfDecoder: Decoder[SeatBid.Bid.AdmOneof] = {
     cursor => cursor.focus.map {
-      case json if json.isString => json.asString.map(AdmOneof.Adm).getOrElse(AdmOneof.Empty)
-      case json if json.isObject => json.as[NativeResponse].map(AdmOneof.AdmNative).getOrElse(AdmOneof.Empty)
+      case json if json.isString =>
+        json.asString.map(s => {
+          decode[NativeResponse](s)
+            .map(AdmOneof.AdmNative) // the string can be decoded as native
+            .getOrElse(AdmOneof.Adm(s)) // the string cannot be decoded
+        }).getOrElse(AdmOneof.Empty) // there's no string or it's impossible to decode it
+      case json if json.isObject =>
+        json.as[NativeResponse].map(AdmOneof.AdmNative).getOrElse(AdmOneof.Empty)
     }.orElse(Some(AdmOneof.Empty)).map(Right(_)).get
   }
 

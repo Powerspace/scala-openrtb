@@ -39,8 +39,22 @@ object OpenRtbNativeSerde extends EncoderProvider[NativeResponse] {
 
   implicit val linkEncoder: Encoder[Link] = deriveEncoder[Link].cleanRtb
 
-  // @todo handle asset key type: make it manual
-  implicit val assetsEncoder: Encoder[Asset] = deriveEncoder[Asset].cleanRtb
+  /**
+    * After normal encoding, AssetOneof object key has to be renamed accordingly with the type of it.
+    * We get this job done by adding up an extra field with good key naming and delete the old `asset`
+    * field afterwards.
+    */
+  implicit val assetsEncoder: Encoder[Asset] = (asset: Asset) => deriveEncoder[Asset].cleanRtb
+    .mapJson(_.mapObject(assetObj =>
+      assetObj.add(
+        asset.assetOneof match {
+          case AssetOneof.Data(_) => "data"
+          case AssetOneof.Img(_) => "img"
+          case AssetOneof.Title(_) => "title"
+          case AssetOneof.Video(_) => "video"
+        }, assetObj.apply("asset").get)))
+    .mapJson(json => json.hcursor.downField("asset").delete.top.get)
+    .apply(asset)
 
   implicit val eventTrackerEncoder: Encoder[EventTracker] = deriveEncoder[EventTracker].cleanRtb
   implicit val nativeResponseEncoder: Encoder[NativeResponse] = deriveEncoder[NativeResponse].cleanRtb
@@ -109,7 +123,6 @@ object OpenRtbNativeSerde extends EncoderProvider[NativeResponse] {
       ver <- cursor.downField("ver").as[Json]
       str = ver.asString
       int = ver.asNumber.flatMap(_.toInt).map(_.toString)
-
       assets <- cursor.downField("assets").as[Seq[NativeResponse.Asset]]
       assetsurl <- cursor.downField("assetsurl").as[Option[String]]
       dcourl <- cursor.downField("dcourl").as[Option[String]]

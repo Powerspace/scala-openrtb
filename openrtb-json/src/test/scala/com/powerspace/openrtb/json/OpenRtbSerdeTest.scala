@@ -6,12 +6,13 @@ import com.google.openrtb._
 import com.powerspace.openrtb.json.BidRequestFixtures._
 import com.powerspace.openrtb.json.BidResponseFixtures._
 import com.powerspace.openrtb.json.util.EncodingUtils
+import io.circe.Json
 import io.circe.parser._
 import io.circe.syntax._
 import org.scalatest.{FunSuite, GivenWhenThen}
 
 /**
-  * @todo test idempotency of bid request (de)serialization
+  * @todo test idempotency of BidRequest (de)serialization
   */
 class OpenRtbSerdeTest extends FunSuite with GivenWhenThen {
 
@@ -19,7 +20,7 @@ class OpenRtbSerdeTest extends FunSuite with GivenWhenThen {
   import OpenRtbSerdeModule._
 
   test("OpenRTB-like bid response deserialization") {
-    Given("An OpenRTB-like bid response in JSON format")
+    Given("An OpenRTB-like bid response in JSON format with a string-ed native response")
     val stream: URL = getClass.getResource("/elasticads-bidresponse.json")
     val json: String = scala.io.Source.fromFile(stream.toURI).mkString
 
@@ -38,20 +39,19 @@ class OpenRtbSerdeTest extends FunSuite with GivenWhenThen {
     assert(firstBid.h.isEmpty)
     assert(firstBid.price > 0)
 
-    assert(firstBid.admOneof.admNative.isEmpty)
-    assert(firstBid.admOneof.adm.nonEmpty)
+    assert(firstBid.admOneof.admNative.nonEmpty)
+    assert(firstBid.admOneof.adm.isEmpty)
 
-    /**
-      * @todo we should be able to unwrap the "stringified" adm native request and deserialize it
-      */
-    //    assert(firstBid.getAdmNative.assets.nonEmpty)
-    //    assert(firstBid.getAdmNative.assets.head.getTitle.text.contains("printemps"))
-    //    assert(firstBid.getAdmNative.assets.last.id == 5)
-    //    assert(firstBid.getAdmNative.assets.last.getData.value.contains("Sarenza"))
+    // the library is capable of unescape and decode the native response in JSON string format
+    assert(firstBid.getAdmNative.link.url.nonEmpty)
+    assert(firstBid.getAdmNative.assets.nonEmpty)
+    assert(firstBid.getAdmNative.assets.head.getTitle.text.contains("printemps"))
+    assert(firstBid.getAdmNative.assets.last.id == 6)
+    assert(firstBid.getAdmNative.assets.last.getImg.url.contains("cloudfront"))
   }
 
-  test("OpenRTB-like bid response deserialization with no-bid") {
-    Given("An OpenRTB-like bid response in JSON format with no bid")
+  test("OpenRTB-like BidResponse deserialization with no-bid") {
+    Given("An OpenRTB-like BidResponse in JSON format with no bid")
     val stream: URL = getClass.getResource("/elasticads-bidresponse-no-bid.json")
     val json: String = scala.io.Source.fromFile(stream.toURI).mkString
 
@@ -74,7 +74,7 @@ class OpenRtbSerdeTest extends FunSuite with GivenWhenThen {
     When("I serialize it")
     val json = bidRequest.asJson
 
-    Then("I should get a proper bid request in JSON format")
+    Then("I should get a proper BidRequest in JSON format")
     val reqCursor = json.hcursor
     assert(reqCursor.downField("id").as[String].value == "fmySKZNcTFcTPOurFYivufGxMtuSYpen")
     assert(reqCursor.downField("at").as[Int].value == 2)
@@ -138,18 +138,18 @@ class OpenRtbSerdeTest extends FunSuite with GivenWhenThen {
     When("I serialize it")
     val json = bidRequest.asJson
 
-    Then("I should get a proper bid request in JSON format")
+    Then("I should get a proper BidRequest in JSON format")
     val nativeObjectCursor = json.hcursor.downField("imp").downArray.downField("native").downField("request")
     assert(nativeObjectCursor.downField("plcmtcnt").as[Int].value == 40)
   }
 
-  test("OpenRTB-like bid response [with Native Object] encoding") {
+  test("OpenRTB-like BidResponse [with Native Object] encoding") {
     Given("A BidSwitch BidResponse with a native object")
     val bidResponse = sampleBidResponse(withNativeObject = true)
 
     When("I encode it")
     val json = bidResponse.asJson
-    Then("It should return a proper native bid response with related extensions in JSON format")
+    Then("It should return a proper native BidResponse with related extensions in JSON format")
 
     val resCursor = json.hcursor
     assert(resCursor.downField("id").as[String].value.nonEmpty)
@@ -173,19 +173,18 @@ class OpenRtbSerdeTest extends FunSuite with GivenWhenThen {
     assert(assetCursor.downField("required").as[Int].value == 1)
     assert(assetCursor.downField("link").downField("url").as[String].value.nonEmpty)
 
-    // @todo implement named assets types
     val imgCursor = assetCursor.downField("img")
-    //assert(imgCursor.downField("url").as[String].value == "url-img")
+    assert(imgCursor.downField("url").as[String].value == "url-img")
   }
 
-  test("OpenRTB-like bid response encoding") {
+  test("OpenRTB-like BidResponse encoding") {
     Given("A BidSwitch BidResponse")
     val bidResponse = sampleBidResponse(withNativeObject = true)
 
     When("I encode it")
     val json = bidResponse.asJson
 
-    Then("It should return a proper native bid response with related extensions in JSON format")
+    Then("It should return a proper native BidResponse with related extensions in JSON format")
     val resCursor = json.hcursor
     assert(resCursor.downField("id").as[String].value.nonEmpty)
     assert(resCursor.downField("cur").as[String].value.nonEmpty)
@@ -208,9 +207,8 @@ class OpenRtbSerdeTest extends FunSuite with GivenWhenThen {
     assert(assetCursor.downField("required").as[Int].value == 1)
     assert(assetCursor.downField("link").downField("url").as[String].value.nonEmpty)
 
-    // @todo implement named assets types
     val imgCursor = assetCursor.downField("img")
-    //assert(imgCursor.downField("url").as[String].value == "url-img")
+    assert(imgCursor.downField("url").as[String].value == "url-img")
   }
 
   test("OpenRTB-like BidRequest with native object deserialization") {
@@ -224,7 +222,7 @@ class OpenRtbSerdeTest extends FunSuite with GivenWhenThen {
     Then("I should get a proper Scala BidRequest")
     val bidRequest = decoded.toTry.get
 
-    // Bid Request
+    // BidRequest
     assert(bidRequest.id.nonEmpty)
     assert(bidRequest.tmax.nonEmpty)
 
@@ -330,10 +328,10 @@ class OpenRtbSerdeTest extends FunSuite with GivenWhenThen {
 
   }
 
-  test("Deserializing and re-serializing a JSON BidResponse I obtain the same JSON") {
+  test("Deserializing and re-serializing a JSON BidResponse with native string I obtain the same JSON") {
     import gnieh.diffson.circe._
 
-    Given("An JSON OpenRTB-like bid response")
+    Given("An JSON OpenRTB-like BidResponse")
     val stream: URL = this.getClass.getResource("/elasticads-bidresponse.json")
     val Right(originalJson) = parse(scala.io.Source.fromFile(stream.toURI).mkString)
 
@@ -341,18 +339,26 @@ class OpenRtbSerdeTest extends FunSuite with GivenWhenThen {
     val bidResponse = originalJson.as[BidResponse].right.get
 
     And("I serialize it")
-    val deserSerJson = bidResponse.asJson
+    val serializedJson = bidResponse.asJson
 
+    /**
+      * We will ignore the native part taking it out of the JSONs. The reason is that the library automatically
+      * decodes the native response even when i's given in a String format. As a consequence, the serialization
+      * process generates a JSON containing a native object rather than a String.
+      * The content though is identical: check out `originalJson` and `serializedJson` adm content.
+      * @todo edit one of the two versions to make possible to compare them
+      */
     Then("There's no difference between the original JSON and the processed one")
-    val patch = JsonDiff.diff(deserSerJson, originalJson, remember = false)
-    assert(patch.ops.isEmpty)
+    def deleteAdm(json: Json): Json = json.hcursor.downField("seatbid").downArray.downField("bid").downArray.downField("adm").delete.top.get
+    val difference = JsonDiff.diff(deleteAdm(originalJson), deleteAdm(serializedJson), remember = false)
+    assert(difference.ops.isEmpty)
   }
 
 
-  test("Deserializing and re-serializing an unfolded JSON BidResponse I obtain the same JSON") {
+  test("Deserializing and re-serializing an unfolded JSON BidResponse with native object I obtain the same JSON") {
     import gnieh.diffson.circe._
 
-    Given("An unfolded JSON OpenRTB-like bid response")
+    Given("An unfolded JSON OpenRTB-like BidResponse")
     val stream: URL = this.getClass.getResource("/elasticads-bidresponse-unfold.json")
     val Right(originalJson) = parse(scala.io.Source.fromFile(stream.toURI).mkString)
 
@@ -360,13 +366,16 @@ class OpenRtbSerdeTest extends FunSuite with GivenWhenThen {
     val bidResponse = originalJson.as[BidResponse].right.get
 
     And("I serialize it")
-    val deserSerJson = bidResponse.asJson
+    val serializedJson = bidResponse.asJson
 
+    /**
+      * Here we are actually asserting that there is only one difference concerning the `ver` field in the native
+      * response object. For compatibility purpose we able to de-serialize `ver` as an Int or as a String, but it
+      * gets always serialized as a String.
+      */
     Then("There's no difference between the original JSON and the processed one")
-    val patch = JsonDiff.diff(deserSerJson, originalJson, remember = false)
-    // @todo find out how to handle elastic ads `ver` field
-    //assert(patch.ops.isEmpty)
-
+    val patch = JsonDiff.diff(serializedJson, originalJson, remember = false)
+    assert(patch.ops.head.path.path.exists(p => p.left.exists(name => name == "ver")))
   }
 
 }
