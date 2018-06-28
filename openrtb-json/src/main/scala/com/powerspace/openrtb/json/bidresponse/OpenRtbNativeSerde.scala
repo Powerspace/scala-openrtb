@@ -57,7 +57,8 @@ object OpenRtbNativeSerde extends EncoderProvider[NativeResponse] {
     .apply(asset)
 
   implicit val eventTrackerEncoder: Encoder[EventTracker] = deriveEncoder[EventTracker].cleanRtb
-  implicit val nativeResponseEncoder: Encoder[NativeResponse] = deriveEncoder[NativeResponse].cleanRtb
+  implicit val nativeResponseEncoder: Encoder[NativeResponse] = deriveEncoder[NativeResponse]
+    .renameOneof.clean(toKeep = Seq("assets")).transformBooleans
     .mapJson(json => Json.obj(("native", json)))
 
   private implicit val linkDecoder: Decoder[NativeResponse.Link] =
