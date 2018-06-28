@@ -54,7 +54,7 @@ object OpenRtbBidSerde extends EncoderProvider[BidResponse.SeatBid.Bid] {
       impid <- cursor.downField("impid").as[String]
       price <- cursor.downField("price").as[Double]
       adid <- cursor.downField("adid").as[Option[String]]
-      adomain <- cursor.downField("adomain").as[Seq[String]]
+      adomain <- cursor.downField("adomain").as[Option[Seq[String]]]
       nurl <- cursor.downField("nurl").as[Option[String]]
       bundle <- cursor.downField("bundle").as[Option[String]]
       iurl <- cursor.downField("iurl").as[Option[String]]
@@ -81,7 +81,7 @@ object OpenRtbBidSerde extends EncoderProvider[BidResponse.SeatBid.Bid] {
       hratio <- cursor.downField("hratio").as[Option[Int]]
       admOneof <- cursor.downField("adm").as[Option[BidResponse.SeatBid.Bid.AdmOneof]]
     } yield {
-      BidResponse.SeatBid.Bid(id, impid = impid, price = price, adid = adid, adomain = adomain,
+      BidResponse.SeatBid.Bid(id, impid = impid, price = price, adid = adid, adomain = adomain.getOrElse(Seq()),
         nurl = nurl, bundle = bundle, iurl = iurl, cid = cid, crid = crid, cat = cat, attr = attr.getOrElse(Seq()),
         api = api, protocol = protocol, qagmediarating = qagmediarating, dealid = dealid, w = w, h = h,
         exp = exp, burl = burl, lurl = lurl, tactic = tactic, language = language, wratio = wratio,
