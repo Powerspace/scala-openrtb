@@ -81,6 +81,10 @@ class OpenRtbSerdeTest extends FunSuite with GivenWhenThen {
     assert(reqCursor.downField("cur").as[Seq[String]].value == Seq("EUR"))
     assert(reqCursor.downField("source").downField("pchain").as[String].value == "pchain-1")
 
+    val siteCursor = reqCursor.downField("site")
+    assert(siteCursor.downField("id").as[String].value == "id-site")
+    assert(siteCursor.downField("name").as[String].value == "name-site")
+
     val impCursor = reqCursor.downField("imp").downArray
     assert(impCursor.downField("id").as[String].value == "imp-1")
     assert(impCursor.downField("displaymanager").as[String].value == "displaymanager-1")

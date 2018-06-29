@@ -42,9 +42,26 @@ object OpenRtbBidRequestSerde extends EncoderProvider[BidRequest] {
     implicit val siteEncoder: Encoder[BidRequest.Site] = openRtbEncoder[BidRequest.Site]
     implicit val geoEncoder: Encoder[BidRequest.Geo] = openRtbEncoder[BidRequest.Geo]
 
+    /**
+      * After normal encoding, DistributionchannelOneof object key has to be renamsed accordingly with the type of it.
+      * We get this job done by adding up an extra field with good key naming and delete the old `asset`
+      * field afterwards.
+      */
     def encoder(implicit userEncoder: Encoder[BidRequest.User], impEncoder: Encoder[BidRequest.Imp]): Encoder[BidRequest] =
-      deriveEncoder[BidRequest].transformBooleans.clean(toKeep = Seq("imp"))
-
+      bidRequest => {
+        val bidRequestEncoder = deriveEncoder[BidRequest].transformBooleans.clean(toKeep = Seq("imp"))
+        bidRequest.distributionchannelOneof match {
+          case DistributionchannelOneof.Empty => bidRequestEncoder
+          case _ => bidRequestEncoder
+            .mapJson(_.mapObject(dist =>
+              dist.add(
+                bidRequest.distributionchannelOneof match {
+                  case DistributionchannelOneof.App(_) => "app"
+                  case DistributionchannelOneof.Site(_) => "site"
+                }, dist.apply("distributionchannel_oneof").get)))
+            .mapJson(json => json.hcursor.downField("distributionchannel_oneof").delete.top.get)
+        }
+      }.apply(bidRequest)
   }
 
   object OpenRtbBidRequestDecoder {
