@@ -1,6 +1,5 @@
 package com.powerspace.openrtb.json.bidresponse
 
-import com.google.openrtb.BidResponse.SeatBid
 import com.google.openrtb._
 import com.powerspace.openrtb.json.EncoderProvider
 import com.powerspace.openrtb.json.common.OpenRtbProtobufEnumEncoders
@@ -17,9 +16,7 @@ object OpenRtbSeatBidSerde extends EncoderProvider[BidResponse.SeatBid] {
   import EncodingUtils._
   import OpenRtbProtobufEnumEncoders._
 
-  private implicit val bidEncoder: Encoder[SeatBid.Bid] = OpenRtbBidSerde.encoder
-
-  implicit def encoder: Encoder[BidResponse.SeatBid] =
+  implicit def encoder(implicit bidEncoder: Encoder[BidResponse.SeatBid.Bid]): Encoder[BidResponse.SeatBid] =
     deriveEncoder[BidResponse.SeatBid].cleanRtb
 
   implicit def decoder(implicit bidDecoder: Decoder[BidResponse.SeatBid.Bid]): Decoder[BidResponse.SeatBid] =
