@@ -1,42 +1,41 @@
 package com.powerspace.openrtb.bidswitch.bidrequest
 
-import com.google.openrtb.BidRequest
-import com.google.openrtb.BidRequest.{Imp, User}
+import com.powerspace.bidswitch.BidRequestExt
 import com.powerspace.bidswitch.BidRequestExt.Google.DetectedVertical
 import com.powerspace.bidswitch.BidRequestExt.{AdTruth, AdsTxt, Dooh, Google, Gumgum, Publisher, Rubicon, Tv}
-import com.powerspace.bidswitch.{BidRequestExt, BidswitchProto}
-import com.powerspace.openrtb.json.EncoderProvider
-import com.powerspace.openrtb.json.bidrequest.OpenRtbBidRequestSerde.OpenRtbBidRequestEncoder
+import com.powerspace.openrtb.json.ConfiguredSerde
 import com.powerspace.openrtb.json.util.EncodingUtils
 
 /**
   * Bid request BidSwitch extension encoders
   */
-object BidSwitchBidRequestSerde extends EncoderProvider[BidRequest]{
+object BidSwitchBidRequestSerde extends ConfiguredSerde {
 
   import EncodingUtils._
   import io.circe._
-  import io.circe.generic.extras.semiauto._
-  import io.circe.syntax._
 
-  implicit val detectedVerticalEncoder: Encoder[DetectedVertical] = deriveEncoder[DetectedVertical].cleanRtb
-  implicit val publisherEncoder: Encoder[Publisher] = deriveEncoder[Publisher].cleanRtb
-  implicit val adsTxtEncoder: Encoder[AdsTxt] = deriveEncoder[AdsTxt].cleanRtb
-  implicit val googleEncoder: Encoder[Google] = deriveEncoder[Google].cleanRtb
-  implicit val gumGumEncoder: Encoder[Gumgum] = deriveEncoder[Gumgum].cleanRtb
-  implicit val rubiconEncoder: Encoder[Rubicon] = deriveEncoder[Rubicon].cleanRtb
-  implicit val adTruthEncoder: Encoder[AdTruth] = deriveEncoder[AdTruth].cleanRtb
-  implicit val tvEncoder: Encoder[Tv] = deriveEncoder[Tv].cleanRtb
-  implicit val doohEncoder: Encoder[Dooh] = deriveEncoder[Dooh].cleanRtb
-  implicit val bidRequestExt: Encoder[BidRequestExt] = deriveEncoder[BidRequestExt].cleanRtb
-  implicit val userEncoder: Encoder[User] = BidSwitchUserSerde.encoder
-  implicit val impEncoder: Encoder[Imp] = BidSwitchImpressionSerde.encoder
+  implicit val detectedVerticalEncoder: Encoder[DetectedVertical] = openRtbEncoder[DetectedVertical]
+  implicit val publisherEncoder: Encoder[Publisher] = openRtbEncoder[Publisher]
+  implicit val adsTxtEncoder: Encoder[AdsTxt] = openRtbEncoder[AdsTxt]
+  implicit val googleEncoder: Encoder[Google] = openRtbEncoder[Google]
+  implicit val gumGumEncoder: Encoder[Gumgum] = openRtbEncoder[Gumgum]
+  implicit val rubiconEncoder: Encoder[Rubicon] = openRtbEncoder[Rubicon]
+  implicit val adTruthEncoder: Encoder[AdTruth] = openRtbEncoder[AdTruth]
+  implicit val tvEncoder: Encoder[Tv] = openRtbEncoder[Tv]
+  implicit val doohEncoder: Encoder[Dooh] = openRtbEncoder[Dooh]
 
-  def encoder:
-    Encoder[BidRequest] = bidRequest => {
-    val json: Json = bidRequest.extension(BidswitchProto.bidRequestExt).asJson
+  val bidRequestExtEncoder: Encoder[BidRequestExt] = openRtbEncoder[BidRequestExt]
 
-    OpenRtbBidRequestEncoder.encoder.apply(bidRequest).asObject
-      .map(_.add("ext", json)).asJson
-  }
+  implicit val detectedVerticalDecoder: Decoder[DetectedVertical] = openRtbDecoder[DetectedVertical]
+  implicit val publisherDecoder: Decoder[Publisher] = openRtbDecoder[Publisher]
+  implicit val adsTxtDecoder: Decoder[AdsTxt] = openRtbDecoder[AdsTxt]
+  implicit val googleDecoder: Decoder[Google] = openRtbDecoder[Google]
+  implicit val gumGumDecoder: Decoder[Gumgum] = openRtbDecoder[Gumgum]
+  implicit val rubiconDecoder: Decoder[Rubicon] = openRtbDecoder[Rubicon]
+  implicit val adTruthDecoder: Decoder[AdTruth] = openRtbDecoder[AdTruth]
+  implicit val tvDecoder: Decoder[Tv] = openRtbDecoder[Tv]
+  implicit val doohDecoder: Decoder[Dooh] = openRtbDecoder[Dooh]
+
+  val bidRequestExtDecoder: Decoder[BidRequestExt] = openRtbDecoder[BidRequestExt]
+
 }

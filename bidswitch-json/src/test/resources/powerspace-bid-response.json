@@ -1,0 +1,58 @@
+{
+  "id": "9c44792b-e169-35b0-8c6b-f75e8f0fdfc8",
+  "seatbid": [
+    {
+      "bid": [
+        {
+          "id": "94b63215-6a91-3ad9-b9c0-c670dbd2a933",
+          "impid": "1",
+          "price": 0.10504571348428726,
+          "adid": "55",
+          "cid": "51",
+          "crid": "5623",
+          "cat": [
+            "IAB10-5"
+          ],
+          "dealid": "55",
+          "qagmediarating": 1,
+          "cpc": 0.18000000715255737,
+          "ctr": 5.835872725583613E-4,
+          "adm" : {
+            "native" : {
+              "link" : {
+                "url" : "http://www.google.com/",
+                "ext": {
+                  "forbiddencountryurl": "forbidden"
+                }
+              }
+            }
+          },
+          "ext": {
+            "algorithm": "ab",
+            "cpc": 0.5
+          }
+        },
+        {
+          "id": "039f829f-fadc-364e-8445-6a07d1ca8f26",
+          "impid": "1",
+          "price": 0.0,
+          "adid": "1318",
+          "adm": "{\"assets\":[{\"id\":1,\"title\":{\"text\":\"Vous avez encore le droit à 5 LED gratuites\"}},{\"id\":2,\"data\":{\"value\":\"J'en profite\"}},{\"id\":3,\"data\":{\"value\":\"Grâce à la loi sur la Transition Énergétique, vous avez droit à 1 kit de 5 ampoules LED gratuites.\"}},{\"id\":4,\"data\":{\"value\":\"Grâce à la loi sur la Transition Énergétique, vous avez droit à 1 kit de 5 ampoules LED gratuites.\"}}],\"link\":{\"url\":\"https://www.mesampoulesgratuites.fr/?utm_source=powerspace&utm_medium=native-ads&utm_campaign=powerspace-v2-crmretargeting\"}}",
+          "cid": "585",
+          "crid": "4113",
+          "cat": [
+            "IAB22"
+          ],
+          "dealid": "1318",
+          "qagmediarating": 1,
+          "cpc": 0.44999998807907104,
+          "ctr": 0.0
+        }
+      ],
+      "seat": "powerspace",
+      "group": 0,
+      "algorithm": "eCpm_v2"
+    }
+  ],
+  "cur": "EUR"
+}

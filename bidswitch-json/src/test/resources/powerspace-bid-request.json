@@ -1,0 +1,78 @@
+{
+  "id": "9c44792b-e169-35b0-8c6b-f75e8f0fdfc8",
+  "imp": [
+    {
+      "id": "1",
+      "native": {
+        "request": "{\"ver\":\"1\",\"plcmtcnt\":2,\"assets\":[{\"id\":1,\"required\":1,\"title\":{\"len\":50}},{\"id\":2,\"required\":1,\"data\":{\"type\":12}},{\"id\":3,\"required\":1,\"data\":{\"type\":2}},{\"id\":4,\"required\":1,\"data\":{\"type\":10}},{\"id\":5,\"required\":1,\"data\":{\"type\":1}}],\"context\":1,\"plcmttype\":1}"
+      },
+      "instl": 0,
+      "tagid": "powerspace_ZKDGGREZ",
+      "secure": 1,
+      "pmp": {
+        "private_auction": 1,
+        "deals": [
+          {
+            "id": "768"
+          },
+          {
+            "id": "1083"
+          }
+        ]
+      }
+    }
+  ],
+  "site": {
+    "id": "daeb5d88bdf558164d25c93fc00ee6b5",
+    "name": "website test",
+    "domain": "www.example.com",
+    "cat": [
+      "IAB24"
+    ],
+    "page": "/ndi",
+    "publisher": {
+      "id": "daeb5d88bdf558164d25c93fc00ee6b5",
+      "name": ""
+    },
+    "content": {
+      "id": "content-id",
+      "ext": {
+        "channel": "channel"
+      }
+    },
+    "ext": {
+      "country": "ITA",
+      "language": "ITA"
+    }
+  },
+  "device": {
+    "ua": "test test",
+    "ip": "0.0.0.0",
+    "model": "Other",
+    "os": "Other",
+    "language": "ll",
+    "ext": {
+      "ispdomain": "domain",
+      "quovaconnectiontype": "type"
+    }
+  },
+  "user": {
+    "id": "aa",
+    "buyeruid": "2f955b6c-b614-3ac0-8ab6-b3b6b797222e",
+    "geo": {
+      "country": "fr",
+      "city": "paris",
+      "ext": {
+        "statecode": "I10",
+        "admin1": "admin"
+      }
+    }
+  },
+  "test": 1,
+  "at": 2,
+  "tmax": 300,
+  "ext": {
+    "bcampaign": 1,
+    "forcedalgorithm": "ab"
+  }
+}

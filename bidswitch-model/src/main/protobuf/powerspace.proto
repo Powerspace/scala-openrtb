@@ -1,0 +1,91 @@
+syntax = "proto2";
+import "openrtb.proto";
+option java_outer_classname = "PowerspaceExt";
+package com.powerspace.openrtb;
+
+message BidRequestExt {
+    optional string forced_algorithm = 1001;
+    optional string forced_deal = 1002;
+    repeated int32 bcampaign = 1003; //blocked campaign
+}
+
+extend com.google.openrtb.BidRequest {
+    optional BidRequestExt bidRequest = 1001;
+}
+
+// Content (request)
+message ContentExt {
+    optional string channel = 1003;
+}
+
+extend com.google.openrtb.BidRequest.Content {
+    optional ContentExt contentExt = 1001;
+}
+
+// Site (request)
+message SiteExt {
+    optional string network = 1001;
+    optional string language = 1002;
+    optional string country = 1003;
+}
+
+
+extend com.google.openrtb.BidRequest.Site {
+    optional SiteExt siteExt = 1001;
+}
+
+// User (request)
+message UserExt {
+    optional bool identified = 1000;
+    optional bool suspicious = 1002;
+    optional string emailDomain = 1004;
+}
+
+extend com.google.openrtb.BidRequest.User {
+    optional UserExt user = 1001;
+}
+
+// Device (request)
+message DeviceExt {
+    optional string ipRoutingType = 1000;
+    optional string ispDomain = 1001;
+    optional string lineSpeed = 1002;
+    optional string quovaConnectionType = 1003;
+}
+
+extend com.google.openrtb.BidRequest.Device {
+    optional DeviceExt device = 1001;
+}
+
+// Geo (request)
+message GeoExt {
+    optional int32 geoNamesId = 1000;
+    optional string admin1 = 1002;
+    optional string admin2 = 1003;
+    optional string stateCode = 1004;
+}
+
+extend com.google.openrtb.BidRequest.Geo {
+    optional GeoExt geo = 1001;
+}
+
+// Link (response)
+message LinkExt {
+    optional string forbidden_country_url = 1000;
+}
+
+extend com.google.openrtb.NativeResponse.Link {
+    optional LinkExt link = 1001;
+}
+
+// Bid (response)
+message BidExt {
+    optional double ctr = 1000;
+    optional double cpc = 1001;
+    optional string algorithm = 1002;
+    optional double margin = 1003;
+}
+
+extend com.google.openrtb.BidResponse.SeatBid.Bid {
+    optional BidExt bid = 1001;
+}

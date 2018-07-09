@@ -3,4 +3,4 @@ PB.targets in Compile := Seq(
 )
 
 PB.protoSources in Compile += target.value / "protobuf_external"
-includeFilter in PB.generate := "bidswitch.proto"
+includeFilter in PB.generate := "bidswitch.proto" || "powerspace.proto"

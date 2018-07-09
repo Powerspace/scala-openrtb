@@ -3,18 +3,21 @@ package com.powerspace.openrtb.json
 import com.google.openrtb.BidRequest
 import com.google.openrtb.BidRequest.Imp.Native.RequestOneof
 import com.powerspace.openrtb.conversion.RequestLenses
-import com.powerspace.openrtb.json.bidrequest.OpenRtbNativeRequestSerde
+import com.powerspace.openrtb.json.OpenRtbExtensions.ExtensionRegistry
+import com.powerspace.openrtb.json.bidrequest.{OpenRtbBannerSerde, OpenRtbNativeRequestSerde, OpenRtbVideoSerde}
 import io.circe.Encoder
 
-/** Manipulation of native property **/
-object NativeManipulation {
+/**
+  * Manipulation of native property
+  **/
+class NativeManipulation(implicit er: ExtensionRegistry) {
 
   import RequestLenses._
 
-  implicit val impEncoder: Encoder[BidRequest.Imp] = OpenRtbSerdeModule.impEncoder
+  //implicit val impEncoder: Encoder[BidRequest.Imp] = OpenRtbSerdeModule.impEncoder
 
   val toNativeAsString: BidRequest => BidRequest = nativeRequestOneOfTraversal.modify{
-    case RequestOneof.RequestNative(native) => RequestOneof.Request(OpenRtbNativeRequestSerde.nativeRequestEncoder(native).noSpaces)
+    case RequestOneof.RequestNative(native) => RequestOneof.Request(new OpenRtbNativeRequestSerde(new OpenRtbVideoSerde(new OpenRtbBannerSerde())).nativeRequestEncoder(native).noSpaces)
     case str: RequestOneof.Request => str
   }
 

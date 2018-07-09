@@ -16,7 +16,7 @@ import com.powerspace.bidswitch._
 object BidRequestFixtures {
 
   import com.powerspace.openrtb.json.BidRequestFixtures._
-
+  import com.powerspace.openrtb.bidswitch.BidSwitchImplicits._
   def sampleBidRequest(withNativeObject: Boolean): BidRequest = {
 
     // extended user
@@ -94,7 +94,7 @@ object BidRequestFixtures {
 
     // extended bid request
     val bidRequestExtension = BidRequestExt(ssp = "powerspace", mediaSrc = "powerspace", adsTxt = AdsTxt(status = 1, pubId = "pub-id-1"))
-    bidRequest.withExtension(BidswitchProto.bidRequestExt)(Some(bidRequestExtension))
+    bidRequest.withExt(bidRequestExtension)
   }
 
 }
