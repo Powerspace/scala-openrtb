@@ -16,7 +16,8 @@ object OpenRtbBidResponseSerde extends EncoderProvider[BidResponse] {
   import OpenRtbProtobufEnumEncoders._
   import io.circe.generic.extras.semiauto._
 
-  def encoder(implicit seatBidEncoder: Encoder[BidResponse.SeatBid]): Encoder[BidResponse] = deriveEncoder[BidResponse].cleanRtb
+  private implicit val seatBidEncoder: Encoder[BidResponse.SeatBid] = OpenRtbSeatBidSerde.encoder
+  def encoder: Encoder[BidResponse] = deriveEncoder[BidResponse].cleanRtb
 
   private implicit val noBidReasonDecoder: Decoder[Option[NoBidReason]] = Decoder.decodeOption[Int].map(_.map(NoBidReason.fromValue))
   def decoder(implicit seatBidDecoder: Decoder[BidResponse.SeatBid]): Decoder[BidResponse] = {

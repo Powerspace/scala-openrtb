@@ -1,6 +1,6 @@
 name := "scala-openrtb"
 
-version in ThisBuild := "0.10"
+version in ThisBuild := "0.4"
 
 scalaVersion in ThisBuild := "2.12.6"
 organization in ThisBuild := "com.powerspace.openrtb"

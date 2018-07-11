@@ -92,11 +92,8 @@ object BidSwitchBidSerde {
   implicit val bidExtensionEncoder: Encoder[BidExt] = deriveEncoder[BidExt].cleanRtb
   implicit val admOneofEncoder: Encoder[AdmOneof] = OpenRtbBidSerde.admOneofEncoder
 
-  implicit def bidEncoder: Encoder[SeatBid.Bid] =
-    bid => {
-      val json: Json = OpenRtbBidSerde.encoder.apply(bid)
-      json.addExtension(bid.extension(BidswitchProto.bidExt).asJson)
-    }
+  implicit val bidEncoder: Encoder[SeatBid.Bid] =
+    bid => OpenRtbBidSerde.encoder.apply(bid).addExtension(bid.extension(BidswitchProto.bidExt).asJson)
 
   def seatBidEncoder: Encoder[SeatBid] =
     seatBid => OpenRtbSeatBidSerde.encoder.apply(seatBid)
