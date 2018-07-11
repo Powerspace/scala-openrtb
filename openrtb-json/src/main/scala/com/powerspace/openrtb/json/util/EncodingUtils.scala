@@ -1,13 +1,14 @@
 package com.powerspace.openrtb.json.util
 
-import io.circe.Json.JBoolean
+import com.powerspace.openrtb.json.OpenRtbExtensions.ExtensionRegistry
 import io.circe._
 import io.circe.generic.extras.encoding.ConfiguredObjectEncoder
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.decoding.ConfiguredDecoder
-import scalapb.{GeneratedEnumCompanion, UnknownFieldSet}
+import scalapb.{ExtendableMessage, GeneratedEnumCompanion, UnknownFieldSet}
 import shapeless.Lazy
 
+import scala.reflect.ClassTag
 import scala.util.Try
 
 object EncodingUtils {
@@ -19,12 +20,16 @@ object EncodingUtils {
 
   private implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames.withDefaults
 
+  def extendedEncoder[Ext <: ExtendableMessage[Ext]](implicit encoder: Lazy[ConfiguredObjectEncoder[Ext]], er: ExtensionRegistry, tag: ClassTag[Ext]): Encoder[Ext] =
+    er.encoderWithExtensions[Ext](baseEncoder = openRtbEncoder)
+  def extendedDecoder[Ext <: ExtendableMessage[Ext]](implicit encoder: Lazy[ConfiguredDecoder[Ext]], er: ExtensionRegistry, tag: ClassTag[Ext]): Decoder[Ext] =
+    er.decoderWithExtensions[Ext](baseDecoder = openRtbDecoder)
+
   def openRtbEncoder[A](implicit encoder: Lazy[ConfiguredObjectEncoder[A]]): Encoder[A] = deriveEncoder[A](encoder).cleanRtb
   def openRtbDecoder[A](implicit decoder: Lazy[ConfiguredDecoder[A]]): Decoder[A] = deriveDecoder[A](decoder)
 
   /**
     * Unknown fields Encoder
-    * @todo move away from utils
     */
   implicit val unknownFieldsEncoder: Encoder[UnknownFieldSet] = (_: UnknownFieldSet) => Json.Null
   implicit val unknownFieldsDecoder: Decoder[UnknownFieldSet] = (_: HCursor) => Right(UnknownFieldSet.empty)

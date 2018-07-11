@@ -1,40 +1,30 @@
 package com.powerspace.openrtb.bidswitch.bidrequest
 
-import com.google.openrtb.BidRequest
-import com.google.openrtb.BidRequest.Imp
-import com.powerspace.bidswitch.{BidswitchProto, ImpressionExt}
-import com.powerspace.openrtb.json.EncoderProvider
-import com.powerspace.openrtb.json.bidrequest.{ImpressionLevelSerdes, OpenRtbImpressionSerde}
+import com.powerspace.bidswitch.ImpressionExt
+import com.powerspace.openrtb.json.ConfiguredSerde
 import com.powerspace.openrtb.json.util.EncodingUtils
 
 /**
   * Impression BidSwitch extension encoders
   */
-object BidSwitchImpressionSerde extends EncoderProvider[BidRequest.Imp] {
+object BidSwitchImpressionSerde extends ConfiguredSerde {
 
   import EncodingUtils._
   import io.circe._
   import io.circe.generic.extras.semiauto._
-  import io.circe.syntax._
 
   private implicit val googleImpressionEncoder: Encoder[com.powerspace.bidswitch.ImpressionExt.Google] =
     deriveEncoder[com.powerspace.bidswitch.ImpressionExt.Google].cleanRtb
   private implicit val yieldoneImpressionEncoder: Encoder[com.powerspace.bidswitch.ImpressionExt.Yieldone] =
     deriveEncoder[com.powerspace.bidswitch.ImpressionExt.Yieldone].cleanRtb
-  private implicit val impressionExt: Encoder[ImpressionExt] = deriveEncoder[ImpressionExt].cleanRtb
 
-  private implicit val nativeEncoder: Encoder[Imp.Native] = BidSwitchNativeSerde.encoder
-  private implicit val bannerEncoder: Encoder[Imp.Banner] = BidSwitchBannerSerde.encoder
-  private implicit val videoEncoder: Encoder[Imp.Video] = BidSwitchVideoSerde.encoder
-  private implicit val audioEncoder: Encoder[Imp.Audio] = ImpressionLevelSerdes.audioEncoder
+  val impressionExtEncoder: Encoder[ImpressionExt] = deriveEncoder[ImpressionExt].cleanRtb
 
-  private implicit val pmpEncoder: Encoder[Imp.Pmp] = BidSwitchPmpSerde.encoder
+  private implicit val googleImpressionDecoder: Decoder[com.powerspace.bidswitch.ImpressionExt.Google] =
+    deriveDecoder[com.powerspace.bidswitch.ImpressionExt.Google]
+  private implicit val yieldoneImpressionDecoder: Decoder[com.powerspace.bidswitch.ImpressionExt.Yieldone] =
+    deriveDecoder[com.powerspace.bidswitch.ImpressionExt.Yieldone]
 
-  def encoder: Encoder[BidRequest.Imp] = impression => {
-    val impJson = OpenRtbImpressionSerde.encoder.apply(impression)
-    val extJson = impression.extension(BidswitchProto.impressionExt).asJson
-
-    impJson.asObject.map(_.add("ext", extJson)).asJson
-  }
+  val impressionExtDecoder: Decoder[ImpressionExt] = deriveDecoder[ImpressionExt]
 
 }

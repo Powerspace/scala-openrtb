@@ -7,7 +7,6 @@ libraryDependencies ++= Seq(
   "com.github.julien-truffaut" %% "monocle-macro" % monocleVersion,
   "com.github.julien-truffaut" %% "monocle-law" % monocleVersion % "test",
   "com.chuusai" %% "shapeless" % "2.3.3"
-
 )
 
 PB.targets in Compile := Seq(

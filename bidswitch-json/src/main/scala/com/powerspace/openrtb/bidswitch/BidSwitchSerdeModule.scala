@@ -1,11 +1,14 @@
 package com.powerspace.openrtb.bidswitch
 
-import com.google.openrtb.{BidRequest, BidResponse}
-import com.google.openrtb.BidResponse.SeatBid
+import com.google.openrtb.BidRequest.Imp.Pmp.Deal
+import com.google.openrtb.BidRequest.Imp.{Banner, Native, Video}
+import com.google.openrtb.BidResponse.SeatBid.Bid
+import com.google.openrtb.{BidRequest, BidResponse, NativeResponse}
+import com.powerspace.bidswitch._
 import com.powerspace.openrtb.bidswitch.bidrequest._
-import com.powerspace.openrtb.bidswitch.bidresponse.{BidSwitchBidSerde, BidSwitchBidResponseSerde}
+import com.powerspace.openrtb.bidswitch.bidresponse.{BidSwitchBidResponseSerde, BidSwitchBidSerde, BidSwitchNativeResponseSerde}
+import com.powerspace.openrtb.json.OpenRtbExtensions.ExtensionRegistry
 import com.powerspace.openrtb.json._
-import io.circe.generic.extras.Configuration
 
 /**
   * BidSwitch Serialization and Deserialization Module
@@ -13,36 +16,64 @@ import io.circe.generic.extras.Configuration
   */
 object BidSwitchSerdeModule extends SerdeModule {
 
-  import io.circe._
+  def nativeRegistry: ExtensionRegistry = ExtensionRegistry()
+    .registerExtension[NativeResponse, NativeResponseExt](
+    extension = BidswitchProto.responseNativeExt,
+    encoder = BidSwitchNativeResponseSerde.nativeExtEncoder,
+    decoder = BidSwitchNativeResponseSerde.nativeExtDecoder
+  )
+    .registerExtension[Native, NativeExt](
+    extension = BidswitchProto.requestNativeExt,
+    encoder = BidSwitchNativeRequestSerde.nativeExtEncoder,
+    decoder = BidSwitchNativeRequestSerde.nativeExtDecoder
+  )
 
-  implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
+  def extensionRegistry: ExtensionRegistry = {
+    val bidSerde = new BidSwitchBidSerde(nativeResponseSerde)
 
-  /**
-    * BidSwitch bid request encoders
-    */
-  override implicit val userEncoder: Encoder[BidRequest.User] = BidSwitchUserSerde.encoder
-  override implicit val impEncoder: Encoder[BidRequest.Imp] = BidSwitchImpressionSerde.encoder
-  override implicit val bidRequestEncoder: Encoder[BidRequest] = BidSwitchBidRequestSerde.encoder
+    ExtensionRegistry()
+      .registerExtension[BidRequest, BidRequestExt](
+      extension = BidswitchProto.bidRequestExt,
+      encoder = BidSwitchBidRequestSerde.bidRequestExtEncoder,
+      decoder = BidSwitchBidRequestSerde.bidRequestExtDecoder
+    )
+      .registerExtension[BidRequest.Imp, ImpressionExt](
+      extension = BidswitchProto.impressionExt,
+      encoder = BidSwitchImpressionSerde.impressionExtEncoder,
+      decoder = BidSwitchImpressionSerde.impressionExtDecoder
+    )
+      .registerExtension[BidRequest.User, UserExt](
+      extension = BidswitchProto.userExt,
+      encoder = BidSwitchUserSerde.userExtEncoder,
+      decoder = BidSwitchUserSerde.userExtDecoder
+    )
 
-  /**
-    * BidSwitch bid request decoders
-    */
-  override implicit val userDecoder: Decoder[BidRequest.User] = _ => ???
-  override implicit val impDecoder: Decoder[BidRequest.Imp] = _ => ???
-  override implicit val bidRequestDecoder: Decoder[BidRequest] = _ => ???
+      .registerExtension[Banner, BannerExt](
+      extension = BidswitchProto.bannerExt,
+      encoder = BidSwitchBannerSerde.bannerExtEncoder,
+      decoder = BidSwitchBannerSerde.bannerExtDecoder
+    )
+      .registerExtension[Video, VideoExt](
+      extension = BidswitchProto.videoExt,
+      encoder = BidSwitchVideoSerde.videoExtEncoder,
+      decoder = BidSwitchVideoSerde.videoExtDecoder
+    )
+      .registerExtension[Deal, DealExt](
+      extension = BidswitchProto.dealExt,
+      encoder = BidSwitchDealSerde.dealExtEncoder,
+      decoder = BidSwitchDealSerde.dealExtDecoder
+    )
+      .registerExtension[BidResponse, BidResponseExt](
+      extension = BidswitchProto.bidResponseExt,
+      encoder = BidSwitchBidResponseSerde.bidResponseExtEncoder,
+      decoder = BidSwitchBidResponseSerde.bidResponseExtDecoder
+    )
+      .registerExtension[Bid, BidExt](
+      extension = BidswitchProto.bidExt,
+      encoder = bidSerde.bidExtEncoder,
+      decoder = bidSerde.bidExtDecoder
+    )
+  }
 
-  /**
-    * BidSwitch bid response encoders
-    */
-  override implicit val bidEncoder: Encoder[SeatBid.Bid] = BidSwitchBidSerde.bidEncoder
-  override implicit val seatBidEncoder: Encoder[SeatBid] = BidSwitchBidSerde.seatBidEncoder
-  override implicit val bidResponseEncoder: Encoder[BidResponse] = BidSwitchBidResponseSerde.encoder
-
-  /**
-    * BidSwitch bid response decoders
-    */
-  override implicit val bidDecoder: Decoder[SeatBid.Bid] = BidSwitchBidSerde.bidDecoder
-  override implicit val seatBidDecoder: Decoder[SeatBid] = BidSwitchBidSerde.seatBidDecoder
-  override implicit val bidResponseDecoder: Decoder[BidResponse] = BidSwitchBidResponseSerde.decoder
 
 }

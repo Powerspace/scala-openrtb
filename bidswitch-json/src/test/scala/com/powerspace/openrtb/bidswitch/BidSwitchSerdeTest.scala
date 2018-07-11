@@ -4,9 +4,8 @@ import java.net.URL
 
 import com.google.openrtb.BidResponse
 import com.powerspace.bidswitch.BidswitchProto
-import com.powerspace.openrtb.bidswitch.BidRequestFixtures._
-import com.powerspace.openrtb.bidswitch.BidResponseFixtures._
-import com.powerspace.openrtb.bidswitch.bidrequest.BidSwitchBidRequestSerde
+import com.powerspace.openrtb.bidswitch.fixtures.BidRequestFixtures._
+import com.powerspace.openrtb.bidswitch.fixtures.BidResponseFixtures._
 import io.circe.parser._
 import io.circe.syntax._
 import org.scalatest.{FunSuite, GivenWhenThen}
@@ -52,9 +51,7 @@ class BidSwitchSerdeTest extends FunSuite with GivenWhenThen {
     assert(bidExtension.native.get.assets.head.getTitle.text.nonEmpty)
 
     // native extension
-    val nativeExtension = bidExtension.native.get.extension(BidswitchProto.responseNativeExt).get
-    assert(nativeExtension.adchoiceurl.isEmpty)
-    assert(nativeExtension.viewtracker.isEmpty)
+    assert(bidExtension.native.get.extension(BidswitchProto.responseNativeExt).isEmpty)
   }
 
   test("BidSwitch bid response serialization with no-bid") {
@@ -78,7 +75,7 @@ class BidSwitchSerdeTest extends FunSuite with GivenWhenThen {
     val bidRequest = sampleBidRequest(withNativeObject = true)
 
     When("I serialize it")
-    val json = bidRequest.asJson(BidSwitchBidRequestSerde.encoder)
+    val json = bidRequest.asJson
 
     Then("I should get a proper native bid request with related extensions in JSON format")
     // bid request extensions
@@ -130,9 +127,10 @@ class BidSwitchSerdeTest extends FunSuite with GivenWhenThen {
     val json = bidResponse.asJson
 
     Then("I should get a proper native bid response with related extensions in JSON format")
-    // @todo bid request extensions
-    val resCursor = json.hcursor
-    //assert(reqCursor.downField("ext").downField("media_src").as[String].value == "powerspace")
+
+    val nativeCursor = json.hcursor.downField("seatbid").downArray.downField("bid")
+      .downArray.downField("adm").downField("native")
+    assert(nativeCursor.downField("ver").as[String].value == "ver-1")
   }
 
 }

@@ -3,9 +3,10 @@ package com.powerspace.openrtb.json.bidrequest
 import com.google.openrtb.BidRequest.Imp
 import com.google.openrtb.BidRequest.Imp.Native.RequestOneof
 import com.google.openrtb.NativeRequest.Asset.AssetOneof
-import com.google.openrtb.{APIFramework, CreativeAttribute, NativeRequest}
+import com.google.openrtb.NativeRequest
 import com.google.openrtb.NativeRequest.{Asset, EventTrackers}
 import com.powerspace.openrtb.json.EncoderProvider
+import com.powerspace.openrtb.json.OpenRtbExtensions.ExtensionRegistry
 import com.powerspace.openrtb.json.util.EncodingUtils
 import com.powerspace.openrtb.json.common.OpenRtbProtobufEnumEncoders
 import com.powerspace.openrtb.json.common.OpenRtbProtobufEnumDecoders
@@ -14,7 +15,7 @@ import com.powerspace.openrtb.json.common.OpenRtbProtobufEnumDecoders
   * OpenRTB Native Encoder and Decoder
   * @todo split up decoder and encoder
   */
-object OpenRtbNativeRequestSerde extends EncoderProvider[Imp.Native] {
+class OpenRtbNativeRequestSerde(videoSerde: OpenRtbVideoSerde)(implicit er: ExtensionRegistry) extends EncoderProvider[Imp.Native] {
 
   import io.circe._
   import io.circe.syntax._
@@ -22,10 +23,10 @@ object OpenRtbNativeRequestSerde extends EncoderProvider[Imp.Native] {
   import OpenRtbProtobufEnumEncoders._
   import OpenRtbProtobufEnumDecoders._
 
-  private implicit val titleEncoder: Encoder[NativeRequest.Asset.Title] = openRtbEncoder[Asset.Title]
-  private implicit val imgEncoder: Encoder[NativeRequest.Asset.Image] = openRtbEncoder[Asset.Image]
-  private implicit val videoEncoder: Encoder[Imp.Video] = OpenRtbVideoSerde.encoder
-  private implicit val assetDataEncoder: Encoder[NativeRequest.Asset.Data] = openRtbEncoder[Asset.Data]
+  private implicit val titleEncoder: Encoder[NativeRequest.Asset.Title] = extendedEncoder[Asset.Title]
+  private implicit val imgEncoder: Encoder[NativeRequest.Asset.Image] = extendedEncoder[Asset.Image]
+  private implicit val videoEncoder: Encoder[Imp.Video] = videoSerde.encoder
+  private implicit val assetDataEncoder: Encoder[NativeRequest.Asset.Data] = extendedEncoder[Asset.Data]
   private implicit val assetOneOfEncoder: Encoder[NativeRequest.Asset.AssetOneof] = protobufOneofEncoder[NativeRequest.Asset.AssetOneof] {
     case NativeRequest.Asset.AssetOneof.Img(img) => img.asJson
     case NativeRequest.Asset.AssetOneof.Data(data) => data.asJson
@@ -33,21 +34,21 @@ object OpenRtbNativeRequestSerde extends EncoderProvider[Imp.Native] {
     case NativeRequest.Asset.AssetOneof.Title(title) => title.asJson
   }
 
-  private implicit val assetEncoder: Encoder[NativeRequest.Asset] = openRtbEncoder[Asset]
-  private implicit val eventTrackersEncoder: Encoder[NativeRequest.EventTrackers] = openRtbEncoder[EventTrackers]
-  implicit val nativeRequestEncoder: Encoder[NativeRequest] = openRtbEncoder[NativeRequest]
+  private implicit val assetEncoder: Encoder[NativeRequest.Asset] = extendedEncoder[Asset]
+  private implicit val eventTrackersEncoder: Encoder[NativeRequest.EventTrackers] = extendedEncoder[EventTrackers]
+  implicit val nativeRequestEncoder: Encoder[NativeRequest] = extendedEncoder[NativeRequest]
 
   private implicit val requestOneOfEncoder: Encoder[Imp.Native.RequestOneof] = protobufOneofEncoder[Imp.Native.RequestOneof] {
     case Imp.Native.RequestOneof.Request(string) => string.asJson
     case Imp.Native.RequestOneof.RequestNative(request) => request.asJson
   }
 
-  def encoder: Encoder[Imp.Native] = openRtbEncoder[Imp.Native]
+  def encoder: Encoder[Imp.Native] = extendedEncoder[Imp.Native]
 
-  private implicit val titleDecoder: Decoder[NativeRequest.Asset.Title] = openRtbDecoder[Asset.Title]
-  private implicit val imgDecoder: Decoder[NativeRequest.Asset.Image] = openRtbDecoder[Asset.Image]
-  private implicit val videoDecoder: Decoder[Imp.Video] = OpenRtbVideoSerde.decoder
-  private implicit val assetDataDecoder: Decoder[NativeRequest.Asset.Data] = openRtbDecoder[Asset.Data]
+  private implicit val titleDecoder: Decoder[NativeRequest.Asset.Title] = extendedDecoder[Asset.Title]
+  private implicit val imgDecoder: Decoder[NativeRequest.Asset.Image] = extendedDecoder[Asset.Image]
+  private implicit val videoDecoder: Decoder[Imp.Video] = videoSerde.decoder
+  private implicit val assetDataDecoder: Decoder[NativeRequest.Asset.Data] = extendedDecoder[Asset.Data]
 
   /**
     * Each asset object may contain only one of title, img, data or video.
@@ -69,8 +70,8 @@ object OpenRtbNativeRequestSerde extends EncoderProvider[Imp.Native] {
       NativeRequest.Asset(id = id, required = required, assetOneof = assetOneof)
     }
 
-  private implicit val eventTrackersDecoder: Decoder[NativeRequest.EventTrackers] = openRtbDecoder[EventTrackers]
-  implicit val nativeRequestDecoder: Decoder[NativeRequest] = openRtbDecoder[NativeRequest]
+  private implicit val eventTrackersDecoder: Decoder[NativeRequest.EventTrackers] = extendedDecoder[EventTrackers]
+  implicit val nativeRequestDecoder: Decoder[NativeRequest] = extendedDecoder[NativeRequest]
 
   private implicit val requestOneOfDecoder: Decoder[Imp.Native.RequestOneof] = (cursor: HCursor) =>
     cursor.focus.map {
@@ -79,7 +80,7 @@ object OpenRtbNativeRequestSerde extends EncoderProvider[Imp.Native] {
     }.orElse(Some(RequestOneof.Empty)).map(Right(_)).get
 
   def decoder: Decoder[Imp.Native] = for {
-    native <- openRtbDecoder[Imp.Native]
+    native <- extendedDecoder[Imp.Native]
     oneof <- Decoder[Imp.Native.RequestOneof].prepare(_.downField("request"))
   } yield native.copy(requestOneof = oneof)
 

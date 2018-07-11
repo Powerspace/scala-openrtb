@@ -1,4 +1,4 @@
-package com.powerspace.openrtb.bidswitch
+package com.powerspace.openrtb.bidswitch.fixtures
 
 import com.google.openrtb.BidResponse.SeatBid
 import com.google.openrtb.BidResponse.SeatBid.Bid.AdmOneof
@@ -11,7 +11,7 @@ import com.powerspace.bidswitch.{BidExt, BidResponseExt, BidswitchProto, NativeR
   */
 object BidResponseFixtures {
 
-  import com.powerspace.openrtb.json.BidResponseFixtures._
+  import com.powerspace.openrtb.json.fixtures.BidResponseFixtures._
 
   def sampleBidResponse(withNativeObject: Boolean): BidResponse = {
 
