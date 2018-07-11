@@ -123,7 +123,7 @@ object EncodingUtils {
   implicit val booleanDecoder: Decoder[Boolean] = Decoder.decodeBoolean.prepare(cursor => {
     cursor.withFocus(
       _.asNumber.map(
-        _.toInt
+        number => number.toInt
           .map(_.toBoolean)
           .map(Json.fromBoolean)
           getOrElse Json.False
