@@ -13,7 +13,6 @@ object BidSwitchBidResponseSerde extends ConfiguredSerde {
   import io.circe._
 
   implicit val bidResponseExtEncoder: Encoder[BidResponseExt] = openRtbEncoder[BidResponseExt]
-
   implicit val bidResponseExtDecoder: Decoder[BidResponseExt] = openRtbDecoder[BidResponseExt]
 
 }

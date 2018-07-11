@@ -1,17 +1,13 @@
 package com.powerspace.openrtb.bidswitch.bidresponse
 
-import com.google.openrtb.NativeResponse
-import com.powerspace.bidswitch.{BidswitchProto, NativeResponseExt}
-import com.powerspace.openrtb.json.bidresponse.OpenRtbNativeSerde
+import com.powerspace.bidswitch.NativeResponseExt
 import com.powerspace.openrtb.json.util.EncodingUtils
 import io.circe.generic.extras.Configuration
-import io.circe.{Decoder, Encoder, Json}
+import io.circe.{Decoder, Encoder}
 
 object BidSwitchNativeResponseSerde {
 
   import EncodingUtils._
-  import io.circe.syntax._
-  import io.circe.generic.extras.semiauto._
 
   implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
 

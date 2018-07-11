@@ -1,10 +1,10 @@
-package com.powerspace.openrtb.json
+package com.powerspace.openrtb.json.fixtures
 
 import com.google.openrtb.BidRequest.Imp.Banner.Format
 import com.google.openrtb.BidRequest.Imp.Native.RequestOneof
 import com.google.openrtb.BidRequest.Imp.Pmp.Deal
 import com.google.openrtb.BidRequest.Imp.{Audio, Banner, Metric, Native, Pmp, Video}
-import com.google.openrtb.BidRequest.{Data, Device, DistributionchannelOneof, Geo, Imp, Regs, Source, User}
+import com.google.openrtb.BidRequest.{Data, Device, DistributionchannelOneof, Geo, Imp, Regs, Source, User, Site}
 import com.google.openrtb._
 
 /**
@@ -62,6 +62,9 @@ object BidRequestFixtures {
     metric = Seq(Metric(Some("type-1"), Some(10d), Some("vendor-1")))
   )
 
+  def getSite: DistributionchannelOneof.Site =
+    DistributionchannelOneof.Site(value = Site(id = Some("id-site"), name = Some("name-site")))
+
   def getBidRequest(withNativeObject: Boolean): BidRequest = {
     val requestOneof = if (withNativeObject) RequestOneof.RequestNative(NativeRequest(plcmtcnt = Some(40))) else RequestOneof.Request("native-string")
     BidRequest(
@@ -82,7 +85,7 @@ object BidRequestFixtures {
       bseat = Seq("bseat-1", "bseat-2"),
       wlang = Seq("wlang-1", "wlang-2"),
       source = Some(Source(fd = Some(true), tid = None, pchain = Some("pchain-1"))),
-      distributionchannelOneof = DistributionchannelOneof.Empty
+      distributionchannelOneof = getSite
     )
   }
 

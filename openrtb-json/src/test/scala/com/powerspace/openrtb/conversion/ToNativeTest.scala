@@ -1,17 +1,25 @@
 package com.powerspace.openrtb.conversion
 
+import com.powerspace.openrtb.json.NativeManipulation
 import com.powerspace.openrtb.json.OpenRtbExtensions.ExtensionRegistry
-import com.powerspace.openrtb.json.{BidRequestFixtures, NativeManipulation}
+import com.powerspace.openrtb.json.fixtures.BidRequestFixtures
+import org.scalatest.{FunSuite, GivenWhenThen}
 
-object ToNativeTest extends App {
+class ToNativeTest extends FunSuite with GivenWhenThen {
 
-  implicit val extensionRegistry: ExtensionRegistry = ExtensionRegistry()
+  test("Native request string/object converted") {
 
-  private val native = new NativeManipulation()
-  private val request = native.toNativeAsString(BidRequestFixtures.getBidRequest(withNativeObject = true))
+    Given("An ExtensionRegistry and a NativeManipulation object")
+    implicit val extensionRegistry: ExtensionRegistry = ExtensionRegistry()
+    val native = new NativeManipulation()
 
-  assert(RequestLenses.getAllNatives(request).forall(_.isRequest))
+    When("I convert the native request to a real object")
+    val request = native.toNativeAsString(BidRequestFixtures.getBidRequest(withNativeObject = true))
 
-  println(native.toNativeStringEncoder(request).noSpaces)
+    Then("I check that the conversion successfully happened")
+    assert(RequestLenses.getAllNatives(request).forall(_.isRequest))
+    println(native.toNativeStringEncoder(request).noSpaces)
+
+  }
 
 }

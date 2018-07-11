@@ -1,4 +1,4 @@
-package com.powerspace.openrtb.json
+package com.powerspace.openrtb.json.fixtures
 
 import com.google.openrtb.BidResponse.SeatBid
 import com.google.openrtb.BidResponse.SeatBid.Bid

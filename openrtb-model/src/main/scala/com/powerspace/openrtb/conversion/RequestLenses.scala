@@ -1,13 +1,12 @@
 package com.powerspace.openrtb.conversion
 
-import com.google.openrtb.{BidRequest, BidResponse}
+import com.google.openrtb.BidRequest
 import com.google.openrtb.BidRequest.Imp
 import com.google.openrtb.BidRequest.Imp.Native
 import com.google.openrtb.BidRequest.Imp.Native.RequestOneof
-import com.google.openrtb.BidResponse.SeatBid
-import monocle.{PTraversal, Traversal}
 
 object RequestLenses {
+
   import SeqTraverse._
   import monocle.function.all._
   import monocle.macros._

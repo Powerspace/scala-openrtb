@@ -3,7 +3,7 @@ package com.powerspace.openrtb.json.bidrequest
 import com.google.openrtb.BidRequest.Imp
 import com.google.openrtb.BidRequest.Imp.Native.RequestOneof
 import com.google.openrtb.NativeRequest.Asset.AssetOneof
-import com.google.openrtb.{APIFramework, CreativeAttribute, NativeRequest}
+import com.google.openrtb.NativeRequest
 import com.google.openrtb.NativeRequest.{Asset, EventTrackers}
 import com.powerspace.openrtb.json.EncoderProvider
 import com.powerspace.openrtb.json.OpenRtbExtensions.ExtensionRegistry
@@ -22,7 +22,6 @@ class OpenRtbNativeRequestSerde(videoSerde: OpenRtbVideoSerde)(implicit er: Exte
   import EncodingUtils._
   import OpenRtbProtobufEnumEncoders._
   import OpenRtbProtobufEnumDecoders._
-
 
   private implicit val titleEncoder: Encoder[NativeRequest.Asset.Title] = extendedEncoder[Asset.Title]
   private implicit val imgEncoder: Encoder[NativeRequest.Asset.Image] = extendedEncoder[Asset.Image]

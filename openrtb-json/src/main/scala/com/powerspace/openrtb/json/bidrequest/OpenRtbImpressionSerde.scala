@@ -23,13 +23,13 @@ class ImpressionLevelSerdes(videoSerde: OpenRtbVideoSerde)(implicit er: Extensio
   private val openRtbBannerSerde = new OpenRtbBannerSerde()
   private val pmpSerde = new OpenRtbPmpSerde()
 
-  implicit val bannerEncoder: Encoder[Imp.Banner] = openRtbBannerSerde.OpenRtbBannerEncoder.encoder
+  implicit val bannerEncoder: Encoder[Imp.Banner] = openRtbBannerSerde.encoder
   val videoEncoder: Encoder[Imp.Video] = videoSerde.encoder
   val audioEncoder: Encoder[Imp.Audio] = extendedEncoder[Imp.Audio]
 
   implicit def pmpEncoder(implicit dealEncoder: Encoder[Imp.Pmp.Deal]): Encoder[Imp.Pmp] = pmpSerde.encoder
 
-  implicit val bannerDecoder: Decoder[Imp.Banner] = openRtbBannerSerde.OpenRtbBannerDecoder.decoder
+  implicit val bannerDecoder: Decoder[Imp.Banner] = openRtbBannerSerde.decoder
   val videoDecoder: Decoder[Imp.Video] = videoSerde.decoder
   val audioDecoder: Decoder[Imp.Audio] = extendedDecoder[Imp.Audio]
 

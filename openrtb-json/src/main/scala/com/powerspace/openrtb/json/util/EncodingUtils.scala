@@ -30,7 +30,6 @@ object EncodingUtils {
 
   /**
     * Unknown fields Encoder
-    * @todo move away from utils
     */
   implicit val unknownFieldsEncoder: Encoder[UnknownFieldSet] = (_: UnknownFieldSet) => Json.Null
   implicit val unknownFieldsDecoder: Decoder[UnknownFieldSet] = (_: HCursor) => Right(UnknownFieldSet.empty)

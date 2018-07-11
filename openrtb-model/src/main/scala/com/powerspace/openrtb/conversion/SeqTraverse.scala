@@ -1,15 +1,12 @@
 package com.powerspace.openrtb.conversion
 
-import com.google.openrtb.BidRequest
-import com.google.openrtb.BidRequest.Imp
-import com.google.openrtb.BidRequest.Imp.Native
-import com.google.openrtb.BidRequest.Imp.Native.RequestOneof
 import monocle.function.Each
 import monocle.function.Each.fromTraverse
 import scalaz.{Applicative, Traverse}
 
 /** Object definitions for scalaz **/
 object SeqTraverse {
+
   /** Redefine a traverse for seqs since scalaz does not provide one */
   implicit val seqTraverse = new Traverse[Seq] {
     def traverseImpl[F[_], A, B](l: Seq[A])(f: A => F[B])(implicit F: Applicative[F]) = {
@@ -21,6 +18,7 @@ object SeqTraverse {
 
   /** Define an each from the abovementionned traverse object */
   implicit def seqEach[A]: Each[Seq[A], A] = fromTraverse
+
 }
 
 

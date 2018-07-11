@@ -1,13 +1,11 @@
 package com.powerspace.openrtb.json
 
-import com.google.openrtb.{BidRequest, NativeRequest}
-import io.circe
+import com.google.openrtb.NativeRequest
 import io.circe.Json.fromJsonObject
 import io.circe.JsonObject.fromIterable
 import io.circe._
 import io.circe.generic.extras.Configuration
 import scalapb.{ExtendableMessage, GeneratedExtension, GeneratedMessage}
-
 import scala.reflect.ClassTag
 
 /**

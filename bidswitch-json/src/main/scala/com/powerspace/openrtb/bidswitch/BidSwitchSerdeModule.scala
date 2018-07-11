@@ -15,6 +15,7 @@ import com.powerspace.openrtb.json._
   * It uses OpenRTB Serdes underneath and applies extensions Serdes at BidResponse and Bid levels
   */
 object BidSwitchSerdeModule extends SerdeModule {
+
   def nativeRegistry: ExtensionRegistry = ExtensionRegistry()
     .registerExtension[NativeResponse, NativeResponseExt](
     extension = BidswitchProto.responseNativeExt,

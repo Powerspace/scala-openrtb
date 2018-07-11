@@ -2,12 +2,10 @@ package com.powerspace.openrtb.bidswitch
 
 import java.net.URL
 
-import com.google.openrtb.NativeResponse.Link
-import com.google.openrtb.{BidResponse, NativeResponse}
-import com.powerspace.bidswitch.{BidExt, BidswitchProto}
-import com.powerspace.openrtb.bidswitch.BidRequestFixtures._
-import com.powerspace.openrtb.bidswitch.BidResponseFixtures._
-import com.powerspace.openrtb.bidswitch.bidresponse.BidSwitchBidSerde
+import com.google.openrtb.BidResponse
+import com.powerspace.bidswitch.BidswitchProto
+import com.powerspace.openrtb.bidswitch.fixtures.BidRequestFixtures._
+import com.powerspace.openrtb.bidswitch.fixtures.BidResponseFixtures._
 import io.circe.parser._
 import io.circe.syntax._
 import org.scalatest.{FunSuite, GivenWhenThen}

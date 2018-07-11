@@ -3,9 +3,8 @@ package com.powerspace.openrtb.json
 import java.net.URL
 
 import com.google.openrtb._
-import com.powerspace.openrtb.json.BidRequestFixtures._
-import com.powerspace.openrtb.json.BidResponseFixtures._
-import com.powerspace.openrtb.json.OpenRtbExtensions.ExtensionRegistry
+import com.powerspace.openrtb.json.fixtures.BidRequestFixtures._
+import com.powerspace.openrtb.json.fixtures.BidResponseFixtures._
 import com.powerspace.openrtb.json.util.EncodingUtils
 import io.circe.Json
 import io.circe.parser._
@@ -82,6 +81,10 @@ class OpenRtbSerdeTest extends FunSuite with GivenWhenThen {
     assert(reqCursor.downField("at").as[Int].value == 2)
     assert(reqCursor.downField("cur").as[Seq[String]].value == Seq("EUR"))
     assert(reqCursor.downField("source").downField("pchain").as[String].value == "pchain-1")
+
+    val siteCursor = reqCursor.downField("site")
+    assert(siteCursor.downField("id").as[String].value == "id-site")
+    assert(siteCursor.downField("name").as[String].value == "name-site")
 
     val impCursor = reqCursor.downField("imp").downArray
     assert(impCursor.downField("id").as[String].value == "imp-1")

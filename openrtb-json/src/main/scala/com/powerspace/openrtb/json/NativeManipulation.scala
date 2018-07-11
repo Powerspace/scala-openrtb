@@ -14,8 +14,6 @@ class NativeManipulation(implicit er: ExtensionRegistry) {
 
   import RequestLenses._
 
-  //implicit val impEncoder: Encoder[BidRequest.Imp] = OpenRtbSerdeModule.impEncoder
-
   val toNativeAsString: BidRequest => BidRequest = nativeRequestOneOfTraversal.modify{
     case RequestOneof.RequestNative(native) => RequestOneof.Request(new OpenRtbNativeRequestSerde(new OpenRtbVideoSerde(new OpenRtbBannerSerde())).nativeRequestEncoder(native).noSpaces)
     case str: RequestOneof.Request => str

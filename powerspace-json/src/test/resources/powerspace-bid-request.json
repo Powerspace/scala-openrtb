@@ -42,7 +42,7 @@
     },
     "ext": {
       "country": "ITA",
-      "language": "ITA"
+      "network": "network"
     }
   },
   "device": {
@@ -50,11 +50,7 @@
     "ip": "0.0.0.0",
     "model": "Other",
     "os": "Other",
-    "language": "ll",
-    "ext": {
-      "ispdomain": "domain",
-      "quovaconnectiontype": "type"
-    }
+    "language": "ll"
   },
   "user": {
     "id": "aa",
@@ -63,16 +59,24 @@
       "country": "fr",
       "city": "paris",
       "ext": {
-        "statecode": "I10",
-        "admin1": "admin"
+        "admin1": "admin",
+        "admin2": "admin",
+        "geo_names_id": 1
       }
+    },
+    "ext": {
+      "identified": 1,
+      "suspicious": 0
     }
   },
   "test": 1,
   "at": 2,
   "tmax": 300,
   "ext": {
-    "bcampaign": 1,
-    "forcedalgorithm": "ab"
+    "forced_algorithm": "ab",
+    "forced_deal": "ab",
+    "bcampaign" : [
+      2
+    ]
   }
 }

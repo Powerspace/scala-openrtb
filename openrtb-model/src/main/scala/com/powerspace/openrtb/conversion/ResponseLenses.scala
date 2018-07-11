@@ -5,6 +5,7 @@ import com.google.openrtb.BidResponse.SeatBid
 import monocle.Traversal
 
 object ResponseLenses {
+
   import SeqTraverse._
   import monocle.function.all._
   import monocle.macros._
@@ -26,4 +27,5 @@ object ResponseLenses {
   def takeBestBids(bidResponse: BidResponse)(n: Int) = getAllBids(bidResponse)
     .sorted(priceOrdering)
     .take(n)
+
 }

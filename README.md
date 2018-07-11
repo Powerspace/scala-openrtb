@@ -6,16 +6,15 @@ This library also provides SerDes for [BidSwitch](http://www.bidswitch.com/) bid
 ## Building
 Build it like any other SBT project. Go to the root folder and run:
 
-```sbt
+```bash
 sbt compile
 ```
 
 ## Work in Progress
- - Maven artifact upload
- - OpenRTB versioning and Lens
- - Macro replacement
- - Add Travis Continuous Integration
- - Optimised extension registry
+ - Use cases will be defined into the *readme*
+ - A Maven artifact will be produced and uploaded
+ - Macro replacement will be included into ScalaOpenRTB
+ - Adding Travis Continuous Integration
 
 ## Links
 
@@ -23,7 +22,6 @@ sbt compile
   * [OpenRTB API Spec Version 2.5](https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf)
   * [OpenRTB Dynamic Native Ads API Spec Version 1.1](https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-Native-Ads-Specification-1-1_2016.pdf)
 * [Powerspace](https://powerspace.com/en/): Powerspace is the 1st native advertising platform for e-mail. Powerspace allows brands to broadcast their content at scale across hundreds of media newsletters leveraging cutting-edge technology solutions.
-
 
 ## Contributions
 

@@ -73,9 +73,9 @@ trait SerdeModule extends ConfiguredSerde {
 
   implicit private def seatBidDecoder = seatBidSerde.decoder
 
-  implicit def bidRequestEncoder = bidRequestSerde.OpenRtbBidRequestEncoder.encoder
+  implicit def bidRequestEncoder = bidRequestSerde.encoder
 
-  implicit def bidRequestDecoder = bidRequestSerde.OpenRtbBidRequestDecoder.decoder
+  implicit def bidRequestDecoder = bidRequestSerde.decoder
 
   implicit def bidResponseDecoder = bidResponseSerde.decoder
 
