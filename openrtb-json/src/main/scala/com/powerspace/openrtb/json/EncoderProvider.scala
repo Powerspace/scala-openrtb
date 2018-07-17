@@ -1,11 +1,16 @@
 package com.powerspace.openrtb.json
 
 import com.google.openrtb.NativeRequest
+import com.powerspace.openrtb.json.util.EncodingUtils
 import io.circe.Json.fromJsonObject
 import io.circe.JsonObject.fromIterable
 import io.circe._
 import io.circe.generic.extras.Configuration
+import io.circe.generic.extras.decoding.ConfiguredDecoder
+import io.circe.generic.extras.encoding.ConfiguredObjectEncoder
 import scalapb.{ExtendableMessage, GeneratedExtension, GeneratedMessage}
+import shapeless.Lazy
+
 import scala.reflect.ClassTag
 
 /**
@@ -29,7 +34,7 @@ trait NativeDependencies {
   * Set of features that should be able to manage json openrtb extensions
   */
 object OpenRtbExtensions {
-
+  import EncodingUtils._
   /**
     * An openrtb extension is a generated extension with Optional availability. The [[scalapb.GeneratedExtension]] comes from scalapb stuff
     */
@@ -80,6 +85,15 @@ object OpenRtbExtensions {
         decoder
       ))
 
+    }
+
+    def registerExtension[Extendable <: ExtendableMessage[Extendable], Extension <: scalapb.GeneratedMessage](extension: OpenRtbExtension[Extendable, Extension])
+                                                                                                             (implicit encoder: Lazy[ConfiguredObjectEncoder[Extension]],
+                                                                                                                decoder: Lazy[ConfiguredDecoder[Extension]],
+                                                                                                                extendableTag: ClassTag[Extendable],
+                                                                                                                extensionTag: ClassTag[Extension]): ExtensionRegistry = {
+
+      registerExtension[Extendable, Extension](extension, openRtbEncoder[Extension], openRtbDecoder[Extension])
     }
 
     /**

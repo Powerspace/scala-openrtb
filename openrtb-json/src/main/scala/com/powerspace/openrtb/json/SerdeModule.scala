@@ -5,6 +5,7 @@ import com.powerspace.openrtb.json.bidrequest._
 import com.powerspace.openrtb.json.bidresponse.{OpenRtbBidResponseSerde, OpenRtbBidSerde, OpenRtbNativeSerde, OpenRtbSeatBidSerde}
 
 trait SerdeModule extends ConfiguredSerde {
+
   def nativeRegistry: ExtensionRegistry
 
   def extensionRegistry: ExtensionRegistry
@@ -29,7 +30,7 @@ trait SerdeModule extends ConfiguredSerde {
 
   protected def bidResponseSerde = new OpenRtbBidResponseSerde()(extensionRegistry)
 
-  protected def userSerde = new OpenRtbUserSerde()(extensionRegistry)
+  protected def userSerde = new OpenRtbUserSerde(bidRequestSerde)(extensionRegistry)
 
   protected def pmpSerde = new OpenRtbPmpSerde()(extensionRegistry)
 
