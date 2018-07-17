@@ -91,6 +91,7 @@ class PowerspaceSerdeModuleTest extends FunSuite with GivenWhenThen {
     assert(bidExt.downField("margin").as[Double].isRight)
     assert(bidExt.downField("cpc").as[Double].isRight)
     assert(bidExt.downField("ctr").as[Double].isRight)
+    assert(bidExt.downField("algorithm").as[String].isRight)
   }
 
   test("Powerspace BidResponse Deserialization") {

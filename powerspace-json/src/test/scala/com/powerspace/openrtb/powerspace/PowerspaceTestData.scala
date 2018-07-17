@@ -155,7 +155,7 @@ object PowerspaceTestData {
   }
 
   val bid: Bid = {
-    val ext = BidExt(ctr = Some(0.5d), cpc = Some(0.9d), margin = Some(0.6d))
+    val ext = BidExt(ctr = Some(0.5d), cpc = Some(0.9d), margin = Some(0.6d), algorithm = Some("random"))
     Bid(
       id = "bidid-1",
       impid = "impid-1",
