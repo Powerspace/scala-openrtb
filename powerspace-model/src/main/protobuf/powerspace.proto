@@ -48,9 +48,9 @@ message LinkExt {
 
 // Bid (response)
 message BidExt {
-    reserved 1002;
     optional double ctr = 1000;
     optional double cpc = 1001;
+    optional string algorithm = 1002;
     optional double margin = 1003;
 }
 
