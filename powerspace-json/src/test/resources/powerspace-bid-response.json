@@ -25,7 +25,7 @@
             }
           },
           "ext": {
-            "margin": 0.5,
+            "final_revenue": 0.5,
             "cpc": 0.5,
             "ctr": 0.5
           }
@@ -48,8 +48,7 @@
         }
       ],
       "seat": "powerspace",
-      "group": 0,
-      "algorithm": "algo"
+      "group": 0
     }
   ],
   "cur": "EUR"

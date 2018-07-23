@@ -51,7 +51,18 @@ message BidExt {
     optional double ctr = 1000;
     optional double cpc = 1001;
     optional string algorithm = 1002;
-    optional double margin = 1003;
+
+    optional double advertiserCpm = 1006;
+    optional double advertiserCpc = 1004;
+
+    optional double finalRevenue = 1003; // == margin
+
+    optional double finalCpm = 1005;
+    optional double finalRevshare = 1007;
+    optional double internalDemandRevenue = 1008;
+
+    optional double publisherPayout = 1009;
+    optional double externalDemandRevenue = 1010;
 }
 
 extend com.google.openrtb.BidRequest {

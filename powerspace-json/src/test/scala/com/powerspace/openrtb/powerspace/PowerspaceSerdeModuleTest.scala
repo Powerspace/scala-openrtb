@@ -88,7 +88,8 @@ class PowerspaceSerdeModuleTest extends FunSuite with GivenWhenThen {
     val res = encoded.hcursor
 
     val bidExt = res.downField("seatbid").downArray.downField("bid").downArray.downField("ext")
-    assert(bidExt.downField("margin").as[Double].isRight)
+
+    assert(bidExt.downField("final_revenue").as[Double].isRight)
     assert(bidExt.downField("cpc").as[Double].isRight)
     assert(bidExt.downField("ctr").as[Double].isRight)
     assert(bidExt.downField("algorithm").as[String].isRight)
@@ -105,9 +106,9 @@ class PowerspaceSerdeModuleTest extends FunSuite with GivenWhenThen {
     Then("I should get the related Scala BidResponse")
     val bidResponse = decoded.toTry.get
     val bidExt = bidResponse.seatbid.head.bid.head.extension(PowerspaceProto.bid)
-    assert(bidExt.get.margin.get > 0d)
+
+    assert(bidExt.get.finalRevenue.get > 0d)
     assert(bidExt.get.cpc.get > 0d)
     assert(bidExt.get.ctr.get > 0d)
   }
-
 }
