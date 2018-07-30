@@ -11,9 +11,6 @@ import io.circe.parser._
 import io.circe.syntax._
 import org.scalatest.{FunSuite, GivenWhenThen}
 
-/**
-  * @todo test idempotency of BidRequest (de)serialization
-  */
 class OpenRtbSerdeTest extends FunSuite with GivenWhenThen {
 
   import EncodingUtils._
@@ -67,10 +64,10 @@ class OpenRtbSerdeTest extends FunSuite with GivenWhenThen {
     assert(bidResponse.seatbid.head.bid.isEmpty)
   }
 
-  test("OpenRTB-like BidRequest with a string-ed native object serialization") {
+  test("OpenRTB-like BidRequest with native object serialization") {
 
-    Given("An OpenRTB-like BidRequest with a string-ed native object")
-    val bidRequest = getBidRequest(withNativeObject = false)
+    Given("An OpenRTB-like BidRequest with native object")
+    val bidRequest = getBidRequest(withNativeObject = true)
 
     When("I serialize it")
     val json = bidRequest.asJson
@@ -118,8 +115,6 @@ class OpenRtbSerdeTest extends FunSuite with GivenWhenThen {
     val nativeCursor = impCursor.downField("native")
     assert(nativeCursor.downField("ver").as[String].value == "ver-1")
     assert(nativeCursor.downField("battr").downArray.as[Int].value == 17)
-    assert(nativeCursor.downField("request").as[String].contains("native-string"))
-
 
     val regsCursor = reqCursor.downField("regs")
     assert(regsCursor.downField("coppa").as[Int].value == 1)
@@ -133,6 +128,10 @@ class OpenRtbSerdeTest extends FunSuite with GivenWhenThen {
     assert(userCursor.downField("id").as[String].value == "id-1")
     assert(userCursor.downField("gender").as[String].value == "m")
     assert(userCursor.downField("data").downArray.downField("name").as[String].value == "name-1")
+
+    val assetCursor = nativeCursor.downField("request").downField("assets").downArray
+    assert(assetCursor.downField("id").as[Int].value == 44)
+    assert(assetCursor.downField("title").downField("len").as[Int].value == 44)
 
   }
 
