@@ -8,26 +8,19 @@ import com.powerspace.openrtb.json.bidrequest.{OpenRtbBannerSerde, OpenRtbNative
 import io.circe.Encoder
 
 /**
-  * Manipulation of native property
+  * Manipulation of bid requests
   **/
-class NativeManipulation(implicit er: ExtensionRegistry) {
+class RequestManipulation(implicit er: ExtensionRegistry) {
 
   import RequestLenses._
 
-  val toNativeAsString: BidRequest => BidRequest = nativeRequestOneOfTraversal.modify{
+  val toNativeAsString: BidRequest => BidRequest = bidRequestToRequestOneOf.modify {
     case RequestOneof.RequestNative(native) => RequestOneof.Request(new OpenRtbNativeRequestSerde(new OpenRtbVideoSerde(new OpenRtbBannerSerde())).nativeRequestEncoder(native).noSpaces)
     case str: RequestOneof.Request => str
   }
 
-  /**val toNativeAsObject = nativeRequestOneOfTraversal.modify{
-    case native: RequestOneof.RequestNative => native
-    case str: RequestOneof.Request => RequestOneof.RequestNative(???) // @todo missing decoder
-  }**/
 
   /** specific encoder that always return native as string request **/
   def toNativeStringEncoder: Encoder[BidRequest] = OpenRtbSerdeModule.bidRequestEncoder.contramap(toNativeAsString)
-
-  /** specific encoder that always return native as object request **/
-  //val toNativeObjectEncoder = OpenRtbBidRequestSerde.encoder.contramap(toNativeAsObject)
 
 }
