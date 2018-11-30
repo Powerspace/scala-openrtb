@@ -3,14 +3,11 @@ package com.powerspace.openrtb.json.common
 import com.google.openrtb._
 import com.powerspace.openrtb.json.util.EncodingUtils.protobufEnumEncoder
 import io.circe.Encoder
-import io.circe.generic.extras.Configuration
 
 /**
-  * OpenRTB bid request enums encoders
+  * OpenRTB Protocol Buffer Enumerations Encoders
   */
 object OpenRtbProtobufEnumEncoders {
-
-  private implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
 
   implicit val companionTypeEncoder: Encoder[CompanionType] = protobufEnumEncoder[CompanionType]
   implicit val apiFrameworkEncoder: Encoder[APIFramework] = protobufEnumEncoder[APIFramework]
@@ -46,3 +43,5 @@ object OpenRtbProtobufEnumEncoders {
   implicit val noBidReasonEncoder: Encoder[NoBidReason] = protobufEnumEncoder[NoBidReason]
 
 }
+
+
