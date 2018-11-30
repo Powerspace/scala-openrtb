@@ -10,8 +10,39 @@ Build it like any other SBT project. Go to the root folder and run:
 sbt compile
 ```
 
+## Usage
+To laverage ScalaOpenRTB we have to define our bid request/response extensions and their decoders:
+
+```scala
+object CustomSerdeModule extends SerdeModule {
+
+  // Define encoder for custom extension
+  implicit val directEncoder: Encoder[CustomExtension] = openRtbEncoder[CustomExtension]
+ 
+  // Register extension for specific proto-kind object
+  override def extensionRegistry: ExtensionRegistry = ExtensionRegistry()
+    .registerExtension(CustomProto.bidRequest)
+  
+  override def nativeRegistry: ExtensionRegistry = ExtensionRegistry()
+
+```
+
+Then in the bidder client we import defined module and use it for bid requests/response encoding/decoding:
+
+```scala
+import CustomSerdeModule._
+import io.circe.syntax._
+import io.circe.parser.decode
+
+implicit val bidRequestEncoder: Encoder[BidRequest] = PowerspaceSerdeModule.bidRequestEncoder
+implicit val bidResponseDecoder: Decoder[BidRequest] = PowerspaceSerdeModule.bidResponseDecoder
+
+val bidRequest = BidRequest(...).asJson
+val bidRequest = decode[BidResponse](bidRequest)
+
+```
+
 ## Work in Progress
- - Use cases will be defined into the *readme*
  - A Maven artifact will be produced and uploaded
  - Macro replacement will be included into ScalaOpenRTB
  - Adding Travis Continuous Integration
