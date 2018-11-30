@@ -13,7 +13,7 @@ sbt compile
 ```
 
 ## Usage
-To laverage ScalaOpenRTB we have to define our bid request/response extensions and their decoders:
+To leverage ScalaOpenRTB we have to define our bid request/response extensions and their decoders:
 
 ```scala
 object CustomSerdeModule extends SerdeModule {
