@@ -16,6 +16,7 @@ import com.google.openrtb._
 import com.powerspace.openrtb.Bidder
 import monix.eval.Task
 import monix.execution.Scheduler
+import monix.reactive.Observable
 
 import scala.concurrent.Future
 import scala.util.{Failure, Random, Success}
@@ -61,37 +62,31 @@ object BidderApp extends App {
 }
 
 class RtbBidder extends Bidder[Task] {
-
   import cats.data.OptionT
 
-
   override def bidOn(bidRequest: BidRequest): Task[Option[BidResponse]] = {
-    val bids: Seq[Task[Seq[Bid]]] = bidRequest.imp
-      .map(bidsForImpression).toList
+    val bids: Task[List[Bid]] = Observable
+      .fromIterable(bidRequest.imp)
+      .flatMap(bidsForImpression)
+      .toListL
 
-    val bidList: Task[List[Bid]] = Task.gatherUnordered(bids).map(_.flatten)
-
-    OptionT(bidList
-      .map {
-        case Nil => None
-        case bids@_ => Some(BidResponse(
-          id = bidRequest.id,
-          seatbid = Seq(SeatBid(bid = bids)),
-        ))
-      })
-      .map(withProtocol)
-      .value
+    bids.map{
+      case Nil => None
+      case bids@_ => Some(withProtocol(BidResponse(
+        id = bidRequest.id,
+        seatbid = Seq(SeatBid(bid = bids)))),
+      )}
   }
 
-  private def bidsForImpression(impression: BidRequest.Imp): Task[Seq[Bid]] = {
-    (for {
+  private def bidsForImpression(impression: BidRequest.Imp): Observable[Bid] = {
+    Observable.fromTask((for {
       nativeRequest: NativeRequest <- OptionT.fromOption[Task](impression.native.flatMap(
         _.requestOneof.requestNative
       ))
       nativeResponse: NativeResponse <- OptionT.apply(Task.deferFuture(buildNativeResponse(nativeRequest)))
 
       bid: Bid <- OptionT.apply[Task, Bid](buildBid(impression, nativeResponse))
-    } yield bid).value.map(_.toSeq)
+    } yield bid).value).flatMap(Observable.fromIterable(_))
   }
 
   private def buildNativeResponse(request: NativeRequest): Future[Option[NativeResponse]] = {
@@ -117,5 +112,5 @@ class RtbBidder extends Bidder[Task] {
   }
 
   private def withProtocol(bidResponse: BidResponse): BidResponse =
-    bidResponse.withExtension(ExampleProto.bidResponseExt)(Some(BidResponseExt(protocol = Some("HTTP"))))
+    bidResponse.withExtension(ExampleProto.bidResponseExt)(Some(BidResponseExt(protocol = Some("some useful protocol"))))
 }
