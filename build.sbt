@@ -48,6 +48,7 @@ lazy val common = Project(id = "common", base = file("common"))
     bidswitchModel % "compile->compile;test->test",
     bidswitchJson % "compile->compile;test->test")
   .settings(testDependencies: _*)
+  .settings(skip in publish := true)
 
 lazy val root = (project in file("."))
   .aggregate(
