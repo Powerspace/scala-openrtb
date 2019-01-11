@@ -83,13 +83,13 @@ class RtbBidder extends Bidder[Task] {
       nativeRequest: NativeRequest <- OptionT.fromOption[Task](impression.native.flatMap(
         _.requestOneof.requestNative
       ))
-      nativeResponse: NativeResponse <- OptionT.apply(Task.deferFuture(buildNativeResponse(nativeRequest)))
+      nativeResponse: NativeResponse <- OptionT.apply(buildNativeResponse(nativeRequest))
 
       bid: Bid <- OptionT.apply[Task, Bid](buildBid(impression, nativeResponse))
     } yield bid).value).flatMap(Observable.fromIterable(_))
   }
 
-  private def buildNativeResponse(request: NativeRequest): Future[Option[NativeResponse]] = {
+  private def buildNativeResponse(request: NativeRequest): Task[Option[NativeResponse]] = {
     val assets = request.assets.map(
       (asset: NativeRequest.Asset) =>
         NativeResponse.Asset(
