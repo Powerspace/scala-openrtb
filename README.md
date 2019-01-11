@@ -1,5 +1,7 @@
 <img src="https://storage.googleapis.com/github-imgs/scala-open-rtb.png" width="270" height="150"/>
 
+<img src="https://travis-ci.com/Powerspace/scala-openrtb.svg?branch=master" />
+
 Scala OpenRTB is a full Scala library that provides protobuf bindings as well as JSON serialization for [OpenRTB](https://www.iab.com/guidelines/real-time-bidding-rtb-project/)-based entities in a functional fashion. 
 This library also provides SerDes for [Powerspace](https://www.powerspace.com/en) and [BidSwitch](http://www.bidswitch.com/) bidding models, and aims to support other DSPs in the near future.
 
@@ -11,7 +13,7 @@ sbt compile
 ```
 
 ## Usage
-To laverage ScalaOpenRTB we have to define our bid request/response extensions and their decoders:
+To leverage ScalaOpenRTB we have to define our bid request/response extensions and their decoders:
 
 ```scala
 object CustomSerdeModule extends SerdeModule {
