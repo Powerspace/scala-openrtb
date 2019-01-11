@@ -18,7 +18,6 @@ import monix.eval.Task
 import monix.execution.Scheduler
 import monix.reactive.Observable
 
-import scala.concurrent.Future
 import scala.util.{Failure, Random, Success}
 
 /**
@@ -98,7 +97,7 @@ class RtbBidder extends Bidder[Task] {
         )
     )
 
-    Future.successful(Some(NativeResponse(assets = assets, link = Link(url = "http://www.wonderful-offer.com"), imptrackers = Seq())))
+    Task(Some(NativeResponse(assets = assets, link = Link(url = "http://www.wonderful-offer.com"), imptrackers = Seq())))
   }
 
   private def buildBid(impression: BidRequest.Imp, response: NativeResponse): Task[Option[Bid]] = {
