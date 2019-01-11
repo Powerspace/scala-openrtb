@@ -19,6 +19,7 @@ object OpenRtbSerdeModule extends SerdeModule {
     ImpressionLevelEncoders.pmpEncoder, OpenRtbNativeRequestSerde.encoder
   )
   override implicit val bidRequestEncoder: Encoder[BidRequest] = OpenRtbBidRequestSerde.encoder
+  override implicit val bidRequestDecoder: Decoder[BidRequest] = OpenRtbBidRequestSerde.decoder
 
   // bid response encoding
   override implicit val bidEncoder: Encoder[SeatBid.Bid] = OpenRtbBidSerde.encoder

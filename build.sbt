@@ -1,3 +1,4 @@
+
 name := "scala-openrtb"
 
 version in ThisBuild := "0.1"
@@ -39,6 +40,10 @@ lazy val bidswitchModel = Project(id = "bidswitch-model", base = file("bidswitch
 lazy val bidswitchJson = Project(id = "bidswitch-json", base = file("bidswitch-json"))
   .dependsOn(bidswitchModel % "compile->compile;test->test", openRtbJson % "compile->compile;test->test")
   .settings(testDependencies: _*)
+
+// examples
+lazy val examples = Project(id = "openrtb-examples", base = file("openrtb-examples"))
+  .dependsOn(openRtbJson % "compile->compile;test->test")
 
 lazy val root = (project in file("."))
   .aggregate(
