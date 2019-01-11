@@ -55,7 +55,6 @@ val bidRequest = decode[BidResponse](bidRequest)
 ```
 
 ## Work in Progress
- - A Maven artifact will be produced and uploaded
  - Macro replacement will be included into ScalaOpenRTB
  - Adding Travis Continuous Integration
 
