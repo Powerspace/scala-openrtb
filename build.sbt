@@ -1,9 +1,11 @@
 name := "scala-openrtb"
 
-version in ThisBuild := "1.1.3"
+version in ThisBuild := "1.1.4"
 
 scalaVersion in ThisBuild := "2.12.6"
 organization in ThisBuild := "com.powerspace.openrtb"
+organizationName in ThisBuild := "Powerspace"
+organizationHomepage := Some(url("https://powerspace.com/"))
 
 scalacOptions in ThisBuild := Seq(
   "-unchecked", "-feature",
@@ -15,6 +17,8 @@ scalacOptions in ThisBuild := Seq(
   "-Ywarn-dead-code", "-Ywarn-numeric-widen", "-Ywarn-unused-import",
   "-language:postfixOps", "-language:implicitConversions", "-language:existentials", "-language:higherKinds"
 )
+
+publishArtifact in root := false
 
 val testDependencies = Seq(libraryDependencies ++= Seq(
   "org.scalactic" %% "scalactic" % "3.0.1" % "test",
@@ -49,6 +53,7 @@ lazy val common = Project(id = "common", base = file("common"))
     bidswitchModel % "compile->compile;test->test",
     bidswitchJson % "compile->compile;test->test")
   .settings(testDependencies: _*)
+  .settings(skip in publish := true)
 
 lazy val root = (project in file("."))
   .aggregate(
