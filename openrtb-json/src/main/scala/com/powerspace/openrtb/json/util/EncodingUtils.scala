@@ -1,24 +1,38 @@
 package com.powerspace.openrtb.json.util
 
-import io.circe.generic.extras.decoding.ConfiguredDecoder
-import io.circe.generic.extras.encoding.ConfiguredObjectEncoder
+import com.powerspace.openrtb.json.OpenRtbExtensions.ExtensionRegistry
 import io.circe._
+import io.circe.generic.extras.encoding.ConfiguredObjectEncoder
 import io.circe.generic.extras.Configuration
-import scalapb.UnknownFieldSet
+import io.circe.generic.extras.decoding.ConfiguredDecoder
+import scalapb.{ExtendableMessage, GeneratedEnumCompanion, UnknownFieldSet}
 import shapeless.Lazy
 
-object EncodingUtils {
-  import io.circe.generic.extras.semiauto._
-  private implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames
+import scala.reflect.ClassTag
+import scala.util.Try
 
-  def openrtbEncoder[A](implicit encode: Lazy[ConfiguredObjectEncoder[A]]): Encoder[A] = deriveEncoder[A](encode).cleanRtb
+object EncodingUtils {
+
+  import io.circe.generic.extras.semiauto._
+  import scala.reflect.runtime.universe.TypeTag
+  import scala.reflect.runtime.{currentMirror => cm}
+  import PrimitivesUtils._
+
+  private implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames.withDefaults
+
+  def extendedEncoder[Ext <: ExtendableMessage[Ext]](implicit encoder: Lazy[ConfiguredObjectEncoder[Ext]], er: ExtensionRegistry, tag: ClassTag[Ext]): Encoder[Ext] =
+    er.encoderWithExtensions[Ext](baseEncoder = openRtbEncoder)
+  def extendedDecoder[Ext <: ExtendableMessage[Ext]](implicit encoder: Lazy[ConfiguredDecoder[Ext]], er: ExtensionRegistry, tag: ClassTag[Ext]): Decoder[Ext] =
+    er.decoderWithExtensions[Ext](baseDecoder = openRtbDecoder)
+
+  def openRtbEncoder[A](implicit encoder: Lazy[ConfiguredObjectEncoder[A]]): Encoder[A] = deriveEncoder[A](encoder).cleanRtb
+  def openRtbDecoder[A](implicit decoder: Lazy[ConfiguredDecoder[A]]): Decoder[A] = deriveDecoder[A](decoder)
 
   /**
-    * Convert a boolean to the related integer value
+    * Unknown fields Encoder
     */
-  implicit class BooleanEnhancement(b: Boolean) {
-    def toInt: Int = if (b) 1 else 0
-  }
+  implicit val unknownFieldsEncoder: Encoder[UnknownFieldSet] = (_: UnknownFieldSet) => Json.Null
+  implicit val unknownFieldsDecoder: Decoder[UnknownFieldSet] = (_: HCursor) => Right(UnknownFieldSet.empty)
 
   implicit class EncoderEnhancement[T](encoder: Encoder[T]) {
 
@@ -42,8 +56,8 @@ object EncodingUtils {
       encoder.mapJson({
         json =>
           json.mapObject(_.mapValues {
-            case json: Json if json.isBoolean => Json.fromInt(json.asBoolean.map(_.toInt).get)
-            case json: Json => json
+            case boolean if boolean.isBoolean => Json.fromInt(boolean.asBoolean.map(_.toInt).get)
+            case other => other
           })
       })
     }
@@ -82,10 +96,19 @@ object EncodingUtils {
   }
 
   /**
-    * @todo user would define a list of protobuf extensions to actually encode
+    * Allow to generate a JSON integer field from an Enum instance
     */
+  def protobufEnumDecoder[T <: _root_.scalapb.GeneratedEnum](implicit tag: TypeTag[T]): Decoder[T] = {
+    val thisClassCompanion = tag.tpe.typeSymbol.companion.asModule
+    val companion = cm
+      .reflectModule(thisClassCompanion)
+      .instance
+      .asInstanceOf[GeneratedEnumCompanion[T]]
 
-  implicit val unknownFieldsEncoder: Encoder[UnknownFieldSet] = (_: UnknownFieldSet) => Json.Null
+    Decoder.decodeInt.emapTry[T](i => {
+      Try(companion.fromValue(i))
+    })
+  }
 
   /**
     * Allow to generate a JSON field from an oneof PB structure
@@ -96,4 +119,15 @@ object EncodingUtils {
         else partialFunction.apply(oneOf)
     }
   }
+
+  implicit val booleanDecoder: Decoder[Boolean] = Decoder.decodeBoolean.prepare(cursor => {
+    cursor.withFocus(
+      _.asNumber.map(
+        number => number.toInt
+          .map(_.toBoolean)
+          .map(Json.fromBoolean)
+          getOrElse Json.False
+      ).getOrElse(Json.False))
+  })
+
 }
