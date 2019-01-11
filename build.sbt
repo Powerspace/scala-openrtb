@@ -55,5 +55,6 @@ lazy val root = (project in file("."))
     openRtbJson,
     bidswitchModel,
     bidswitchJson,
-    common
+    common,
+    examples
   )
