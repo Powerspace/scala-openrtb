@@ -2,7 +2,12 @@ package com.powerspace.openrtb.json
 
 import com.powerspace.openrtb.json.OpenRtbExtensions.ExtensionRegistry
 import com.powerspace.openrtb.json.bidrequest._
-import com.powerspace.openrtb.json.bidresponse.{OpenRtbBidResponseSerde, OpenRtbBidSerde, OpenRtbNativeSerde, OpenRtbSeatBidSerde}
+import com.powerspace.openrtb.json.bidresponse.{
+  OpenRtbBidResponseSerde,
+  OpenRtbBidSerde,
+  OpenRtbNativeSerde,
+  OpenRtbSeatBidSerde
+}
 
 trait SerdeModule extends ConfiguredSerde {
 
@@ -10,13 +15,13 @@ trait SerdeModule extends ConfiguredSerde {
 
   def extensionRegistry: ExtensionRegistry
 
-  protected def nativeRequestSerde = new OpenRtbNativeRequestSerde(
-    new OpenRtbVideoSerde(
-      new OpenRtbBannerSerde()(extensionRegistry))(extensionRegistry))(nativeRegistry)
+  protected def nativeRequestSerde =
+    new OpenRtbNativeRequestSerde(
+      new OpenRtbVideoSerde(new OpenRtbBannerSerde()(extensionRegistry))(extensionRegistry))(nativeRegistry)
 
-  protected def impressionLevelSerde = new ImpressionLevelSerdes(
-    new OpenRtbVideoSerde(
-      new OpenRtbBannerSerde()(extensionRegistry))(extensionRegistry))(extensionRegistry)
+  protected def impressionLevelSerde =
+    new ImpressionLevelSerdes(new OpenRtbVideoSerde(new OpenRtbBannerSerde()(extensionRegistry))(extensionRegistry))(
+      extensionRegistry)
 
   protected def impressionSerde = new OpenRtbImpressionSerde()(extensionRegistry)
 
@@ -90,4 +95,3 @@ trait SerdeModule extends ConfiguredSerde {
     }
   }
 }
-

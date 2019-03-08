@@ -41,19 +41,23 @@ class OpenRtbImpressionSerde(implicit extensionRegistry: ExtensionRegistry) exte
   import EncodingUtils._
 
   implicit val metricEncoder: Encoder[Imp.Metric] = deriveEncoder[Imp.Metric].cleanRtb
-  def encoder(implicit bannerEncoder: Encoder[Imp.Banner],
-              videoEncoder: Encoder[Imp.Video],
-              audioEncoder: Encoder[Imp.Audio],
-              pmpEncoder: Encoder[Imp.Pmp],
-              nativeEncode: Encoder[Imp.Native]): Encoder[Imp] =
+
+  def encoder(
+    implicit bannerEncoder: Encoder[Imp.Banner],
+    videoEncoder: Encoder[Imp.Video],
+    audioEncoder: Encoder[Imp.Audio],
+    pmpEncoder: Encoder[Imp.Pmp],
+    nativeEncode: Encoder[Imp.Native]): Encoder[Imp] =
     extendedEncoder[Imp]
 
   implicit val metricDecoder: Decoder[Imp.Metric] = deriveDecoder[Imp.Metric]
-  def decoder(implicit bannerDecoder: Decoder[Imp.Banner],
-              videoDecoder: Decoder[Imp.Video],
-              audioDecoder: Decoder[Imp.Audio],
-              pmpDecoder: Decoder[Imp.Pmp],
-              nativeDecode: Decoder[Imp.Native]): Decoder[Imp] =
+
+  def decoder(
+    implicit bannerDecoder: Decoder[Imp.Banner],
+    videoDecoder: Decoder[Imp.Video],
+    audioDecoder: Decoder[Imp.Audio],
+    pmpDecoder: Decoder[Imp.Pmp],
+    nativeDecode: Decoder[Imp.Native]): Decoder[Imp] =
     extendedDecoder[Imp]
 
 }

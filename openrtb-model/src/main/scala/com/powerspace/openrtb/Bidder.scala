@@ -6,5 +6,3 @@ import monix.eval.Task
 trait Bidder {
   def bidOn(bidRequest: BidRequest): Task[Option[BidResponse]]
 }
-
-

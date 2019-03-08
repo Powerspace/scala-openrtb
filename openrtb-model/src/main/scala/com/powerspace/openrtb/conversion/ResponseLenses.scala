@@ -24,8 +24,9 @@ object ResponseLenses {
 
   def getAllBids(bidResponse: BidResponse): List[SeatBid.Bid] = bidTraversal.getAll(bidResponse)
 
-  def takeBestBids(bidResponse: BidResponse)(n: Int) = getAllBids(bidResponse)
-    .sorted(priceOrdering)
-    .take(n)
+  def takeBestBids(bidResponse: BidResponse)(n: Int) =
+    getAllBids(bidResponse)
+      .sorted(priceOrdering)
+      .take(n)
 
 }

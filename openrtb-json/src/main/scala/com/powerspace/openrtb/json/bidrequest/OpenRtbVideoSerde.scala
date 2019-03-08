@@ -12,7 +12,8 @@ import com.powerspace.openrtb.json.util.EncodingUtils
   * OpenRTB Video Encoder and Decoder
   * @todo split up decoder and encoder
   */
-class OpenRtbVideoSerde(bannerSerde: OpenRtbBannerSerde)(implicit er: ExtensionRegistry) extends EncoderProvider[Imp.Banner] {
+class OpenRtbVideoSerde(bannerSerde: OpenRtbBannerSerde)(implicit er: ExtensionRegistry)
+    extends EncoderProvider[Imp.Banner] {
 
   import EncodingUtils._
   import io.circe._
