@@ -2,7 +2,7 @@ name := "scala-openrtb"
 
 version in ThisBuild := "1.1.4"
 
-scalaVersion in ThisBuild := "2.12.6"
+scalaVersion in ThisBuild := "2.12.8"
 organization in ThisBuild := "com.powerspace.openrtb"
 organizationName in ThisBuild := "Powerspace"
 organizationHomepage := Some(url("https://powerspace.com/"))
@@ -42,19 +42,10 @@ lazy val bidswitchJson = Project(id = "bidswitch-json", base = file("bidswitch-j
   .dependsOn(bidswitchModel % "compile->compile;test->test", openRtbJson % "compile->compile;test->test")
   .settings(testDependencies: _*)
 
-lazy val common = Project(id = "common", base = file("common"))
-  .dependsOn(
-    openRtbJson % "compile->compile;test->test",
-    bidswitchModel % "compile->compile;test->test",
-    bidswitchJson % "compile->compile;test->test")
-  .settings(testDependencies: _*)
-  .settings(skip in publish := true)
-
 lazy val root = (project in file("."))
   .aggregate(
     openRtbModel,
     openRtbJson,
     bidswitchModel,
-    bidswitchJson,
-    common
+    bidswitchJson
   )

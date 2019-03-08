@@ -7,7 +7,6 @@ import com.google.openrtb._
 import com.powerspace.openrtb.json.EncoderProvider
 import com.powerspace.openrtb.json.OpenRtbExtensions.ExtensionRegistry
 import com.powerspace.openrtb.json.common.OpenRtbProtobufEnumEncoders
-import com.powerspace.openrtb.json.common.OpenRtbProtobufEnumDecoders
 
 import com.powerspace.openrtb.json.util.EncodingUtils
 
@@ -19,11 +18,9 @@ class OpenRtbNativeSerde(implicit er: ExtensionRegistry) extends EncoderProvider
 
   import io.circe._
   import io.circe.syntax._
-  import io.circe.generic.extras.semiauto._
 
   import EncodingUtils._
   import OpenRtbProtobufEnumEncoders._
-  import OpenRtbProtobufEnumDecoders._
 
   implicit val dataEncoder: Encoder[Asset.Data] = extendedEncoder[Asset.Data]
   implicit val imgEncoder: Encoder[Asset.Image] = extendedEncoder[Asset.Image]

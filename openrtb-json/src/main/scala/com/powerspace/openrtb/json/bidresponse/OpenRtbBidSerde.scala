@@ -17,7 +17,6 @@ class OpenRtbBidSerde(nativeSerde: OpenRtbNativeSerde)(implicit er: ExtensionReg
 
   import io.circe._
   import io.circe.syntax._
-  import io.circe.generic.extras.semiauto._
   import EncodingUtils._
   import OpenRtbProtobufEnumEncoders._
 
