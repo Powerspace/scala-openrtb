@@ -50,6 +50,10 @@ lazy val common = Project(id = "common", base = file("common"))
   .settings(testDependencies: _*)
   .settings(skip in publish := true)
 
+lazy val examples = Project(id = "examples", base = file("examples"))
+  .dependsOn(openRtbJson)
+  .settings(skip in publish := true)
+
 lazy val root = (project in file("."))
   .aggregate(
     openRtbModel,
