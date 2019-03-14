@@ -34,7 +34,23 @@ class OpenRtbNativeRequestSerde(videoSerde: OpenRtbVideoSerde)(implicit er: Exte
     case NativeRequest.Asset.AssetOneof.Title(title) => title.asJson
   }
 
-  private implicit val assetEncoder: Encoder[NativeRequest.Asset] = extendedEncoder[Asset]
+  /**
+    * After normal encoding, AssetOneof object key has to be renamed accordingly with the type of it.
+    * We get this job done by adding up an extra field with good key naming and delete the old `asset`
+    * field afterwards.
+    */
+  private implicit val assetEncoder: Encoder[NativeRequest.Asset] = (asset: Asset) => extendedEncoder[Asset]
+      .mapJson(_.mapObject(assetObj =>
+        assetObj.add(
+          asset.assetOneof match {
+            case AssetOneof.Data(_) => "data"
+            case AssetOneof.Img(_) => "img"
+            case AssetOneof.Title(_) => "title"
+            case AssetOneof.Video(_) => "video"
+          }, assetObj.apply("asset").get)))
+      .mapJson(json => json.hcursor.downField("asset").delete.top.get)
+      .apply(asset)
+
   private implicit val eventTrackersEncoder: Encoder[NativeRequest.EventTrackers] = extendedEncoder[EventTrackers]
   implicit val nativeRequestEncoder: Encoder[NativeRequest] = extendedEncoder[NativeRequest]
 

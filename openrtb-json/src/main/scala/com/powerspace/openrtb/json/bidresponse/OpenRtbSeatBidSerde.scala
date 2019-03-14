@@ -27,9 +27,9 @@ class OpenRtbSeatBidSerde(bidSerde: OpenRtbBidSerde)(implicit er: ExtensionRegis
     cursor => for {
       seat <- cursor.downField("seat").as[Option[String]]
       group <- cursor.downField("group").as[Option[Boolean]]
-      bids <- cursor.downField("bid").as[Seq[BidResponse.SeatBid.Bid]]
+      bids <- cursor.downField("bid").as[Option[Seq[BidResponse.SeatBid.Bid]]]
     } yield {
-      BidResponse.SeatBid(seat = seat, bid = bids, group = group)
+      BidResponse.SeatBid(seat = seat, bid = bids.getOrElse(Seq()), group = group)
     }
 
 }

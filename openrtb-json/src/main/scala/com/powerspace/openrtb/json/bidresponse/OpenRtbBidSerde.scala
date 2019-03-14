@@ -36,7 +36,7 @@ class OpenRtbBidSerde(nativeSerde: OpenRtbNativeSerde)(implicit er: ExtensionReg
     * As long as the content is compatible with a NativeResponse, the library will de-serialize it as
     * expected.
     */
-  private implicit val admOneOfDecoder: Decoder[SeatBid.Bid.AdmOneof] = {
+  implicit val admOneOfDecoder: Decoder[SeatBid.Bid.AdmOneof] = {
     cursor => cursor.focus.map {
       case json if json.isString =>
         json.asString.map(s => {

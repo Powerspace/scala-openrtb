@@ -4,7 +4,9 @@ import com.google.openrtb.BidRequest.Imp.Banner.Format
 import com.google.openrtb.BidRequest.Imp.Native.RequestOneof
 import com.google.openrtb.BidRequest.Imp.Pmp.Deal
 import com.google.openrtb.BidRequest.Imp.{Audio, Banner, Metric, Native, Pmp, Video}
-import com.google.openrtb.BidRequest.{Data, Device, DistributionchannelOneof, Geo, Imp, Regs, Source, User, Site}
+import com.google.openrtb.BidRequest.{Data, Device, DistributionchannelOneof, Geo, Imp, Regs, Site, Source, User}
+import com.google.openrtb.NativeRequest.Asset
+import com.google.openrtb.NativeRequest.Asset.Title
 import com.google.openrtb._
 
 /**
@@ -66,7 +68,11 @@ object BidRequestFixtures {
     DistributionchannelOneof.Site(value = Site(id = Some("id-site"), name = Some("name-site")))
 
   def getBidRequest(withNativeObject: Boolean): BidRequest = {
-    val requestOneof = if (withNativeObject) RequestOneof.RequestNative(NativeRequest(plcmtcnt = Some(40))) else RequestOneof.Request("native-string")
+    val requestOneof = if (withNativeObject)
+      RequestOneof.RequestNative(NativeRequest(
+        plcmtcnt = Some(40),
+        assets = Seq(Asset(id = 44, assetOneof = Asset.AssetOneof.Title(value = Title(len = 44))))))
+    else RequestOneof.Request("native-string")
     BidRequest(
       id = "fmySKZNcTFcTPOurFYivufGxMtuSYpen",
       at = Some(AuctionType.fromValue(value = 2)),
