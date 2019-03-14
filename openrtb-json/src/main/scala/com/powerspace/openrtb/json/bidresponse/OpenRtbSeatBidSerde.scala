@@ -4,7 +4,6 @@ import com.google.openrtb.BidResponse.SeatBid
 import com.google.openrtb._
 import com.powerspace.openrtb.json.EncoderProvider
 import com.powerspace.openrtb.json.OpenRtbExtensions.ExtensionRegistry
-import com.powerspace.openrtb.json.common.OpenRtbProtobufEnumEncoders
 import com.powerspace.openrtb.json.util.EncodingUtils
 
 /**
@@ -16,7 +15,6 @@ class OpenRtbSeatBidSerde(bidSerde: OpenRtbBidSerde)(implicit er: ExtensionRegis
   import io.circe._
   import io.circe.generic.extras.semiauto._
   import EncodingUtils._
-  import OpenRtbProtobufEnumEncoders._
 
   private implicit val bidEncoder: Encoder[SeatBid.Bid] = bidSerde.encoder
 
