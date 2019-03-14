@@ -19,7 +19,8 @@ object OpenRtbProtobufEnumEncoders {
   implicit val contentDeliveryMethodEncoder: Encoder[ContentDeliveryMethod] = protobufEnumEncoder[ContentDeliveryMethod]
   implicit val playbackCessationModeEncoder: Encoder[PlaybackCessationMode] = protobufEnumEncoder[PlaybackCessationMode]
   implicit val auctionTypeEncoder: Encoder[AuctionType] = protobufEnumEncoder[AuctionType]
-  implicit val volumeNormalizationModeEncoder: Encoder[VolumeNormalizationMode] = protobufEnumEncoder[VolumeNormalizationMode]
+  implicit val volumeNormalizationModeEncoder: Encoder[VolumeNormalizationMode] =
+    protobufEnumEncoder[VolumeNormalizationMode]
   implicit val bannerAdTypeEncoder: Encoder[BannerAdType] = protobufEnumEncoder[BannerAdType]
   implicit val adPositionEncoder: Encoder[AdPosition] = protobufEnumEncoder[AdPosition]
   implicit val expandableDirectionEncoder: Encoder[ExpandableDirection] = protobufEnumEncoder[ExpandableDirection]
@@ -43,5 +44,3 @@ object OpenRtbProtobufEnumEncoders {
   implicit val noBidReasonEncoder: Encoder[NoBidReason] = protobufEnumEncoder[NoBidReason]
 
 }
-
-

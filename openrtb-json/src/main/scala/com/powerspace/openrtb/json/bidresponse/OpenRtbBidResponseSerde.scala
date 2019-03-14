@@ -15,10 +15,13 @@ class OpenRtbBidResponseSerde(implicit er: ExtensionRegistry) extends EncoderPro
   import EncodingUtils._
   import io.circe._
 
-  def encoder(implicit seatBidEncoder: Encoder[BidResponse.SeatBid]): Encoder[BidResponse] = extendedEncoder[BidResponse]
+  def encoder(implicit seatBidEncoder: Encoder[BidResponse.SeatBid]): Encoder[BidResponse] =
+    extendedEncoder[BidResponse]
 
-  private implicit val noBidReasonDecoder: Decoder[Option[NoBidReason]] = Decoder.decodeOption[Int].map(_.map(NoBidReason.fromValue))
+  private implicit val noBidReasonDecoder: Decoder[Option[NoBidReason]] =
+    Decoder.decodeOption[Int].map(_.map(NoBidReason.fromValue))
 
-  def decoder(implicit seatBidDecoder: Decoder[BidResponse.SeatBid]): Decoder[BidResponse] = extendedDecoder[BidResponse]
+  def decoder(implicit seatBidDecoder: Decoder[BidResponse.SeatBid]): Decoder[BidResponse] =
+    extendedDecoder[BidResponse]
 
 }

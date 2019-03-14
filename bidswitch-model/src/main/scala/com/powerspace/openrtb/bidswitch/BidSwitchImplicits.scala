@@ -8,12 +8,16 @@ object BidSwitchImplicits {
 
   implicit class BswBidRequest(bidRequest: BidRequest) {
     def extension: Option[BidRequestExt] = bidRequest.extension(BidswitchProto.bidRequestExt)
-    def withExtension(ext: BidRequestExt): BidRequest = bidRequest.withExtension(BidswitchProto.bidRequestExt)(Some(ext))
+
+    def withExtension(ext: BidRequestExt): BidRequest =
+      bidRequest.withExtension(BidswitchProto.bidRequestExt)(Some(ext))
   }
 
   implicit class BswBidResponse(bidResponse: BidResponse) {
     def extension: Option[BidResponseExt] = bidResponse.extension(BidswitchProto.bidResponseExt)
-    def withExtension(ext: BidResponseExt): BidResponse = bidResponse.withExtension(BidswitchProto.bidResponseExt)(Some(ext))
+
+    def withExtension(ext: BidResponseExt): BidResponse =
+      bidResponse.withExtension(BidswitchProto.bidResponseExt)(Some(ext))
   }
 
   implicit class BswBid(bid: SeatBid.Bid) {
@@ -22,5 +26,3 @@ object BidSwitchImplicits {
   }
 
 }
-
-

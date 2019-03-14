@@ -19,7 +19,8 @@ object OpenRtbProtobufEnumDecoders {
   implicit val contentDeliveryMethodDecoder: Decoder[ContentDeliveryMethod] = protobufEnumDecoder[ContentDeliveryMethod]
   implicit val playbackCessationModeDecoder: Decoder[PlaybackCessationMode] = protobufEnumDecoder[PlaybackCessationMode]
   implicit val auctionTypeDecoder: Decoder[AuctionType] = protobufEnumDecoder[AuctionType]
-  implicit val volumeNormalizationModeDecoder: Decoder[VolumeNormalizationMode] = protobufEnumDecoder[VolumeNormalizationMode]
+  implicit val volumeNormalizationModeDecoder: Decoder[VolumeNormalizationMode] =
+    protobufEnumDecoder[VolumeNormalizationMode]
   implicit val bannerAdTypeDecoder: Decoder[BannerAdType] = protobufEnumDecoder[BannerAdType]
   implicit val adPositionDecoder: Decoder[AdPosition] = protobufEnumDecoder[AdPosition]
   implicit val expandableDirectionDecoder: Decoder[ExpandableDirection] = protobufEnumDecoder[ExpandableDirection]
