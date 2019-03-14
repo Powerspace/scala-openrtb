@@ -42,6 +42,11 @@ lazy val bidswitchJson = Project(id = "bidswitch-json", base = file("bidswitch-j
   .dependsOn(bidswitchModel % "compile->compile;test->test", openRtbJson % "compile->compile;test->test")
   .settings(testDependencies: _*)
 
+// examples
+lazy val examples = Project(id = "openrtb-examples", base = file("openrtb-examples"))
+  .dependsOn(openRtbJson % "compile->compile;test->test")
+  .settings(skip in publish := true)
+
 lazy val common = Project(id = "common", base = file("common"))
   .dependsOn(
     openRtbJson % "compile->compile;test->test",
@@ -56,5 +61,6 @@ lazy val root = (project in file("."))
     openRtbJson,
     bidswitchModel,
     bidswitchJson,
-    common
+    common,
+    examples
   )
