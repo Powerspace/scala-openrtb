@@ -32,18 +32,22 @@ class OpenRtbBidRequestSerde(implicit er: ExtensionRegistry) extends EncoderProv
   implicit val deviceEncoder: Encoder[BidRequest.Device] = extendedEncoder[BidRequest.Device]
   implicit val regsEncoder: Encoder[BidRequest.Regs] = extendedEncoder[BidRequest.Regs]
 
-  implicit val distChannelOneOfEncoder: Encoder[BidRequest.DistributionchannelOneof] = protobufOneofEncoder[BidRequest.DistributionchannelOneof] {
-    case BidRequest.DistributionchannelOneof.App(app) => app.asJson
-    case BidRequest.DistributionchannelOneof.Site(site) => site.asJson
-  }
+  implicit val distChannelOneOfEncoder: Encoder[BidRequest.DistributionchannelOneof] =
+    protobufOneofEncoder[BidRequest.DistributionchannelOneof] {
+      case BidRequest.DistributionchannelOneof.App(app) => app.asJson
+      case BidRequest.DistributionchannelOneof.Site(site) => site.asJson
+    }
 
   implicit val appEncoder: Encoder[BidRequest.App] = extendedEncoder[BidRequest.App]
   implicit val siteEncoder: Encoder[BidRequest.Site] = extendedEncoder[BidRequest.Site]
   implicit val geoEncoder: Encoder[BidRequest.Geo] = extendedEncoder[BidRequest.Geo]
 
-  def encoder(implicit userEncoder: Encoder[BidRequest.User], impEncoder: Encoder[BidRequest.Imp]): Encoder[BidRequest] =
+  def encoder(
+    implicit userEncoder: Encoder[BidRequest.User],
+    impEncoder: Encoder[BidRequest.Imp]): Encoder[BidRequest] =
     bidRequest => {
       val bidRequestEncoder = extendedEncoder[BidRequest].transformBooleans.clean(toKeep = Seq("imp"))
+
       /**
         * After normal encoding, DistributionchannelOneof object key has to be renamed accordingly based on the type.
         * We get this job done by adding an extra node with the right naming and deleting the old node afterwards.
@@ -51,16 +55,21 @@ class OpenRtbBidRequestSerde(implicit er: ExtensionRegistry) extends EncoderProv
       bidRequest.distributionchannelOneof match {
         // if there is no distribution channel, just return the request encoder
         case DistributionchannelOneof.Empty => bidRequestEncoder
-        case _ => bidRequestEncoder
-          .mapJson(_.mapObject(request =>
-            // add the distribution channel node with the right naming
-            request.add(
-              bidRequest.distributionchannelOneof match {
-                case DistributionchannelOneof.App(_) => "app"
-                case DistributionchannelOneof.Site(_) => "site"
-              }, request.apply("distributionchannel").get)))
-          // now delete the old node
-          .mapJson(json => json.hcursor.downField("distributionchannel").delete.top.get)
+        case _ =>
+          bidRequestEncoder
+            .mapJson(
+              _.mapObject(
+                request =>
+                  // add the distribution channel node with the right naming
+                  request.add(
+                    bidRequest.distributionchannelOneof match {
+                      case DistributionchannelOneof.App(_) => "app"
+                      case DistributionchannelOneof.Site(_) => "site"
+                    },
+                    request.apply("distributionchannel").get
+                  )))
+            // now delete the old node
+            .mapJson(json => json.hcursor.downField("distributionchannel").delete.top.get)
       }
     }.apply(bidRequest)
 
@@ -74,7 +83,8 @@ class OpenRtbBidRequestSerde(implicit er: ExtensionRegistry) extends EncoderProv
   implicit val siteDecoder: Decoder[BidRequest.Site] = extendedDecoder[BidRequest.Site]
   implicit val geoDecoder: Decoder[BidRequest.Geo] = extendedDecoder[BidRequest.Geo]
 
-  implicit val channelSiteDecoder: Decoder[DistributionchannelOneof.Site] = openRtbDecoder[DistributionchannelOneof.Site]
+  implicit val channelSiteDecoder: Decoder[DistributionchannelOneof.Site] =
+    openRtbDecoder[DistributionchannelOneof.Site]
   implicit val channelAppDecoder: Decoder[DistributionchannelOneof.App] = openRtbDecoder[DistributionchannelOneof.App]
 
   implicit val sourceDecoder: Decoder[BidRequest.Source] = extendedDecoder[BidRequest.Source]
@@ -83,7 +93,9 @@ class OpenRtbBidRequestSerde(implicit er: ExtensionRegistry) extends EncoderProv
 
   implicit val oneOf: Decoder[DistributionchannelOneof] = (c: HCursor) => Right(DistributionchannelOneof.Empty)
 
-  def decoder(implicit userDecoder: Decoder[BidRequest.User], impDecoder: Decoder[BidRequest.Imp]): Decoder[BidRequest] = {
+  def decoder(
+    implicit userDecoder: Decoder[BidRequest.User],
+    impDecoder: Decoder[BidRequest.Imp]): Decoder[BidRequest] = {
     for {
       bidRequest <- extendedDecoder[BidRequest]
       app <- Decoder[Option[BidRequest.App]].prepare(_.downField("app"))

@@ -56,7 +56,6 @@ val bidRequest = decode[BidResponse](bidRequest)
 
 ## Work in Progress
  - Macro replacement will be included into ScalaOpenRTB
- - Adding Travis Continuous Integration
 
 ## Links
 

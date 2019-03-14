@@ -1,0 +1,13 @@
+syntax = "proto2";
+
+import "openrtb.proto";
+
+package com.powerspace.example;
+
+message BidResponseExt {
+    optional string protocol = 1;
+}
+
+extend com.google.openrtb.BidResponse {
+    optional BidResponseExt bidResponseExt = 1000;
+}

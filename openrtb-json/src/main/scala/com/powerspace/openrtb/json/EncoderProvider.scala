@@ -18,9 +18,7 @@ import scala.reflect.ClassTag
   *
   * @tparam T the type we want to provide an encoder for
   */
-trait EncoderProvider[T] extends ConfiguredSerde {
-
-}
+trait EncoderProvider[T] extends ConfiguredSerde {}
 
 trait ConfiguredSerde {
   implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames.withDefaults
@@ -35,6 +33,7 @@ trait NativeDependencies {
   */
 object OpenRtbExtensions {
   import EncodingUtils._
+
   /**
     * An openrtb extension is a generated extension with Optional availability. The [[scalapb.GeneratedExtension]] comes from scalapb stuff
     */
@@ -53,12 +52,12 @@ object OpenRtbExtensions {
     *
     */
   case class ExtensionHandle[Extendable <: ExtendableMessage[Extendable], Extension <: GeneratedMessage](
-                                                                                                          baseMessage: Class[Extendable],
-                                                                                                          extensionMessage: Class[Extension],
-                                                                                                          extension: OpenRtbExtension[Extendable, Extension],
-                                                                                                          encoder: Encoder[Extension],
-                                                                                                          decoder: Decoder[Extension]
-                                                                                                        )
+    baseMessage: Class[Extendable],
+    extensionMessage: Class[Extension],
+    extension: OpenRtbExtension[Extendable, Extension],
+    encoder: Encoder[Extension],
+    decoder: Decoder[Extension]
+  )
 
   /**
     * An extension registry is a mean to provide encoders based on a list of extensions
@@ -73,25 +72,29 @@ object OpenRtbExtensions {
       * Register a Extension [[OpenRtbExtension]] for Extendable, using an [[io.circe.Encoder]] and [[io.circe.Decoder]]
       */
     def registerExtension[Extendable <: ExtendableMessage[Extendable], Extension <: scalapb.GeneratedMessage](
-                                                                                                               extension: OpenRtbExtension[Extendable, Extension],
-                                                                                                               encoder: Encoder[Extension],
-                                                                                                               decoder: Decoder[Extension])(implicit extendableTag: ClassTag[Extendable], extensionTag: ClassTag[Extension]): ExtensionRegistry = {
+      extension: OpenRtbExtension[Extendable, Extension],
+      encoder: Encoder[Extension],
+      decoder: Decoder[Extension])(
+      implicit extendableTag: ClassTag[Extendable],
+      extensionTag: ClassTag[Extension]): ExtensionRegistry = {
 
-      this.copy(extensions :+ ExtensionHandle[Extendable, Extension](
-        extendableTag.runtimeClass.asInstanceOf[Class[Extendable]],
-        extensionTag.runtimeClass.asInstanceOf[Class[Extension]],
-        extension,
-        encoder,
-        decoder
-      ))
+      this.copy(
+        extensions :+ ExtensionHandle[Extendable, Extension](
+          extendableTag.runtimeClass.asInstanceOf[Class[Extendable]],
+          extensionTag.runtimeClass.asInstanceOf[Class[Extension]],
+          extension,
+          encoder,
+          decoder
+        ))
 
     }
 
-    def registerExtension[Extendable <: ExtendableMessage[Extendable], Extension <: scalapb.GeneratedMessage](extension: OpenRtbExtension[Extendable, Extension])
-                                                                                                             (implicit encoder: Lazy[ConfiguredObjectEncoder[Extension]],
-                                                                                                                decoder: Lazy[ConfiguredDecoder[Extension]],
-                                                                                                                extendableTag: ClassTag[Extendable],
-                                                                                                                extensionTag: ClassTag[Extension]): ExtensionRegistry = {
+    def registerExtension[Extendable <: ExtendableMessage[Extendable], Extension <: scalapb.GeneratedMessage](
+      extension: OpenRtbExtension[Extendable, Extension])(
+      implicit encoder: Lazy[ConfiguredObjectEncoder[Extension]],
+      decoder: Lazy[ConfiguredDecoder[Extension]],
+      extendableTag: ClassTag[Extendable],
+      extensionTag: ClassTag[Extension]): ExtensionRegistry = {
 
       registerExtension[Extendable, Extension](extension, openRtbEncoder[Extension], openRtbDecoder[Extension])
     }
@@ -99,19 +102,27 @@ object OpenRtbExtensions {
     /**
       * Provide an [[Encoder]] built from the extension registry
       */
-    def encoderWithExtensions[Extendable <: ExtendableMessage[Extendable]](baseEncoder: Encoder[Extendable])(implicit tag: ClassTag[Extendable]): Encoder[Extendable] = {
+    def encoderWithExtensions[Extendable <: ExtendableMessage[Extendable]](baseEncoder: Encoder[Extendable])(
+      implicit tag: ClassTag[Extendable]): Encoder[Extendable] = {
       val extendableHandles = handles(tag)
 
       // loop through the extendables and perform encoding
       extendableHandles.foldLeft(baseEncoder) {
         case (currentEncoder, handle: ExtensionHandle[Extendable, GeneratedMessage]) =>
           (extendable: Extendable) => {
-            val ExtensionHandle(_, _, extension: OpenRtbExtension[Extendable, GeneratedMessage], extEncoder: Encoder[GeneratedMessage], _) = handle
+            val ExtensionHandle(
+              _,
+              _,
+              extension: OpenRtbExtension[Extendable, GeneratedMessage],
+              extEncoder: Encoder[GeneratedMessage],
+              _) = handle
 
             // encode the extendable entity, then encode and bind the extension too if present
-            currentEncoder.apply(extendable)
+            currentEncoder
+              .apply(extendable)
               .mapObject(obj => {
-                val maybeExtension: Option[GeneratedMessage] = extendable.extension(extension.asInstanceOf[OpenRtbExtension[Extendable, GeneratedMessage]])
+                val maybeExtension: Option[GeneratedMessage] =
+                  extendable.extension(extension.asInstanceOf[OpenRtbExtension[Extendable, GeneratedMessage]])
                 alterObject(extEncoder.asInstanceOf[Encoder[GeneratedMessage]])(maybeExtension, obj)
               })
           }
@@ -121,26 +132,33 @@ object OpenRtbExtensions {
     /**
       * Provide a [[Decoder]] built from the extension registry
       */
-    def decoderWithExtensions[Extendable <: ExtendableMessage[Extendable]](baseDecoder: Decoder[Extendable])(implicit tag: ClassTag[Extendable]): Decoder[Extendable] = {
+    def decoderWithExtensions[Extendable <: ExtendableMessage[Extendable]](baseDecoder: Decoder[Extendable])(
+      implicit tag: ClassTag[Extendable]): Decoder[Extendable] = {
       val extendableHandles = handles(tag)
 
       // loop through the extendables and perform decoding
       extendableHandles.foldLeft(baseDecoder) {
         case (currentDecoder, handle: ExtensionHandle[Extendable, GeneratedMessage]) =>
           (extendable: HCursor) => {
-            val ExtensionHandle(_, _, extension: OpenRtbExtension[Extendable, GeneratedMessage], _, decoder: Decoder[GeneratedMessage]) = handle
+            val ExtensionHandle(
+              _,
+              _,
+              extension: OpenRtbExtension[Extendable, GeneratedMessage],
+              _,
+              decoder: Decoder[GeneratedMessage]) = handle
             currentDecoder.flatMap(base => {
               implicit val possibleDecoder = decoder
 
-              Decoder[Option[GeneratedMessage]].prepare(cursor => cursor.downField("ext"))
-                .map(ext =>
-                  base.withExtension(extension)(ext))
+              Decoder[Option[GeneratedMessage]]
+                .prepare(cursor => cursor.downField("ext"))
+                .map(ext => base.withExtension(extension)(ext))
             })
           }.apply(extendable)
       }
     }
 
-    private def alterObject(encoder: Encoder[GeneratedMessage])(ext: Option[GeneratedMessage], jsonObject: JsonObject): JsonObject = {
+    private def alterObject(
+      encoder: Encoder[GeneratedMessage])(ext: Option[GeneratedMessage], jsonObject: JsonObject): JsonObject = {
       val fields: Option[Iterable[(String, Json)]] = for {
         e <- ext
         toAdd <- encoder.apply(e).asObject
@@ -150,10 +168,9 @@ object OpenRtbExtensions {
 
       fields
         .map(f => JsonObject(("ext", fromJsonObject(fromIterable(f)))))
-        .map(o => fromIterable(jsonObject.toIterable ++ o.toIterable ))
+        .map(o => fromIterable(jsonObject.toIterable ++ o.toIterable))
         .getOrElse(jsonObject)
     }
-
 
     private def handles[Extendable <: ExtendableMessage[Extendable]](tag: ClassTag[Extendable]) = {
       extensionMap
@@ -163,4 +180,3 @@ object OpenRtbExtensions {
   }
 
 }
-
