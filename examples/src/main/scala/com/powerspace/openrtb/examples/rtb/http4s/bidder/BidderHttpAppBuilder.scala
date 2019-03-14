@@ -1,7 +1,7 @@
-package com.powerspace.openrtb.examples.rtb.bidder
+package com.powerspace.openrtb.examples.rtb.http4s.bidder
 
 import com.google.openrtb.BidRequest
-import com.powerspace.openrtb.examples.rtb.common.ExampleSerdeModule
+import com.powerspace.openrtb.examples.rtb.http4s.common.ExampleSerdeModule
 import io.circe.Decoder
 import monix.eval.Task
 import org.http4s.dsl.Http4sDsl
@@ -29,13 +29,15 @@ object BidderHttpAppBuilder {
     implicit val bidRequestDecoder: Decoder[BidRequest] = serdeModule.bidRequestDecoder
     implicit val bidRequestEntityDecoder: EntityDecoder[Task, BidRequest] = jsonOf[Task, BidRequest]
 
-    HttpRoutes.of[Task] {
-      case req@POST -> Root / "bid" =>
-        for {
-          bidRequest <- req.as[BidRequest]
-          response <- handleBid(bidRequest)
-        } yield response
-    }.orNotFound
+    HttpRoutes
+      .of[Task] {
+        case req @ POST -> Root / "bid" =>
+          for {
+            bidRequest <- req.as[BidRequest]
+            response <- handleBid(bidRequest)
+          } yield response
+      }
+      .orNotFound
   }
 
   /**

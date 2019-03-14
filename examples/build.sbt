@@ -11,15 +11,13 @@ PB.protoSources in Compile += target.value / "protobuf_external"
 includeFilter in PB.generate := "example.proto"
 
 libraryDependencies ++= Seq(
-  "org.http4s" %% "http4s-dsl" % http4sVersion,
-  "org.http4s" %% "http4s-blaze-server" % http4sVersion,
-  "org.http4s" %% "http4s-blaze-client" % http4sVersion,
-  "org.http4s" %% "http4s-circe" % http4sVersion,
-  "org.http4s" %% "http4s-twirl" % http4sVersion,
-
-  "com.typesafe.akka" %% "akka-http-core" % akkaHttpVersion,
-  "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
-  "de.heikoseeberger" %% "akka-http-circe" % akkaHttpJsonVersion,
-
-  "io.monix" %% "monix" % monixVersion
+  "org.http4s"        %% "http4s-dsl"          % http4sVersion,
+  "org.http4s"        %% "http4s-blaze-server" % http4sVersion,
+  "org.http4s"        %% "http4s-blaze-client" % http4sVersion,
+  "org.http4s"        %% "http4s-circe"        % http4sVersion,
+  "org.http4s"        %% "http4s-twirl"        % http4sVersion,
+  "com.typesafe.akka" %% "akka-http-core"      % akkaHttpVersion,
+  "com.typesafe.akka" %% "akka-http"           % akkaHttpVersion,
+  "de.heikoseeberger" %% "akka-http-circe"     % akkaHttpJsonVersion,
+  "io.monix"          %% "monix"               % monixVersion
 )

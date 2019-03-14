@@ -1,7 +1,7 @@
-package com.powerspace.openrtb.examples.rtb.adserver
+package com.powerspace.openrtb.examples.rtb.http4s.adserver
 
 import com.google.openrtb.{BidRequest, BidResponse}
-import com.powerspace.openrtb.examples.rtb.common.ExampleSerdeModule
+import com.powerspace.openrtb.examples.rtb.http4s.common.ExampleSerdeModule
 import com.powerspace.openrtb.json.SerdeModule
 import io.circe.{Decoder, Encoder}
 import monix.eval.Task
@@ -21,8 +21,7 @@ object AdserverHttpClientBuilder {
   implicit val bidResponseDecoder: Decoder[BidResponse] = serdeModule.bidResponseDecoder
   implicit val bidResponseEntityDecoder: EntityDecoder[Task, BidResponse] = jsonOf[Task, BidResponse]
 
-  def bid(client: Client[Task],
-          bidRequest: BidRequest): Task[Option[BidResponse]] = {
+  def bid(client: Client[Task], bidRequest: BidRequest): Task[Option[BidResponse]] = {
     val url = Uri(
       scheme = Some(Scheme.http),
       authority = Some(Authority(host = RegName("localhost"), port = Some(9000))),
@@ -32,8 +31,7 @@ object AdserverHttpClientBuilder {
     val httpRequest = Request[Task](
       method = Method.POST,
       uri = url
-    )
-      .withEntity[BidRequest](bidRequest)
+    ).withEntity[BidRequest](bidRequest)
 
     client.expectOption[BidResponse](httpRequest)
   }

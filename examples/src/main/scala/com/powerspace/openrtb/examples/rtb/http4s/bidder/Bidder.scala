@@ -1,4 +1,4 @@
-package com.powerspace.openrtb.examples.rtb.bidder
+package com.powerspace.openrtb.examples.rtb.http4s.bidder
 
 import cats.Applicative
 import com.google.openrtb.BidRequest.Imp
@@ -13,7 +13,7 @@ import com.powerspace.openrtb.{Bidder => OpenrtbBidder}
 
 import scala.util.Random
 
-class Bidder[F[_] : Applicative] extends OpenrtbBidder[F] {
+class Bidder[F[_]: Applicative] extends OpenrtbBidder[F] {
 
   import cats.implicits._
 
@@ -21,20 +21,19 @@ class Bidder[F[_] : Applicative] extends OpenrtbBidder[F] {
     * Handle the bidding process
     */
   override def bidOn(bidRequest: BidRequest): F[Option[BidResponse]] = {
-    val bidResponse: F[Option[BidResponse]] = bidOnImps(bidRequest.imp)
-      .map {
-        case Nil => None
-        case bids@_ =>
-          BidResponse(
-            id = bidRequest.id,
-            seatbid = Seq(SeatBid(
+    val bidResponse: F[Option[BidResponse]] = bidOnImps(bidRequest.imp).map {
+      case Nil => None
+      case bids @ _ =>
+        BidResponse(
+          id = bidRequest.id,
+          seatbid = Seq(
+            SeatBid(
               bid = bids.toSeq,
               seat = Some("seat-1")
             )),
-            bidid = Some("1")
-          )
-            .some
-      }
+          bidid = Some("1")
+        ).some
+    }
 
     bidResponse
       .map(
@@ -76,9 +75,8 @@ class Bidder[F[_] : Applicative] extends OpenrtbBidder[F] {
         (asset: NativeRequest.Asset) =>
           NativeResponse.Asset(
             id = asset.id,
-            assetOneof =
-              Title(value = Asset.Title(text = "Wonderful offer just for you!"))
-          )
+            assetOneof = Title(value = Asset.Title(text = "Wonderful offer just for you!"))
+        )
       )
 
     NativeResponse(
@@ -88,8 +86,7 @@ class Bidder[F[_] : Applicative] extends OpenrtbBidder[F] {
     ).some
   }
 
-  private def buildBid(impId: String,
-                       response: NativeResponse): Option[Bid] = {
+  private def buildBid(impId: String, response: NativeResponse): Option[Bid] = {
     Bid(
       id = Random.nextInt().toString,
       price = Random.nextDouble(),

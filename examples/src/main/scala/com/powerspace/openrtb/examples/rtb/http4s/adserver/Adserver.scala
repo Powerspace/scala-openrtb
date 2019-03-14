@@ -1,4 +1,4 @@
-package com.powerspace.openrtb.examples.rtb.adserver
+package com.powerspace.openrtb.examples.rtb.http4s.adserver
 
 import java.util.UUID
 
@@ -6,11 +6,12 @@ import com.google.openrtb.BidRequest.Imp
 import com.google.openrtb.BidRequest.Imp.Native
 import com.google.openrtb.BidRequest.Imp.Native.RequestOneof.RequestNative
 import com.google.openrtb.NativeRequest.Asset
-import com.google.openrtb.NativeRequest.Asset.{AssetOneof, Data, Title}
-import com.google.openrtb.{BidRequest, DataAssetType, NativeRequest}
+import com.google.openrtb.NativeRequest.Asset.{AssetOneof, Title}
+import com.google.openrtb.{BidRequest, NativeRequest}
 import com.powerspace.openrtb.example.{ExampleProto, ImpExt}
 
 object Adserver {
+
   def buildBidRequest(): BidRequest = {
     val bidRequestId = UUID.randomUUID().toString
 

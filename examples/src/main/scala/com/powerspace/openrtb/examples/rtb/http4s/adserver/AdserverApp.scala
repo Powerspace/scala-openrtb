@@ -1,8 +1,8 @@
-package com.powerspace.openrtb.examples.rtb.adserver
+package com.powerspace.openrtb.examples.rtb.http4s.adserver
 
 import cats.effect.Resource
 import com.google.openrtb.{BidRequest, BidResponse}
-import com.powerspace.openrtb.examples.rtb.common.ExampleSerdeModule
+import com.powerspace.openrtb.examples.rtb.http4s.common.ExampleSerdeModule
 import io.circe.{Encoder, Json}
 import monix.eval.Task
 import org.http4s.client.Client
@@ -25,8 +25,7 @@ object AdserverApp extends App {
     .runSyncUnsafe(Duration.Inf)
 
   private def buildHttpClient(): Resource[Task, Client[Task]] = {
-    BlazeClientBuilder[Task](global)
-      .resource
+    BlazeClientBuilder[Task](global).resource
   }
 
   private def httpBid(httpClient: Resource[Task, Client[Task]]) =

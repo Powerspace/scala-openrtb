@@ -1,4 +1,4 @@
-package com.powerspace.openrtb.examples.rtb.bidder
+package com.powerspace.openrtb.examples.rtb.http4s.bidder
 
 import cats.effect.ExitCode
 import monix.eval.Task
@@ -7,10 +7,7 @@ object BidderApp extends App {
 
   import monix.execution.Scheduler.Implicits.global
 
-  stream
-    .compile
-    .drain
-    .runAsyncAndForget
+  stream.compile.drain.runAsyncAndForget
 
   /**
     * Bind an http service
