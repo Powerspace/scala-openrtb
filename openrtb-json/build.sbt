@@ -7,6 +7,6 @@ libraryDependencies ++= Seq(
   "io.circe" %% "circe-generic-extras"
 ).map(_ % circeVersion)
 
-libraryDependencies += "org.scalactic" %% "scalactic" % "3.0.5" % "test"
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % "test"
-libraryDependencies += "org.gnieh" %% "diffson-circe" % "3.0.0" % "test"
+libraryDependencies += "org.scalactic" %% "scalactic"     % "3.0.5" % "test"
+libraryDependencies += "org.scalatest" %% "scalatest"     % "3.0.5" % "test"
+libraryDependencies += "org.gnieh"     %% "diffson-circe" % "3.0.0" % "test"

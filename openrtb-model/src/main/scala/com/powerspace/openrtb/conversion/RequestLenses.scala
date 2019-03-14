@@ -23,12 +23,10 @@ object RequestLenses {
   val optNative = native.composePrism(some)
 
   /** Lens composition for req.imp.native.oneOf */
-  val nativeRequestOneOfTraversal = impsTraversal.composeTraversal(optNative
-    .composeOptional(nativeRequestOneOf.asOptional).asTraversal)
+  val nativeRequestOneOfTraversal = impsTraversal.composeTraversal(
+    optNative
+      .composeOptional(nativeRequestOneOf.asOptional)
+      .asTraversal)
 
-  val getAllNatives: BidRequest => List[RequestOneof] = nativeRequestOneOfTraversal
-    .getAll
+  val getAllNatives: BidRequest => List[RequestOneof] = nativeRequestOneOfTraversal.getAll
 }
-
-
-

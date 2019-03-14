@@ -9,7 +9,8 @@ import com.powerspace.openrtb.json.util.EncodingUtils
   * OpenRTB User Encoder and Decoder
   * @todo split up decoder and encoder
   */
-class OpenRtbUserSerde(bidRequestSerde: OpenRtbBidRequestSerde)(implicit er: ExtensionRegistry) extends EncoderProvider[BidRequest.User] {
+class OpenRtbUserSerde(bidRequestSerde: OpenRtbBidRequestSerde)(implicit er: ExtensionRegistry)
+    extends EncoderProvider[BidRequest.User] {
 
   import EncodingUtils._
   import io.circe._
