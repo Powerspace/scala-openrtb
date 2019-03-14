@@ -1,4 +1,4 @@
-package com.powerspace.example
+package com.powerspace.openrtb.examples.rtb.akkahttp
 
 import java.util.UUID
 
@@ -14,17 +14,13 @@ import com.google.openrtb.NativeResponse.Asset.AssetOneof.Title
 import com.google.openrtb.NativeResponse.{Asset, Link}
 import com.google.openrtb._
 import com.powerspace.openrtb.Bidder
+import com.powerspace.openrtb.example.{BidResponseExt, ExampleProto}
 import monix.eval.Task
 import monix.execution.Scheduler
 import monix.reactive.Observable
 
 import scala.util.{Failure, Random, Success}
 
-/**
-  * @todo maybe create a simple test?
-  * @todo make a proper ScalaOpenRTB readme file with example of usage
-  * @todo
-  */
 object BidderApp extends App {
 
   import akka.http.scaladsl.server.Directives.complete
@@ -42,13 +38,11 @@ object BidderApp extends App {
   val router =
     path("bidOn") {
       post {
-        entity(as[BidRequest]) {
-          bidRequest =>
-            onComplete(
-              bidder.bidOn(bidRequest).runToFuture) {
-                case Success(bidResponse) => complete(ToResponseMarshallable(bidResponse))
-                case Failure(e) => failWith(e)
-              }
+        entity(as[BidRequest]) { bidRequest =>
+          onComplete(bidder.bidOn(bidRequest).runToFuture) {
+            case Success(bidResponse) => complete(ToResponseMarshallable(bidResponse))
+            case Failure(e) => failWith(e)
+          }
         }
       }
     }
@@ -61,6 +55,7 @@ object BidderApp extends App {
 }
 
 class RtbBidder extends Bidder[Task] {
+
   import cats.data.OptionT
 
   override def bidOn(bidRequest: BidRequest): Task[Option[BidResponse]] = {
@@ -69,23 +64,24 @@ class RtbBidder extends Bidder[Task] {
       .flatMap(bidsForImpression)
       .toListL
 
-    bids.map{
+    bids.map {
       case Nil => None
-      case bids@_ => Some(withProtocol(BidResponse(
-        id = bidRequest.id,
-        seatbid = Seq(SeatBid(bid = bids)))),
-      )}
+      case bids @ _ => Some(withProtocol(BidResponse(id = bidRequest.id, seatbid = Seq(SeatBid(bid = bids)))))
+    }
   }
 
   private def bidsForImpression(impression: BidRequest.Imp): Observable[Bid] = {
-    Observable.fromTask((for {
-      nativeRequest: NativeRequest <- OptionT.fromOption[Task](impression.native.flatMap(
-        _.requestOneof.requestNative
-      ))
-      nativeResponse: NativeResponse <- OptionT.apply(buildNativeResponse(nativeRequest))
+    Observable
+      .fromTask((for {
+        nativeRequest: NativeRequest <- OptionT.fromOption[Task](
+          impression.native.flatMap(
+            _.requestOneof.requestNative
+          ))
+        nativeResponse: NativeResponse <- OptionT.apply(buildNativeResponse(nativeRequest))
 
-      bid: Bid <- OptionT.apply[Task, Bid](buildBid(impression, nativeResponse))
-    } yield bid).value).flatMap(Observable.fromIterable(_))
+        bid: Bid <- OptionT.apply[Task, Bid](buildBid(impression, nativeResponse))
+      } yield bid).value)
+      .flatMap(Observable.fromIterable(_))
   }
 
   private def buildNativeResponse(request: NativeRequest): Task[Option[NativeResponse]] = {
@@ -97,19 +93,23 @@ class RtbBidder extends Bidder[Task] {
         )
     )
 
-    Task(Some(NativeResponse(assets = assets, link = Link(url = "http://www.wonderful-offer.com"), imptrackers = Seq())))
+    Task(
+      Some(NativeResponse(assets = assets, link = Link(url = "http://www.wonderful-offer.com"), imptrackers = Seq())))
   }
 
   private def buildBid(impression: BidRequest.Imp, response: NativeResponse): Task[Option[Bid]] = {
-    Task.now(Some(Bid(
-      id = UUID.randomUUID().toString,
-      price = new Random().nextDouble,
-      nurl = Some(s"http://www.get-back-to-me.com?impression=${impression.id}"),
-      impid = impression.id,
-      admOneof = AdmNative(response)
-    )))
+    Task.now(
+      Some(
+        Bid(
+          id = UUID.randomUUID().toString,
+          price = new Random().nextDouble,
+          nurl = Some(s"http://www.get-back-to-me.com?impression=${impression.id}"),
+          impid = impression.id,
+          admOneof = AdmNative(response)
+        )))
   }
 
   private def withProtocol(bidResponse: BidResponse): BidResponse =
-    bidResponse.withExtension(ExampleProto.bidResponseExt)(Some(BidResponseExt(protocol = Some("some useful protocol"))))
+    bidResponse.withExtension(ExampleProto.bidResponseExt)(
+      Some(BidResponseExt(protocol = Some("some useful protocol"))))
 }

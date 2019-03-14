@@ -2,7 +2,7 @@ name := "scala-openrtb"
 
 version in ThisBuild := "1.1.5"
 
-scalaVersion in ThisBuild := "2.12.8"
+scalaVersion in ThisBuild     := "2.12.8"
 organization in ThisBuild     := "com.powerspace.openrtb"
 organizationName in ThisBuild := "Powerspace"
 organizationHomepage          := Some(url("https://powerspace.com/"))
@@ -50,11 +50,14 @@ lazy val bidswitchJson = Project(id = "bidswitch-json", base = file("bidswitch-j
   .dependsOn(bidswitchModel % "compile->compile;test->test", openRtbJson % "compile->compile;test->test")
   .settings(testDependencies: _*)
 
-// examples
-lazy val examples = Project(id = "openrtb-examples", base = file("openrtb-examples"))
+// Akka Http marshallers and unmarshallers
+lazy val akkaHttpMarshaller = Project(id = "akka-http-marshallers", base = file("akka-http-marshallers"))
+  .dependsOn(openRtbJson)
+
+// scala-openrtb examples
+lazy val examples = Project(id = "examples", base = file("examples"))
   .dependsOn(openRtbJson % "compile->compile;test->test")
   .settings(skip in publish := true)
-
 
 lazy val root = (project in file("."))
   .aggregate(
