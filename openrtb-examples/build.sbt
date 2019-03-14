@@ -19,5 +19,6 @@ libraryDependencies ++= Seq(
   "org.typelevel" %% "cats-laws" % "1.1.0",
   "io.monix" %% "monix-catnap" % "3.0.0-RC2",
   "io.monix" %% "monix-execution" % "3.0.0-RC2",
-  "io.monix" %% "monix-eval" % "3.0.0-RC2"
+  "io.monix" %% "monix-eval" % "3.0.0-RC2",
+  "io.monix" %% "monix-reactive" % "3.0.0-RC2"
 )
