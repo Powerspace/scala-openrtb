@@ -65,6 +65,8 @@ val bidRequest = decode[BidResponse](bidRequest)
 * [Powerspace](https://powerspace.com/en/): Powerspace is the 1st native advertising platform for e-mail. Powerspace allows brands to broadcast their content at scale across hundreds of media newsletters leveraging cutting-edge technology solutions.
 * [BidSwitch](http://bidswitch.com/en/): BidSwitch provides immediate and seamless real-time access for Supply and Demand Partners across all media types (display, mobile, video, native, TV, DOOH, VR, etc.).
 
+* [Medium](https://powerspace.tech/open-sourcing-the-first-openrtb-scala-framework-686dde0a0d40): Open-sourcing the first OpenRTB Scala framework
+
 ## Contributions
 
 Feel free to:
