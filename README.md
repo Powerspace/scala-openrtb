@@ -18,10 +18,10 @@ sbt compile
 ```
 
 ## Usage
-If you want to use the core of ScalaOpenRTB, you only need to add `libraryDependencies += "com.powerspace.openrtb" % "openrtb-model_2.12" % "version"` to your
+If you want to use the core of ScalaOpenRTB, you only need to add `libraryDependencies += "com.powerspace.openrtb" %% "openrtb-model" % "version"` to your
 **build.sbt**
 
-We also provide json encoders through `libraryDependencies += "com.powerspace.openrtb" % "openrtb-json_2.12" % "version"`
+We also provide json encoders through `libraryDependencies += "com.powerspace.openrtb" %% "openrtb-json" % "version"`
 
 To leverage ScalaOpenRTB we have to define our bid request/response extensions and their decoders:
 
