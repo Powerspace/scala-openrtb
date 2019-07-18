@@ -5,7 +5,7 @@
 <img src="https://img.shields.io/nexus/r/https/oss.sonatype.org/com.powerspace.openrtb/openrtb-json_2.12.svg" />
 
 Scala OpenRTB is a full Scala library that provides protobuf bindings as well as JSON serialization for [OpenRTB](https://www.iab.com/guidelines/real-time-bidding-rtb-project/)-based entities in a functional fashion. 
-This library also provides SerDes for [Powerspace](https://www.powerspace.com/en) and [BidSwitch](http://www.bidswitch.com/) bidding models, and aims to support other DSPs in the near future.
+This library also provides SerDes for [BidSwitch](http://www.bidswitch.com/) bidding models, and aims to support other DSPs in the near future.
 
 ## Artifacts
 Scala openrtb artifacts are [available on Sonatype](https://search.maven.org/search?q=g:com.powerspace.openrtb).
@@ -18,10 +18,10 @@ sbt compile
 ```
 
 ## Usage
-If you want to use the core of ScalaOpenRTB, you only need to add `libraryDependencies += "com.powerspace.openrtb" % "openrtb-model_2.12" % "version"` to your
+If you want to use the core of ScalaOpenRTB, you only need to add `libraryDependencies += "com.powerspace.openrtb" %% "openrtb-model" % "version"` to your
 **build.sbt**
 
-We also provide json encoders through `libraryDependencies += "com.powerspace.openrtb" % "openrtb-json_2.12" % "version"`
+We also provide json encoders through `libraryDependencies += "com.powerspace.openrtb" %% "openrtb-json" % "version"`
 
 To leverage ScalaOpenRTB we have to define our bid request/response extensions and their decoders:
 
