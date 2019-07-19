@@ -30,9 +30,9 @@ import org.openjdk.jmh.annotations._
   * For more details, please refer to https://github.com/ktoso/sbt-jmh
   *
   * Last results:
-  * BidRequestDecoding.decodeBidRequestWithExtensions   thrpt   10    817.812 ±   14.980  ops/s
-  * BidRequestDecoding.decodeDefaultBidRequest          thrpt   10    915.832 ±   42.983  ops/s
-  * BidRequestDecoding.decodeSimpleBidRequest           thrpt   10    842.699 ±   62.196  ops/s
+  * BidRequestDecoding.decodeBidRequestWithExtensions     thrpt   10    797.807 ±   59.250  ops/s
+  * BidRequestDecoding.decodeDefaultBidRequest            thrpt   10    895.351 ±   56.625  ops/s
+  * BidRequestDecoding.decodeSimpleBidRequest             thrpt   10    824.767 ±   46.414  ops/s
   *
   */
 @State(Scope.Benchmark)
