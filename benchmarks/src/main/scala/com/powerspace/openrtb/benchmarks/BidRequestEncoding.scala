@@ -1,66 +1,44 @@
 package com.powerspace.openrtb.benchmarks
 
-import java.util.UUID
 import java.util.concurrent.TimeUnit
 
-import com.google.openrtb.BidRequest.Imp.Native
-import com.google.openrtb.BidRequest.Imp.Native.RequestOneof
-import com.google.openrtb.BidRequest.{Geo, Imp, User}
-import com.google.openrtb.{BidRequest, ContextType, NativeRequest, PlacementType}
-import com.powerspace.openrtb.benchmarks.serde.BenchmarkSerdeModule
-import com.powerspace.openrtb.example.{ExampleProto, ImpExt}
 import com.powerspace.openrtb.json.OpenRtbSerdeModule
 import io.circe.Json
 import org.openjdk.jmh.annotations._
 
+/**
+  * To run the benchmark from within SBT:
+  *
+  *     jmh:run -i 10 -wi 10 -f 3 -t 1 com.powerspace.openrtb.benchmarks.BidRequestEncoding
+  *
+  * Which means "10 iterations", "10 warm-up iterations", "3 forks", "1 thread".
+  * Please note that benchmarks should be usually executed at least in
+  * 10 iterations (as a rule of thumb), but more is better.
+  *
+  *
+  * It is also possible to:
+  *   - record a Flight Recorder for it with
+  *
+  *       jmh:run -prof jmh.extras.JFR -i 10 -wi 10 -f 3 -t 1 com.powerspace.openrtb.benchmarks.BidRequestEncoding
+  *
+  *   - generate flame-graphs
+  *
+  *       jmh:run Bench -i 10 -f 1 -wi 10 -prof jmh.extras.JFR:dir=/tmp/profile-jfr;flameGraphDir=/code/FlameGraph;jfrFlameGraphDir=/code/jfr-flame-graph;flameGraphOpts=--minwidth,2;verbose=true
+  *
+  * For more details, please refer to https://github.com/ktoso/sbt-jmh
+  *
+  * Last results:
+  * BidRequestEncoding.encodeBidRequestWithExtensions   thrpt   10    828.487 ±   41.169  ops/s
+  * BidRequestEncoding.encodeDefaultBidRequest          thrpt   10    930.089 ±   61.319  ops/s
+  * BidRequestEncoding.encodeSimpleBidRequest           thrpt   10    887.830 ±   54.475  ops/s
+  *
+  */
 @State(Scope.Benchmark)
 @BenchmarkMode(Array(Mode.Throughput))
 @OutputTimeUnit(TimeUnit.SECONDS)
 class BidRequestEncoding {
 
-  val defaultBidRequest: BidRequest = BidRequest.defaultInstance
-
-  val simpleBidRequest: BidRequest = BidRequest(
-    id = UUID.randomUUID().toString,
-    wseat = Seq("seat-1", "seat-2", "seat-3"),
-    cur = Seq("EUR", "USD"),
-    test = None,
-    user = Some(
-      User(
-        id = Some(UUID.randomUUID().toString),
-        geo = Some(
-          Geo(
-            lat = Some(48.8566),
-            lon = Some(2.3522),
-            country = Some("fr")
-          ))
-      )),
-    imp = Seq(
-      Imp(
-        id = "1",
-        native = Some(
-          Native(
-            requestOneof = RequestOneof.RequestNative(
-              NativeRequest(
-                plcmtcnt = Some(5),
-                ver = Some("1"),
-                context = Some(ContextType.CONTENT),
-                plcmttype = Some(PlacementType.IN_FEED)
-              )
-            )
-          ))
-      ))
-  )
-
-  val bidRequestWithExtensions: BidRequest = simpleBidRequest.copy(
-    imp = simpleBidRequest.imp
-      .map(
-        _.withExtension(ExampleProto.impExt)(
-          Some(ImpExt(Some("test-extension")))
-        ))
-  )
-
-  val benchmarkSerdeModule = new BenchmarkSerdeModule
+  import JmhEntities._
 
   @Benchmark
   def encodeDefaultBidRequest(): Json = {
