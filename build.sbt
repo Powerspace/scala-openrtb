@@ -27,15 +27,16 @@ scalacOptions in ThisBuild := Seq(
 
 publishArtifact in root := false
 
-val testDependencies = Seq(
+val testSettings = Seq(
   libraryDependencies ++= Seq(
     "org.scalactic" %% "scalactic"                   % "3.0.1" % "test",
     "org.scalatest" %% "scalatest"                   % "3.0.1" % "test",
-    "org.scalamock" %% "scalamock-scalatest-support" % "3.5.0" % "test"))
+    "org.scalamock" %% "scalamock-scalatest-support" % "3.5.0" % "test")
+)
 
 // OpenRTB Scala model
 lazy val openRtbModel = Project(id = "openrtb-model", base = file("openrtb-model"))
-  .settings(testDependencies: _*)
+  .settings(testSettings: _*)
 
 // OpenRTB JSON Serialization & Deserialization
 lazy val openRtbJson = Project(id = "openrtb-json", base = file("openrtb-json"))
@@ -48,7 +49,7 @@ lazy val bidswitchModel = Project(id = "bidswitch-model", base = file("bidswitch
 // BidSwitch JSON Serialization & Deserialization
 lazy val bidswitchJson = Project(id = "bidswitch-json", base = file("bidswitch-json"))
   .dependsOn(bidswitchModel % "compile->compile;test->test", openRtbJson % "compile->compile;test->test")
-  .settings(testDependencies: _*)
+  .settings(testSettings: _*)
 
 // Akka Http marshallers and unmarshallers
 lazy val akkaHttpMarshaller = Project(id = "akka-http-marshallers", base = file("akka-http-marshallers"))
@@ -59,11 +60,20 @@ lazy val examples = Project(id = "examples", base = file("examples"))
   .dependsOn(openRtbJson % "compile->compile;test->test")
   .settings(skip in publish := true)
 
+lazy val benchmarks = Project(id = "benchmarks", base = file("benchmarks"))
+  .enablePlugins(JmhPlugin)
+  .dependsOn(
+    openRtbJson,
+    examples
+  )
+  .settings(skip in publish := true)
+
 lazy val root = (project in file("."))
   .aggregate(
     openRtbModel,
     openRtbJson,
     bidswitchModel,
     bidswitchJson,
-    examples
+    examples,
+    benchmarks
   )

@@ -5,7 +5,7 @@
 <img src="https://img.shields.io/nexus/r/https/oss.sonatype.org/com.powerspace.openrtb/openrtb-json_2.12.svg" />
 
 Scala OpenRTB is a full Scala library that provides protobuf bindings as well as JSON serialization for [OpenRTB](https://www.iab.com/guidelines/real-time-bidding-rtb-project/)-based entities in a functional fashion. 
-This library also provides SerDes for [Powerspace](https://www.powerspace.com/en) and [BidSwitch](http://www.bidswitch.com/) bidding models, and aims to support other DSPs in the near future.
+This library also provides SerDes for [BidSwitch](http://www.bidswitch.com/) bidding models, and aims to support other DSPs in the near future.
 
 ## Artifacts
 Scala openrtb artifacts are [available on Sonatype](https://search.maven.org/search?q=g:com.powerspace.openrtb).
