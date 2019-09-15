@@ -57,10 +57,7 @@ lazy val akkaHttpMarshaller = Project(id = "akka-http-marshallers", base = file(
 
 // scala-openrtb examples
 lazy val examples = Project(id = "examples", base = file("examples"))
-  .dependsOn(
-    openRtbJson % "compile->compile;test->test",
-    akkaHttpMarshaller
-  )
+  .dependsOn(openRtbJson % "compile->compile;test->test")
   .settings(skip in publish := true)
 
 lazy val benchmarks = Project(id = "benchmarks", base = file("benchmarks"))
