@@ -14,13 +14,14 @@ import org.scalatest.{FunSuite, GivenWhenThen}
 class OpenRtbSerdeTest extends FunSuite with GivenWhenThen {
 
   import EncodingUtils._
-
   import OpenRtbSerdeModule._
 
   test("OpenRTB-like bid response deserialization") {
     Given("An OpenRTB-like bid response in JSON format with a string-ed native response")
     val stream: URL = getClass.getResource("/elasticads-bidresponse.json")
-    val json: String = scala.io.Source.fromFile(stream.toURI).mkString
+    val source = scala.io.Source.fromFile(stream.toURI)
+    val json: String = source.mkString
+    source.close()
 
     When("I deserialize it")
     val decoded = decode[BidResponse](json)
@@ -51,7 +52,9 @@ class OpenRtbSerdeTest extends FunSuite with GivenWhenThen {
   test("OpenRTB-like BidResponse deserialization with no-bid") {
     Given("An OpenRTB-like BidResponse in JSON format with no bid")
     val stream: URL = getClass.getResource("/elasticads-bidresponse-no-bid.json")
-    val json: String = scala.io.Source.fromFile(stream.toURI).mkString
+    val source = scala.io.Source.fromFile(stream.toURI)
+    val json: String = source.mkString
+    source.close()
 
     When("I deserialize it")
     val decoded = decode[BidResponse](json)
@@ -218,7 +221,9 @@ class OpenRtbSerdeTest extends FunSuite with GivenWhenThen {
   test("OpenRTB-like BidRequest with native object deserialization") {
     Given("An OpenRTB-like BidRequest with native object in JSON format")
     val stream: URL = getClass.getResource("/openrtb-like-bidrequest-native.json")
-    val json: String = scala.io.Source.fromFile(stream.toURI).mkString
+    val source1 = scala.io.Source.fromFile(stream.toURI)
+    val json: String = source1.mkString
+    source1.close()
 
     When("I deserialize it")
     val decoded = decode[BidRequest](json)
@@ -333,11 +338,17 @@ class OpenRtbSerdeTest extends FunSuite with GivenWhenThen {
   }
 
   test("Deserializing and re-serializing a JSON BidResponse with native string I obtain the same JSON") {
-    import gnieh.diffson.circe._
+    import diffson._
+    import diffson.circe._
+    import diffson.jsonpatch._
+    import diffson.jsonpatch.lcsdiff.remembering._
+    import diffson.lcs._
 
     Given("An JSON OpenRTB-like BidResponse")
     val stream: URL = this.getClass.getResource("/elasticads-bidresponse.json")
-    val Right(originalJson) = parse(scala.io.Source.fromFile(stream.toURI).mkString)
+    val source = scala.io.Source.fromFile(stream.toURI)
+    val Right(originalJson) = parse(source.mkString)
+    source.close()
 
     When("I deserialize it")
     val bidResponse = originalJson.as[BidResponse].right.get
@@ -354,17 +365,23 @@ class OpenRtbSerdeTest extends FunSuite with GivenWhenThen {
       */
     Then("There's no difference between the original JSON and the processed one")
     def deleteAdm(json: Json): Json = json.hcursor.downField("seatbid").downArray.downField("bid").downArray.downField("adm").delete.top.get
-    val difference = JsonDiff.diff(deleteAdm(originalJson), deleteAdm(serializedJson), remember = false)
+    val difference: JsonPatch[Json] = diff[Json, JsonPatch[Json]](deleteAdm(originalJson), deleteAdm(serializedJson))(JsonDiffDiff(jsonyCirce, new Patience))
     assert(difference.ops.isEmpty)
   }
 
 
   test("Deserializing and re-serializing an unfolded JSON BidResponse with native object I obtain the same JSON") {
-    import gnieh.diffson.circe._
+    import diffson._
+    import diffson.circe._
+    import diffson.jsonpatch._
+    import diffson.jsonpatch.lcsdiff.remembering._
+    import diffson.lcs._
 
     Given("An unfolded JSON OpenRTB-like BidResponse")
     val stream: URL = this.getClass.getResource("/elasticads-bidresponse-unfold.json")
-    val Right(originalJson) = parse(scala.io.Source.fromFile(stream.toURI).mkString)
+    val source = scala.io.Source.fromFile(stream.toURI)
+    val Right(originalJson) = parse(source.mkString)
+    source.close()
 
     When("I deserialize it")
     val bidResponse = originalJson.as[BidResponse].right.get
@@ -378,8 +395,8 @@ class OpenRtbSerdeTest extends FunSuite with GivenWhenThen {
       * gets always serialized as a String.
       */
     Then("There's no difference between the original JSON and the processed one")
-    val patch = JsonDiff.diff(serializedJson, originalJson, remember = false)
-    assert(patch.ops.head.path.path.exists(p => p.left.exists(name => name == "ver")))
+    val patch: JsonPatch[Json] = diff[Json, JsonPatch[Json]](serializedJson,originalJson)(JsonDiffDiff(jsonyCirce, new Patience))
+    assert(patch.ops.head.patch.leftSide.path.parts.lastOption.exists(_.left.exists(_ == "ver")))
   }
 
 }

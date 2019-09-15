@@ -18,7 +18,9 @@ class BidSwitchSerdeTest extends FunSuite with GivenWhenThen {
   test("BidSwitch BidResponse deserialization") {
     Given("A BidSwitch BidResponse in JSON format")
     val stream: URL = getClass.getResource("/bidswitch-bidresponse.json")
-    val json: String = scala.io.Source.fromFile(stream.toURI).mkString
+    val source = scala.io.Source.fromFile(stream.toURI)
+    val json: String = source.mkString
+    source.close()
 
     When("I deserialize it")
     val decoded = decode[BidResponse](json)
@@ -57,7 +59,9 @@ class BidSwitchSerdeTest extends FunSuite with GivenWhenThen {
   test("BidSwitch bid response serialization with no-bid") {
     Given("An BidSwitch bid response in JSON format with no bid")
     val stream: URL = getClass.getResource("/bidswitch-bidresponse-no-bid.json")
-    val json: String = scala.io.Source.fromFile(stream.toURI).mkString
+    val source = scala.io.Source.fromFile(stream.toURI)
+    val json: String = source.mkString
+    source.close()
 
     When("I deserialize it")
     val decoded = decode[BidResponse](json)

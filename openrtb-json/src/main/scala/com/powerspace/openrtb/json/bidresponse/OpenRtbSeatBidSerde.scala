@@ -20,7 +20,7 @@ class OpenRtbSeatBidSerde(bidSerde: OpenRtbBidSerde)(implicit er: ExtensionRegis
   private implicit val bidEncoder: Encoder[SeatBid.Bid] = bidSerde.encoder
 
   implicit def encoder: Encoder[BidResponse.SeatBid] =
-    deriveEncoder[BidResponse.SeatBid].cleanRtb
+    deriveConfiguredEncoder[BidResponse.SeatBid].cleanRtb
 
   implicit def decoder(implicit bidDecoder: Decoder[BidResponse.SeatBid.Bid]): Decoder[BidResponse.SeatBid] =
     cursor =>

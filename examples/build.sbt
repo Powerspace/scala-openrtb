@@ -1,7 +1,7 @@
-val http4sVersion = "0.20.0-M6"
-val akkaHttpVersion = "10.1.0"
-val akkaHttpJsonVersion = "1.20.0"
-val monixVersion = "3.0.0-RC2"
+val http4sVersion = "0.21.0-M4"
+val akkaHttpVersion = "10.1.9"
+val akkaHttpJsonVersion = "1.28.0"
+val monixVersion = "3.0.0"
 
 PB.targets in Compile := Seq(
   scalapb.gen(flatPackage = true) -> (sourceManaged in Compile).value

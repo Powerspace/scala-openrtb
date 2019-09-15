@@ -13,8 +13,8 @@ object BidSwitchDealSerde extends ConfiguredSerde {
   import io.circe._
   import io.circe.generic.extras.semiauto._
 
-  implicit val dealExtEncoder: Encoder[DealExt] = deriveEncoder[DealExt].cleanRtb
+  implicit val dealExtEncoder: Encoder[DealExt] = deriveConfiguredEncoder[DealExt].cleanRtb
 
-  val dealExtDecoder: Decoder[DealExt] = deriveDecoder[DealExt]
+  val dealExtDecoder: Decoder[DealExt] = deriveConfiguredDecoder[DealExt]
 
 }
