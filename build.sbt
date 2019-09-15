@@ -1,6 +1,6 @@
 name := "scala-openrtb"
 
-version in ThisBuild := "1.2.0"
+version in ThisBuild := "1.3.0"
 
 scalaVersion in ThisBuild       := "2.13.0"
 crossScalaVersions in ThisBuild := Seq("2.12.10", "2.13.0")
