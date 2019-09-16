@@ -16,4 +16,4 @@ cache:
     - $HOME/.sbt
 
 script:
-  - sbt ++$TRAVIS_SCALA_VERSION -Dsbt.supershell=false -Dsbt.log.noformat=true clean +test
+  - sbt ++$TRAVIS_SCALA_VERSION -Dsbt.supershell=false -Dsbt.log.noformat=true clean test
