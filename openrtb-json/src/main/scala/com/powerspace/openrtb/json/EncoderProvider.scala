@@ -1,13 +1,12 @@
 package com.powerspace.openrtb.json
 
-import com.google.openrtb.NativeRequest
 import com.powerspace.openrtb.json.util.EncodingUtils
 import io.circe.Json.fromJsonObject
 import io.circe.JsonObject.fromIterable
 import io.circe._
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.decoding.ConfiguredDecoder
-import io.circe.generic.extras.encoding.ConfiguredObjectEncoder
+import io.circe.generic.extras.encoding.ConfiguredAsObjectEncoder
 import scalapb.{ExtendableMessage, GeneratedExtension, GeneratedMessage}
 import shapeless.Lazy
 
@@ -91,7 +90,7 @@ object OpenRtbExtensions {
 
     def registerExtension[Extendable <: ExtendableMessage[Extendable], Extension <: scalapb.GeneratedMessage](
       extension: OpenRtbExtension[Extendable, Extension])(
-      implicit encoder: Lazy[ConfiguredObjectEncoder[Extension]],
+      implicit encoder: Lazy[ConfiguredAsObjectEncoder[Extension]],
       decoder: Lazy[ConfiguredDecoder[Extension]],
       extendableTag: ClassTag[Extendable],
       extensionTag: ClassTag[Extension]): ExtensionRegistry = {
