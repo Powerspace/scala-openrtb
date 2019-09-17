@@ -15,7 +15,6 @@ scalacOptions in ThisBuild := Seq(
   "-encoding",
   "utf8",
   "-opt:l:default,l:inline,l:method",
-  "-opt-inline-from:**",
   "-unchecked",
   "-Ywarn-dead-code",
   "-Ywarn-numeric-widen",
