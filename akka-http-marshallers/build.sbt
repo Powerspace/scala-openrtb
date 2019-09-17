@@ -1,5 +1,6 @@
-val akkaHttpVersion = "10.1.0"
-val akkaHttpJsonVersion = "1.20.0"
+val akkaVersion = "2.5.25"
+val akkaHttpVersion = "10.1.9"
+val akkaHttpJsonVersion = "1.28.0"
 
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-http-core"  % akkaHttpVersion,

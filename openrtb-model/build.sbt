@@ -1,7 +1,7 @@
-val monocleVersion = "1.5.0" // 1.5.0-cats based on cats 1.0.x
+val monocleVersion = "2.0.0"
 
 libraryDependencies ++= Seq(
-  "com.google.openrtb"         % "openrtb-core"   % "1.5.1" % "protobuf",
+  "com.google.openrtb"         % "openrtb-core"   % "1.5.7" % "protobuf",
   "com.github.julien-truffaut" %% "monocle-core"  % monocleVersion,
   "com.github.julien-truffaut" %% "monocle-macro" % monocleVersion,
   "com.github.julien-truffaut" %% "monocle-law"   % monocleVersion % "test",

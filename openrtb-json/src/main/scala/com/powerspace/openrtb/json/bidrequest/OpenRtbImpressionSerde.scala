@@ -40,7 +40,7 @@ class OpenRtbImpressionSerde(implicit extensionRegistry: ExtensionRegistry) exte
 
   import EncodingUtils._
 
-  implicit val metricEncoder: Encoder[Imp.Metric] = deriveEncoder[Imp.Metric].cleanRtb
+  implicit val metricEncoder: Encoder[Imp.Metric] = deriveConfiguredEncoder[Imp.Metric].cleanRtb
 
   def encoder(
     implicit bannerEncoder: Encoder[Imp.Banner],
@@ -50,7 +50,7 @@ class OpenRtbImpressionSerde(implicit extensionRegistry: ExtensionRegistry) exte
     nativeEncode: Encoder[Imp.Native]): Encoder[Imp] =
     extendedEncoder[Imp]
 
-  implicit val metricDecoder: Decoder[Imp.Metric] = deriveDecoder[Imp.Metric]
+  implicit val metricDecoder: Decoder[Imp.Metric] = deriveConfiguredDecoder[Imp.Metric]
 
   def decoder(
     implicit bannerDecoder: Decoder[Imp.Banner],

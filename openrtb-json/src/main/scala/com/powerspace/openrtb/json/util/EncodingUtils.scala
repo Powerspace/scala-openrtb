@@ -2,9 +2,9 @@ package com.powerspace.openrtb.json.util
 
 import com.powerspace.openrtb.json.OpenRtbExtensions.ExtensionRegistry
 import io.circe._
-import io.circe.generic.extras.encoding.ConfiguredObjectEncoder
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.decoding.ConfiguredDecoder
+import io.circe.generic.extras.encoding.ConfiguredAsObjectEncoder
 import scalapb.{ExtendableMessage, GeneratedEnumCompanion, UnknownFieldSet}
 import shapeless.Lazy
 
@@ -13,18 +13,22 @@ import scala.util.Try
 
 object EncodingUtils {
 
+  import PrimitivesUtils._
   import io.circe.generic.extras.semiauto._
+
   import scala.reflect.runtime.universe.TypeTag
   import scala.reflect.runtime.{currentMirror => cm}
-  import PrimitivesUtils._
 
   private implicit val customConfig: Configuration = Configuration.default.withSnakeCaseMemberNames.withDefaults
 
   def extendedEncoder[Ext <: ExtendableMessage[Ext]](
-    implicit encoder: Lazy[ConfiguredObjectEncoder[Ext]],
+    implicit encoder: Lazy[ConfiguredAsObjectEncoder[Ext]],
     er: ExtensionRegistry,
     tag: ClassTag[Ext]): Encoder[Ext] =
     er.encoderWithExtensions[Ext](baseEncoder = openRtbEncoder)
+
+  def openRtbEncoder[A](implicit encoder: Lazy[ConfiguredAsObjectEncoder[A]]): Encoder[A] =
+    deriveConfiguredEncoder[A](encoder).cleanRtb
 
   def extendedDecoder[Ext <: ExtendableMessage[Ext]](
     implicit encoder: Lazy[ConfiguredDecoder[Ext]],
@@ -32,9 +36,7 @@ object EncodingUtils {
     tag: ClassTag[Ext]): Decoder[Ext] =
     er.decoderWithExtensions[Ext](baseDecoder = openRtbDecoder)
 
-  def openRtbEncoder[A](implicit encoder: Lazy[ConfiguredObjectEncoder[A]]): Encoder[A] =
-    deriveEncoder[A](encoder).cleanRtb
-  def openRtbDecoder[A](implicit decoder: Lazy[ConfiguredDecoder[A]]): Decoder[A] = deriveDecoder[A](decoder)
+  def openRtbDecoder[A](implicit decoder: Lazy[ConfiguredDecoder[A]]): Decoder[A] = deriveConfiguredDecoder[A](decoder)
 
   /**
     * Unknown fields Encoder
@@ -43,6 +45,30 @@ object EncodingUtils {
   implicit val unknownFieldsDecoder: Decoder[UnknownFieldSet] = (_: HCursor) => Right(UnknownFieldSet.empty)
 
   implicit class EncoderEnhancement[T](encoder: Encoder[T]) {
+
+    def cleanRtb: Encoder[T] = renameOneof.clean.transformBooleans
+
+    /**
+      * Transform boolean fields into the related integers
+      */
+    def transformBooleans: Encoder[T] = {
+      encoder.mapJson({ json =>
+        json.mapObject(_.mapValues {
+          case boolean if boolean.isBoolean => Json.fromInt(boolean.asBoolean.map(_.toInt).get)
+          case other => other
+        })
+      })
+    }
+
+    def renameOneof: Encoder[T] =
+      encoder.mapJson({
+        _.mapObject(obj =>
+          JsonObject.fromIterable(obj.toIterable.map {
+            case (key, json) => (key.stripSuffix("_oneof"), json)
+          }))
+      })
+
+    def clean: Encoder[T] = clean(Seq())
 
     /**
       * Clean up the JSON file from empty fields/arrays unless present within the given list
@@ -57,20 +83,6 @@ object EncodingUtils {
           }))
     }
 
-    /**
-      * Transform boolean fields into the related integers
-      */
-    def transformBooleans: Encoder[T] = {
-      encoder.mapJson({ json =>
-        json.mapObject(_.mapValues {
-          case boolean if boolean.isBoolean => Json.fromInt(boolean.asBoolean.map(_.toInt).get)
-          case other => other
-        })
-      })
-    }
-
-    def cleanRtb: Encoder[T] = renameOneof.clean.transformBooleans
-
     def rename(renames: Map[String, String]): Encoder[T] =
       encoder.mapJson({
         _.mapObject(obj =>
@@ -78,16 +90,6 @@ object EncodingUtils {
             case (key, json) => (renames.getOrElse(key, key), json)
           }))
       })
-
-    def renameOneof: Encoder[T] =
-      encoder.mapJson({
-        _.mapObject(obj =>
-          JsonObject.fromIterable(obj.toIterable.map {
-            case (key, json) => (key.stripSuffix("_oneof"), json)
-          }))
-      })
-
-    def clean: Encoder[T] = clean(Seq())
 
   }
 

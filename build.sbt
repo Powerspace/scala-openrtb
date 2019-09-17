@@ -1,11 +1,12 @@
 name := "scala-openrtb"
 
-version in ThisBuild := "1.2.0"
+version in ThisBuild := "1.3.0"
 
-scalaVersion in ThisBuild     := "2.12.8"
-organization in ThisBuild     := "com.powerspace.openrtb"
-organizationName in ThisBuild := "Powerspace"
-organizationHomepage          := Some(url("https://powerspace.com/"))
+scalaVersion in ThisBuild       := "2.13.0"
+crossScalaVersions in ThisBuild := Seq("2.12.10", "2.13.0")
+organization in ThisBuild       := "com.powerspace.openrtb"
+organizationName in ThisBuild   := "Powerspace"
+organizationHomepage            := Some(url("https://powerspace.com/"))
 
 scalacOptions in ThisBuild := Seq(
   "-unchecked",
@@ -18,7 +19,6 @@ scalacOptions in ThisBuild := Seq(
   "-unchecked",
   "-Ywarn-dead-code",
   "-Ywarn-numeric-widen",
-  "-Ywarn-unused-import",
   "-language:postfixOps",
   "-language:implicitConversions",
   "-language:existentials",
@@ -29,9 +29,9 @@ publishArtifact in root := false
 
 val testSettings = Seq(
   libraryDependencies ++= Seq(
-    "org.scalactic" %% "scalactic"                   % "3.0.1" % "test",
-    "org.scalatest" %% "scalatest"                   % "3.0.1" % "test",
-    "org.scalamock" %% "scalamock-scalatest-support" % "3.5.0" % "test")
+    "org.scalactic" %% "scalactic" % "3.0.8" % "test",
+    "org.scalatest" %% "scalatest" % "3.0.8" % "test",
+    "org.scalamock" %% "scalamock" % "4.4.0" % "test")
 )
 
 // OpenRTB Scala model
@@ -74,6 +74,7 @@ lazy val root = (project in file("."))
     openRtbJson,
     bidswitchModel,
     bidswitchJson,
+    akkaHttpMarshaller,
     examples,
     benchmarks
   )

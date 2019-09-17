@@ -3,10 +3,17 @@ dist: trusty
 language: scala
 
 scala:
-- 2.12.8
+- 2.12.10
+- 2.13.0
 
 jdk:
 - oraclejdk8
 
+cache:
+  directories:
+    - $HOME/.cache
+    - $HOME/.ivy2/cache
+    - $HOME/.sbt
+
 script:
-  - sbt ++$TRAVIS_SCALA_VERSION -Dsbt.log.noformat=true clean test
+  - sbt ++$TRAVIS_SCALA_VERSION -Dsbt.supershell=false -Dsbt.log.noformat=true clean test

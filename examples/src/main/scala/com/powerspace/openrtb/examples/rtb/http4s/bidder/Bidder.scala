@@ -53,7 +53,7 @@ class Bidder[F[_]: Applicative] extends OpenrtbBidder[F] {
     * Provide a list of [[com.google.openrtb.BidResponse.SeatBid.Bid]] given a list
     * of [[com.google.openrtb.BidRequest.Imp]]
     */
-  private def bidOnImps(imps: Traversable[Imp]): F[Traversable[Bid]] = {
+  private def bidOnImps(imps: Iterable[Imp]): F[Iterable[Bid]] = {
     imps
       .flatMap(bidOnImp)
       .pure[F]

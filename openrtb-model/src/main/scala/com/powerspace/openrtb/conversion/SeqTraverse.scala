@@ -1,23 +1,27 @@
 package com.powerspace.openrtb.conversion
 
+import cats.{Applicative, Eval, Traverse}
 import monocle.function.Each
 import monocle.function.Each.fromTraverse
-import scalaz.{Applicative, Traverse}
 
-/** Object definitions for scalaz **/
+/** Object definitions for cats **/
 object SeqTraverse {
 
-  /** Redefine a traverse for seqs since scalaz does not provide one */
+  /** Redefine a traverse for seqs since cats does not provide one */
   implicit val seqTraverse = new Traverse[Seq] {
 
-    def traverseImpl[F[_], A, B](l: Seq[A])(f: A => F[B])(implicit F: Applicative[F]) = {
-      F.map(l.reverse.foldLeft(F.point(Nil: List[B])) { (flb: F[List[B]], a: A) =>
-        F.apply2(f(a), flb)(_ :: _)
+    override def traverse[G[_], A, B](fa: Seq[A])(f: A => G[B])(implicit evidence$1: Applicative[G]): G[Seq[B]] = {
+      evidence$1.map(fa.reverse.foldLeft(evidence$1.point(Nil: List[B])) { (flb: G[List[B]], a: A) =>
+        evidence$1.map2(f(a), flb)(_ :: _)
       })(_.toSeq)
     }
+
+    override def foldLeft[A, B](fa: Seq[A], b: B)(f: (B, A) => B): B = fa.foldLeft(b)(f)
+
+    override def foldRight[A, B](fa: Seq[A], lb: Eval[B])(f: (A, Eval[B]) => Eval[B]): Eval[B] = fa.foldRight(lb)(f)
   }
 
-  /** Define an each from the abovementionned traverse object */
-  implicit def seqEach[A]: Each[Seq[A], A] = fromTraverse
+  /** Define an each from the aforementioned traverse object */
+  implicit def seqEach[A]: Each[Seq[A], A] = fromTraverse[Seq, A]
 
 }
