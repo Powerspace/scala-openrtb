@@ -1,5 +1,6 @@
 package com.powerspace.openrtb.json
 
+import com.google.openrtb.NativeRequest
 import com.powerspace.openrtb.json.util.EncodingUtils
 import io.circe.Json.fromJsonObject
 import io.circe.JsonObject.fromIterable
