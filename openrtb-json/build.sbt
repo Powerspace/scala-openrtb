@@ -9,4 +9,4 @@ libraryDependencies ++= Seq(
 
 libraryDependencies += "org.scalactic" %% "scalactic"     % "3.0.8" % "test"
 libraryDependencies += "org.scalatest" %% "scalatest"     % "3.0.8" % "test"
-libraryDependencies += "org.gnieh"     %% "diffson-circe" % "4.0.0-M5" % "test"
+libraryDependencies += "org.gnieh"     %% "diffson-circe" % "4.0.0" % "test"
