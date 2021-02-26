@@ -5,7 +5,8 @@ libraryDependencies ++= Seq(
   "com.github.julien-truffaut" %% "monocle-core"  % monocleVersion,
   "com.github.julien-truffaut" %% "monocle-macro" % monocleVersion,
   "com.github.julien-truffaut" %% "monocle-law"   % monocleVersion % "test",
-  "com.chuusai"                %% "shapeless"     % "2.3.3"
+  "com.chuusai"                %% "shapeless"     % "2.3.3",
+  "com.thesamet.scalapb" %% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion % "protobuf"
 )
 
 PB.targets in Compile := Seq(

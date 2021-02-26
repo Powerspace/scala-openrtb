@@ -73,7 +73,7 @@ object BidRequestFixtures {
     val device = getDevice
     val bidRequest = BidRequest(
       id = "fmySKZNcTFcTPOurFYivufGxMtuSYpen",
-      at = Some(AuctionType.fromValue(value = 2)),
+      at = Some(AuctionType.fromValue(2)),
       imp = Seq(extendedImpression),
       cur = Seq("EUR"),
       device = Some(device),
