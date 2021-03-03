@@ -1,4 +1,4 @@
-val circeVersion = "0.12.1"
+val circeVersion = "0.13.0"
 
 libraryDependencies ++= Seq(
   "io.circe" %% "circe-core",
@@ -9,4 +9,4 @@ libraryDependencies ++= Seq(
 
 libraryDependencies += "org.scalactic" %% "scalactic"     % "3.0.8" % "test"
 libraryDependencies += "org.scalatest" %% "scalatest"     % "3.0.8" % "test"
-libraryDependencies += "org.gnieh"     %% "diffson-circe" % "4.0.0" % "test"
+libraryDependencies += "org.gnieh"     %% "diffson-circe" % "4.0.3" % "test"

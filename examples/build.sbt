@@ -19,5 +19,6 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-http-core"      % akkaHttpVersion,
   "com.typesafe.akka" %% "akka-http"           % akkaHttpVersion,
   "de.heikoseeberger" %% "akka-http-circe"     % akkaHttpJsonVersion,
-  "io.monix"          %% "monix"               % monixVersion
+  "io.monix"          %% "monix"               % monixVersion,
+  "com.thesamet.scalapb" %% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion % "protobuf"
 )

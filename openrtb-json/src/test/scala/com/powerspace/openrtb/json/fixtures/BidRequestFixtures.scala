@@ -75,7 +75,7 @@ object BidRequestFixtures {
     else RequestOneof.Request("native-string")
     BidRequest(
       id = "fmySKZNcTFcTPOurFYivufGxMtuSYpen",
-      at = Some(AuctionType.fromValue(value = 2)),
+      at = Some(AuctionType.fromValue(2)),
       imp = Seq(getImpression(requestOneof)),
       cur = Seq("EUR"),
       device = Some(getDevice),
